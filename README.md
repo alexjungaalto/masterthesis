@@ -6,7 +6,7 @@ methods could be useful for your thesis you might consider having me as your the
 # What can you expect from me as your thesis supervisor ?
 
 My main technical expertise is on optimization theory and methods for machine learning (ML) from network structured data. Some recent papers can be 
-found [here](https://arxiv.org/abs/2105.12769){:target="_blank"} and <a href="https://ieeexplore.ieee.org/document/9298875" target="__blank">here</a>. 
+found [here](https://arxiv.org/abs/2105.12769) and <a href="https://ieeexplore.ieee.org/document/9298875" target="__blank">here</a>. 
 
 Another recent focus of my research is the application of information theory to explainable machine learning. We have introduced a quantitative measure 
 for subjective explainability of predictions <a href="https://ieeexplore.ieee.org/document/9089200" target="__blank">in this paper</a>
@@ -37,9 +37,10 @@ template for the project reports used in some of my ML courses [here] or [here].
 # The Finish Line  
 
 When you have completed the writing of the thesis (draft), I will ask you to prepare a self-assessment of your thesis. This self-assessment 
-amounts to filling out the evaluation form [here] that I will also use to evaluate your thesis. Your self-assessment should take into account 
-the typical grade characterizations <a href="https://arxiv.org/abs/2009.01492" target="_blank">here</a> and include sufficient justifications. These justifications should be as specific as possible and use 
-references to the relevant locations of your thesis. 
+amounts to filling out the evaluation form [here](https://mycourses.aalto.fi/pluginfile.php/1785438/mod_resource/content/1/thesis-statement-template-CCIS-SCI.pdf) 
+that I will also use to evaluate your thesis. Your self-assessment should take into account the typical grade characterizations 
+<a href="https://mycourses.aalto.fi/pluginfile.php/569812/course/section/105302/Typical%20characterization%20of%20theses%20grades_SCI_20161213.pdf" target="_blank">here</a> 
+and include sufficient justifications. These justifications should be as specific as possible and use references to the relevant locations of your thesis. 
 
 
 
