@@ -6,7 +6,7 @@ methods could be useful for your thesis you might consider having me as your the
 # What can you expect from me as your thesis supervisor ?
 
 My main technical expertise is on optimization theory and methods for machine learning (ML) from network structured data. Some recent papers can be 
-found [here](https://arxiv.org/abs/2105.12769){:target="_blank" rel="noopener"} and <a href="https://ieeexplore.ieee.org/document/9298875" target="__blank">here</a>. 
+found [here](https://arxiv.org/abs/2105.12769){:target="_blank"} and <a href="https://ieeexplore.ieee.org/document/9298875" target="__blank">here</a>. 
 
 Another recent focus of my research is the application of information theory to explainable machine learning. We have introduced a quantitative measure 
 for subjective explainability of predictions <a href="https://ieeexplore.ieee.org/document/9089200" target="__blank">in this paper</a>
