@@ -6,11 +6,11 @@ methods could be useful for your thesis you might consider having me as your the
 # What can you expect from me as your thesis supervisor ?
 
 My main technical expertise is on optimization theory and methods for machine learning (ML) from network structured data. Some recent papers can be 
-found [here](https://arxiv.org/abs/2105.12769) and <a href="https://ieeexplore.ieee.org/document/9298875" target="_blank">here</a>. 
+found <a href="https://arxiv.org/abs/2105.12769" target="__blank">here</a> and <a href="https://ieeexplore.ieee.org/document/9298875" target="__blank">here</a>. 
 
 Another recent focus of my research is the application of information theory to explainable machine learning. We have introduced a quantitative measure 
-for subjective explainability of predictions <a href="https://ieeexplore.ieee.org/document/9089200" target="_blank">in this paper</a>
-and used it to regularize machine learning models <a href="https://arxiv.org/abs/2009.01492" target="_blank">in this paper</a>. 
+for subjective explainability of predictions <a href="https://ieeexplore.ieee.org/document/9089200" target="__blank">in this paper</a>
+and used it to regularize the training of any given ML model  <a href="https://arxiv.org/abs/2009.01492" target="_blank">in this paper</a>. 
 
 Beside the above research threads I am also passionate to learn about novel and important applications of basic ML methods. I am 
 happy to help you make good use of existing ML methods or develop novel techniques that are tailored to your specific topic. 
@@ -38,7 +38,7 @@ template for the project reports used in some of my ML courses [here] or [here].
 
 When you have completed the writing of the thesis (draft), I will ask you to prepare a self-assessment of your thesis. This self-assessment 
 amounts to filling out the evaluation form [here] that I will also use to evaluate your thesis. Your self-assessment should take into account 
-the typical grade characterizations [here] and include sufficient justifications. These justifications should be as specific as possible and use 
+the typical grade characterizations <a href="https://arxiv.org/abs/2009.01492" target="_blank">here</a> and include sufficient justifications. These justifications should be as specific as possible and use 
 references to the relevant locations of your thesis. 
 
 
