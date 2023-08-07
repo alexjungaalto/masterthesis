@@ -30,9 +30,9 @@ of a (trained) model. You can read more about these design choices (for data, mo
 
 # Working on the Thesis 
 
-The main thesis work might consist of several iterations of data gathering, model selection, model training and model diagnosis. Each 
-of these steps requires different skills and programming libraries, e.g., Python packages [`pandas`](https://pandas.pydata.org/) for data gathering and processing and 
-`scikiit-learn` for ML model selection and training. 
+The main thesis work might consist of several iterations of data gathering, model selection, training and diagnosis. Each 
+of these steps requires different skills and programming libraries, e.g., Python packages [`pandas`](https://pandas.pydata.org/) for data gathering and processing and  
+[`scikit-learn`]() for ML model selection, training and diagnosis. 
 During the iterations you might want to reflect on your design choices and diagnoses by trying to answer the peer grading questions 
 used for the student project in [CS-C3240 Machine Learning](CS_C3240_PeerReview.pdf) and [CS-E4740 Federated Learning](CS_E4740_PeerReview.pdf).
 
