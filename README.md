@@ -10,7 +10,7 @@ My main expertise is on the statistical and computational aspects of machine lea
 Networked-data arises in many important application domains and provides a rich mathematical structure that can be exploited 
 for the training of ML models. Our recent work includes [this paper](https://arxiv.org/abs/2105.12769) and <a href="https://ieeexplore.ieee.org/document/9298875" target="__blank">that paper</a>. 
 
-Another recent focus of my research is the application of information theory to explainable machine learning. We have introduced a quantitative measure 
+Another recent focus of my research is the application of information theory to explainable ML. We have introduced a quantitative measure 
 for the subjective explainability of predictions <a href="https://ieeexplore.ieee.org/document/9089200" target="__blank">in this paper</a>
 and used it to regularize the training of any given ML model  <a href="https://arxiv.org/abs/2009.01492" target="_blank">in this paper</a>. 
 
@@ -47,18 +47,25 @@ Machine Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/m
 Some specific aspects that you might useful when preparing the final manuscript and that I also use as guidance
 during the evaluation of your thesis: 
 
-- As your thesis is most likely about applied machine learning, it is important that you precisely define/formulate the machine learning 
+- As your thesis is most likely about applied ML, it is important that you precisely define/formulate the ML 
 problem at hand. This formulation requires to make crystal clear to the reader what data points are (cows, clouds, measurements, time periods, ...), 
-their features and label (quantity of interest). 
+which characteristics are used as their features and what is the ultimate quantity of interest (the label).  
 
 - For each ML model or method that you apply to your ML problem, you must clearly state and discuss the obtained average loss on 
 training, validation (and test-) set. Comparing these average loss values is important to diagnose the ML method (see Sect. 6.6. of my textbook). 
 
 - A key challenge in applied ML is to know when to stop. For a master thesis project there is a natural stopping criterion, i.e., 
-the deadling by which you want to submit your thesis. However, it might be very helpful to have a benchmark or baseline against 
-which you can compare the obtained validation or test-set errors. If your ML method achieves a test-set error 
-close the baseline level then there is little point to invest significant additional time into exploring other 
-ML methods. 
+the deadline by which you want to submit your thesis. However, it might be very helpful to have a benchmark or baseline against 
+which you can compare the obtained validation or test-set errors. If your ML method achieves a test-set error close the baseline level 
+then there is little point to invest significant additional time into exploring other ML methods. 
+
+- It is often difficult to determine a useful baseline for the average loss achieved by ML methods. Sources for such a baseline could 
+be simplified probabilistic models for the datapoints (such as "i.i.d." assumption) or literature that has reported the average loss achieved 
+by state-of-the art ML methods. 
+
+- Do not worry if you are not able to achieve a baseline. It is much more important that your thesis precisely explains the 
+applied ML methods and discusses the results. As a rule of thumb: I prefer a convincing explanation for why a ML methods 
+performs poorly over an ad-hoc ML method that provides impressive performance metrics.  
 
 - Try to do a first draft of the manuscript (or key parts) quick and dirty. There will be most likely several follow-up 
 iterations during which you can fill in the gaps and polish the text. 
@@ -73,7 +80,7 @@ I like to see a strong connectivity between different parts of the thesis.
 and edges obtained from references. For example node "Section 1" is connected to "Section 2" if there is a reference from 
 Section 1 to Section 2 or vice-versa (the dependency graph can be directed or undirected). 
 
-- Ask your friends, family or collegeaus to give you feedback. Our group meetings are also a good place to obtain feedback. 
+- Ask your friends, family or colleauges to give you feedback. Our group meetings are also a good place to obtain feedback. 
 
 
 
