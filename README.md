@@ -26,28 +26,30 @@ In general, the start of your thesis is to come up with a formulation of your to
 explaining (the meaning of) data points, their features and label. You should also think about one or two potential ML models that 
 you are familiar with (e.g., you can implement them using a programming language such as Python). Beside the choice of 
 data and model, you should also think about possible performance criteria or loss functions that are used to evaluate the usefulness 
-of a (trained) model. You can read more about these design choices (for data, model and loss) in Chapter 2 of my textbook <a href="https://primo.aalto.fi/discovery/openurl?institution=358AALTO_INST&vid=358AALTO_INST:VU1&ctx_enc=info:ofi%2FencUTF-8&rft_val_fmt=info:ofi%2Fkev:fmt:book&rft.pub=Springer&ctx_tim=2023-08-06T18:10:37EEST&rft_id=info:doi%2F10.1007%2F978-981-16-8193-6&rfr_id=info:sid%2Fpure.atira.dk:pure&ctx_ver=Z39.88-2004&rft.isbn=978-981-16-8192-9&rft.btitle=Machine%20Learning&rft.genre=book&rft.aufirst=Alex&url_ctx_fmt=info:ofi%2Ffmt:kev:mtx:ctx&rft.aulast=Jung&url_ver=Z39.88-2004&rft.auinit=A&rft.date=2022" target="_blank">here</a>.
+of a (trained) model. You can read more about these design choices (for data, model and loss) in Chapter 2 of my textbook <a href="https://primo.aalto.fi/discovery/openurl?institution=358AALTO_INST&vid=358AALTO_INST:VU1&ctx_enc=info:ofi%2FencUTF-8&rft_val_fmt=info:ofi%2Fkev:fmt:book&rft.pub=Springer&ctx_tim=2023-08-06T18:10:37EEST&rft_id=info:doi%2F10.1007%2F978-981-16-8193-6&rfr_id=info:sid%2Fpure.atira.dk:pure&ctx_ver=Z39.88-2004&rft.isbn=978-981-16-8192-9&rft.btitle=Machine%20Learning&rft.genre=book&rft.aufirst=Alex&url_ctx_fmt=info:ofi%2Ffmt:kev:mtx:ctx&rft.aulast=Jung&url_ver=Z39.88-2004&rft.auinit=A&rft.date=2022" target="_blank">here</a>. I have also prepared some lectures on these design choices which can be found [here](https://youtube.com/playlist?list=PLrbn2dGrLJK9zB7pdEd8QOtmC9-eoqoch) .
 
 # Working on the Thesis 
 
 The main thesis work might consist of several iterations of data gathering, model selection, training and diagnosis. Each 
 of these steps requires different skills and programming libraries, e.g., Python packages [`pandas`](https://pandas.pydata.org/) for data gathering and processing and  
-[`scikit-learn`]() for ML model selection, training and diagnosis. 
-During the iterations you might want to reflect on your design choices and diagnoses by trying to answer the peer grading questions 
-used for the student project in [CS-C3240 Machine Learning](CS_C3240_PeerReview.pdf) and [CS-E4740 Federated Learning](CS_E4740_PeerReview.pdf).
+[`scikit-learn`](https://scikit-learn.org/stable/) for ML model selection, training and diagnosis. During the iterations you might want to reflect on your 
+design choices and diagnoses by trying to answer the peer grading questions used for the student project in [CS-C3240 Machine Learning](CS_C3240_PeerReview.pdf) and [CS-E4740 Federated Learning](CS_E4740_PeerReview.pdf).
 
 Beside the actual design and implementation of ML methods and numerical experiments, another main component of the thesis work is the actual 
 writing of the thesis manuscript. To get started on the writing, you might use a template for project reports used in some of my ML courses [CS-C3240 
-Machine Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf) and [CS-E4740 Federated Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf). However, 
-these templates are meant as a support wheel and not as a fill-out form. 
+Machine Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf) and [CS-E4740 Federated Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf). However, these templates are meant as a support wheel and not as a fill-out form. 
 
 # The Finish Line  
 
-When you have completed the writing of the thesis (draft), I will ask you to prepare a self-assessment of your thesis. This self-assessment 
-amounts to filling out the evaluation form [here](https://mycourses.aalto.fi/pluginfile.php/1785438/mod_resource/content/1/thesis-statement-template-CCIS-SCI.pdf) 
+When you have completed the writing of the thesis (draft), I will ask you to prepare a self-assessment of your thesis. 
+This self-assessment amounts to filling out the evaluation form [here](Statement_template_CCIS.pdf) 
 that I will also use to evaluate your thesis. Your self-assessment should take into account the typical grade characterizations 
 <a href="https://mycourses.aalto.fi/pluginfile.php/569812/course/section/105302/Typical%20characterization%20of%20theses%20grades_SCI_20161213.pdf" target="_blank">here</a> 
 and include sufficient justifications. These justifications should be as specific as possible and use references to the relevant locations of your thesis. 
+
+Beside the (self-)evaluation of your thesis, finalizing your thesis typically requires to prepare a thesis presentation. I offer students to choose between 
+different formats of this presentation. These formats include a regular in-person presentation during a group meeting or via a pre-recorded video (see some 
+examples in this [YouTube Playlist](https://youtube.com/playlist?list=PLrbn2dGrLJK8xt7j0tvaL0uMCdrtQ7JY2)). 
 
 
 
