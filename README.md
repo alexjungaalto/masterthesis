@@ -1,7 +1,7 @@
 # Doing a Master Thesis on Applied Machine Learning
 
 Do you have some topic, application or research question that you would like to explore during a master thesis? If you think that machine learning 
-methods could be useful for your thesis you might consider having me as your thesis supervisor. 
+methods could be useful for your thesis you might consider having [me](https://alexjungaalto.github.io/) as your thesis supervisor. 
 
 # What can you expect from me as your thesis supervisor ?
 
@@ -26,13 +26,20 @@ In general, the start of your thesis is to come up with a formulation of your to
 explaining (the meaning of) data points, their features and label. You should also think about one or two potential ML models that 
 you are familiar with (e.g., you can implement them using a programming language such as Python). Beside the choice of 
 data and model, you should also think about possible performance criteria or loss functions that are used to evaluate the usefulness 
-of a (trained model). You can read more about these design choices (for data, model and loss) in Chapter 2 of my textbook <a href="https://primo.aalto.fi/discovery/openurl?institution=358AALTO_INST&vid=358AALTO_INST:VU1&ctx_enc=info:ofi%2FencUTF-8&rft_val_fmt=info:ofi%2Fkev:fmt:book&rft.pub=Springer&ctx_tim=2023-08-06T18:10:37EEST&rft_id=info:doi%2F10.1007%2F978-981-16-8193-6&rfr_id=info:sid%2Fpure.atira.dk:pure&ctx_ver=Z39.88-2004&rft.isbn=978-981-16-8192-9&rft.btitle=Machine%20Learning&rft.genre=book&rft.aufirst=Alex&url_ctx_fmt=info:ofi%2Ffmt:kev:mtx:ctx&rft.aulast=Jung&url_ver=Z39.88-2004&rft.auinit=A&rft.date=2022" target="_blank">here</a>.
+of a (trained) model. You can read more about these design choices (for data, model and loss) in Chapter 2 of my textbook <a href="https://primo.aalto.fi/discovery/openurl?institution=358AALTO_INST&vid=358AALTO_INST:VU1&ctx_enc=info:ofi%2FencUTF-8&rft_val_fmt=info:ofi%2Fkev:fmt:book&rft.pub=Springer&ctx_tim=2023-08-06T18:10:37EEST&rft_id=info:doi%2F10.1007%2F978-981-16-8193-6&rfr_id=info:sid%2Fpure.atira.dk:pure&ctx_ver=Z39.88-2004&rft.isbn=978-981-16-8192-9&rft.btitle=Machine%20Learning&rft.genre=book&rft.aufirst=Alex&url_ctx_fmt=info:ofi%2Ffmt:kev:mtx:ctx&rft.aulast=Jung&url_ver=Z39.88-2004&rft.auinit=A&rft.date=2022" target="_blank">here</a>.
 
 # Working on the Thesis 
 
-The main thesis work might consist of several iterations of data gathering, model selection, model training, model evaluation. 
-However, do not underestimate the amount of work arising from the writing of the thesis. As a starting point, you might use the 
-template for the project reports used in some of my ML courses [here] or [here]. 
+The main thesis work might consist of several iterations of data gathering, model selection, model training and model diagnosis. Each 
+of these steps requires different skills and programming libraries, e.g., Python packages [`pandas`](https://pandas.pydata.org/) for data gathering and processing and 
+`scikiit-learn` for ML model selection and training. 
+During the iterations you might want to reflect on your design choices and diagnoses by trying to answer the peer grading questions 
+used for the student project in [CS-C3240 Machine Learning](CS_C3240_PeerReview.pdf) and [CS-E4740 Federated Learning](CS_E4740_PeerReview.pdf).
+
+Beside the actual design and implementation of ML methods and numerical experiments, another main component of the thesis work is the actual 
+writing of the thesis manuscript. To get started on the writing, you might use a template for project reports used in some of my ML courses [CS-C3240 
+Machine Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf) and [CS-E4740 Federated Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf). However, 
+these templates are meant as a support wheel and not as a fill-out form. 
 
 # The Finish Line  
 
