@@ -1,4 +1,4 @@
-# Doing a Master Thesis on Applied Machine Learning. 
+# Doing a Master Thesis on Applied Machine Learning 
 
 Do you have some topic, application or research question that you would like to explore during a master thesis? 
 If you think that machine learning methods could be useful for your thesis you might consider having [me]
@@ -7,20 +7,20 @@ If you think that machine learning methods could be useful for your thesis you m
 # What can you expect from me as your thesis supervisor ?
 
 My main expertise is on the statistical and computational aspects of machine learning (ML) from network-structured data. 
-Netowrked-data arises in many important application domains and provides a rich mathematical structure that can be exploited 
+Networked-data arises in many important application domains and provides a rich mathematical structure that can be exploited 
 for the training of ML models. Our recent work includes [this paper](https://arxiv.org/abs/2105.12769) and <a href="https://ieeexplore.ieee.org/document/9298875" target="__blank">that paper</a>. 
 
 Another recent focus of my research is the application of information theory to explainable machine learning. We have introduced a quantitative measure 
-for subjective explainability of predictions <a href="https://ieeexplore.ieee.org/document/9089200" target="__blank">in this paper</a>
+for the subjective explainability of predictions <a href="https://ieeexplore.ieee.org/document/9089200" target="__blank">in this paper</a>
 and used it to regularize the training of any given ML model  <a href="https://arxiv.org/abs/2009.01492" target="_blank">in this paper</a>. 
 
-Beside the above research threads I am also passionate to learn about novel and important applications of ML techniques. 
-I am happy to help you make good use of existing ML methods or develop novel techniques that are tailored to your specific topic. 
+Besides the above research threads, I am always eager to learn about novel and important applications of ML techniques. 
+I am happy to help you in making good use of existing ML methods or develop novel techniques that are tailored to your specific topic. 
 
-If you choose to work with me as your supervisor, you will be added to our group mailing list and receive invitations to our 
-regular group meetings. During these meetings you have the opportunity to present your work, get feedback 
-from other group members and also see what they are working on. You will also be added to our discussion forum (currently 
-in the form of slack) to ask questions and look for help. 
+If you choose to work with me as your supervisor, I will add you to our group mailing list so that you 
+receive invitations to our regular group meetings. During these meetings, you can present your work, 
+seek feedback from other group members and also see what they are working on. I will also add you 
+to our discussion forum (currently using [Slack](https://slack.com/)) where you can ask questions and look for help. 
 
 # The Start 
 
