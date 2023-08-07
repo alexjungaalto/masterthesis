@@ -42,7 +42,8 @@ for the student project in [CS-C3240 Machine Learning](CS_C3240_PeerReview.pdf) 
 
 Beside the actual design and implementation of ML methods and numerical experiments, another main component of the thesis work is the actual 
 writing of the thesis manuscript. To get started on the writing, you might use a template for project reports used in some of my ML courses [CS-C3240 
-Machine Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf) and [CS-E4740 Federated Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf). However, these templates are meant as a support wheel and not as a fill-out form. 
+Machine Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf) and [CS-E4740 Federated Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf). However, these templates are meant as a support wheel 
+and not as an application form that has to be filled out. In particular, you are very welcome to use a different outline.  
 
 Some specific aspects that you might useful when preparing the final manuscript and that I also use as guidance
 during the evaluation of your thesis: 
@@ -59,13 +60,15 @@ the deadline by which you want to submit your thesis. However, it might be very 
 which you can compare the obtained validation or test-set errors. If your ML method achieves a test-set error close the baseline level 
 then there is little point to invest significant additional time into exploring other ML methods. 
 
-- It is often difficult to determine a useful baseline for the average loss achieved by ML methods. Sources for such a baseline could 
-be simplified probabilistic models for the datapoints (such as "i.i.d." assumption) or literature that has reported the average loss achieved 
-by state-of-the art ML methods. 
+- Depending on your thesis topic it might be challenging to determine a useful baseline for the achievable peformance of ML methods. 
+One source for such a baseling could be the expected loss (risk) of an optimal estimator under a probabilistic model (such as the "i.i.d." assumption) 
+for the data points. Another source for a baseline might be any literature that has reported the average loss achieved 
+by state-of-the art ML methods. This also includes unorthodox media such as online communities like (Kaggle)[https://www.kaggle.com/]. 
 
-- Do not worry if you are not able to achieve a baseline. It is much more important that your thesis precisely explains the 
-applied ML methods and discusses the results. As a rule of thumb: I prefer a convincing explanation for why a ML methods 
-performs poorly over an ad-hoc ML method that provides impressive performance metrics.  
+- Do not worry if you are not able to achieve a specific baseline. Instead of achieving specific peformance metrics, it is much more 
+important that your thesis provides a careful analysis of the obtained results. Loosely speaking: I prefer a detailed analysis of a 
+(seemingly) poor performance of a ML method over a poor (or missing) analysis of a ML method with impressive performance 
+in numerical experiments.  
 
 - Try to do a first draft of the manuscript (or key parts) quick and dirty. There will be most likely several follow-up 
 iterations during which you can fill in the gaps and polish the text. 
@@ -73,12 +76,25 @@ iterations during which you can fill in the gaps and polish the text.
 - It might be more efficient to not write the thesis in a linear fashion. Indeed, it might be more efficient to start 
 from the Results or Conclusion and then work backwards all the way to the Abstract and Introduction. 
 
-- Try to make good use of references as a formal way to connect different parts of the thesis. 
-I like to see a strong connectivity between different parts of the thesis. 
+- Try to make good use of references using `\ref{}` and `\eqref{}` LaTex commands to connect different 
+parts of the thesis. In general, I like to see a strong connectivity between different parts of the thesis 
+using these commands. 
 
-- You might find it useful to draw a dependency graph of your thesis with nodes being individual Sections (or even paragraphs) 
-and edges obtained from references. For example node "Section 1" is connected to "Section 2" if there is a reference from 
-Section 1 to Section 2 or vice-versa (the dependency graph can be directed or undirected). 
+- I like to see each Chapter having some introductory paragraphs that explain its sections and their relations. 
+Moreover, these chapter introductions are also a great opportunity to bind the different chapters together. For 
+example, the introduction to a Chapter 3 "Methods and Materials" could explain how it builds on a Chapter 2 "Basic ML Concepts". 
+
+- You might find it useful to draw a dependency graph of your thesis with nodes being individual 
+Sections (or even paragraphs) and edges obtained from references. For example node "Chapter 1" is 
+connected to "Chapter 2" if there is a reference from Chapter 1 to Chapter 2 or vice-versa (the dependency graph can be 
+directed or undirected). 
+
+- If your thesis presents a new ML method, it should be summarized as an algorithm pseudocode (e.g., using this commaand) 
+that clearly indicates the required input (data and hyperparameters) and output.  
+
+- Do not forget to label the axes of every plot. 
+
+- Put some effort into crafting succint and informative figure captions (some advice can be found (here)[https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf]). 
 
 - Ask your friends, family or colleauges to give you feedback. Our group meetings are also a good place to obtain feedback. 
 
