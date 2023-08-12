@@ -73,8 +73,8 @@ in numerical experiments.
 - Try to do a first draft of the manuscript (or key parts) quick and dirty. There will be most likely several follow-up 
 iterations during which you can fill in the gaps and polish the text. 
 
-- It might be more efficient to not write the thesis in a linear fashion. Indeed, it might be more efficient to start 
-from the Results or Conclusion and then work backwards all the way to the Abstract and Introduction. 
+- It might be a good idea to write the thesis in a non-linear fashion. Indeed, it might be more efficient to start 
+from the final Chapter (e.g., "Discussion" or "Conclusion") and then work backwards all the way to the Abstract and Introduction. 
 
 - Try to make good use of references using `\ref{}` and `\eqref{}` LaTex commands to connect different 
 parts of the thesis. In general, I like to see a strong connectivity between different parts of the thesis 
@@ -89,12 +89,16 @@ Sections (or even paragraphs) and edges obtained from references. For example no
 connected to "Chapter 2" if there is a reference from Chapter 1 to Chapter 2 or vice-versa (the dependency graph can be 
 directed or undirected). 
 
-- If your thesis presents a new ML method, it should be summarized as an algorithm pseudocode (e.g., using this command) 
-that clearly indicates the required input (data and hyper-parameters) and output.  
+- If your thesis presents a new ML method, it should be summarized as an algorithm pseudocode ([click me](https://www.overleaf.com/learn/latex/Algorithms)). 
+An algoritm has a well-defined input (data, hyper-parameters) and output (e.g., model parameters). 
 
 - Do not forget to label the axes of every plot. 
 
 - Put some effort into crafting succinct and informative figure captions (some advice can be found [here](https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf)). 
+
+- Each numbered equation must be referred to at least once in the text ! 
+
+- Each table or figure must be referred to at least once in the text ! 
 
 - Ask your friends, family or colleagues to give you feedback. Our group meetings are also a good place to obtain feedback. 
 
