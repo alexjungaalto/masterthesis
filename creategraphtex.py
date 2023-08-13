@@ -8,111 +8,85 @@ Created on Sat Aug 12 14:07:43 2023
 
 import re
 
-def extract_sections_and_labels(tex_file_path):
-    with open(tex_file_path, 'r') as tex_file:
-        tex_content = tex_file.read()
-
-    section_pattern = r'\\section\{(.+?)\}\s*\\label\{(.+?)\}'
-    subsection_pattern = r'\\subsection\{(.+?)\}\s*\\label\{(.+?)\}'
-    # Add more patterns for other sectioning commands if needed
-
-    section_matches = re.findall(section_pattern, tex_content)
-    subsection_matches = re.findall(subsection_pattern, tex_content)
-
-    sections_and_labels = section_matches + subsection_matches
-    return sections_and_labels
-
-def find_parent_section(tex_content, label):
-    section_pattern = r'\\section\{(.+?)\}\s*\\label\{(' + re.escape(label) + r')\}'
-    subsection_pattern = r'\\subsection\{(.+?)\}\s*\\label\{(' + re.escape(label) + r')\}'
-    # Add more patterns for other sectioning commands if needed
-
-    section_match = re.search(section_pattern, tex_content)
-    subsection_match = re.search(subsection_pattern, tex_content)
-
-    if section_match:
-        return "Section: " + section_match.group(1)
-    elif subsection_match:
-        return "Subsection: " + subsection_match.group(1)
-    else:
-        return "Parent section not found"
-
-def analyze_refs(tex_file_path):
-    with open(tex_file_path, 'r') as tex_file:
-        tex_content = tex_file.read()
-
-    ref_pattern = r'\\ref\{(.+?)\}'
-    ref_labels = re.findall(ref_pattern, tex_content)
-
-    for label in ref_labels:
-        parent_section = find_parent_section(tex_content, label)
-        print(f"Reference Label: {label}, Parent Section: {parent_section}")
-        
-def extract_refs(tex_content):
-    ref_pattern = r'\\ref\{(.+?)\}'
-    ref_labels = re.findall(ref_pattern, tex_content)
-    return ref_labels
-
-def iterate_over_refs(tex_file_path):
-    with open(tex_file_path, 'r') as tex_file:
-        tex_content = tex_file.read()
-
-    ref_labels = extract_refs(tex_content)
-
-    for label in ref_labels:
-        print(f"Referenced Label: {label}")
 
 
+# replace 'test.tex' with the filename of your file 
 
-tex_file_path = 'test.tex'
-sections_and_labels = extract_sections_and_labels(tex_file_path)
+filename = 'test.tex'
 
-for section_name, label in sections_and_labels:
-    print(f"Section Name: {section_name}, Label: {label}")
+# Define the regular expressions to match chapters, sections, and subsections
+chapter_pattern = r'\\chapter\{(.+?)\}\s*\\label\{(.+?)\}'
+section_pattern = r'\\section\{(.+?)\}\s*\\label\{(.+?)\}'
+subsection_pattern = r'\\subsection\{(.+?)\}\s*\\label\{(.+?)\}'
 
-# Read the LaTeX file
-with open('test.tex', 'r') as f:
-    tex_content = f.read()
+# Read the .tex file
+with open(filename, 'r') as tex_file:
+    tex_content = tex_file.read()
 
-# Find the first occurrence of \eqref{}
-eqref_match = re.search(r'\\eqref\{.*?\}', tex_content)
+# Search for occurrences of chapters, sections, and subsections
+chapter_matches = re.finditer(chapter_pattern, tex_content)
+section_matches = re.finditer(section_pattern, tex_content)
+subsection_matches = re.finditer(subsection_pattern, tex_content)
 
-if eqref_match:
-    print("equref",eqref_match.group())
-    eqref_position = eqref_match.start()
-    
-    # Search for the previous \section{} before \eqref{}
-    section_match = re.search(r'\\section\{(.*?)\}', tex_content[:eqref_position], re.DOTALL | re.MULTILINE)
-    
-    if section_match:
-        previous_section_label = section_match.group(1)
-        print("Label of the Previous Section:", previous_section_label)
-    else:
-        print("No previous section found before \\eqref{}.")
-else:
-    print("No \\eqref{} found in the LaTeX file.")
-    
-    
-with open('test.tex', 'r') as f:
-    tex_content = f.read()
-
-# Find all occurrences of \section{}
-section_matches = re.finditer(r'\\section\{(.*?)\}', tex_content, re.DOTALL | re.MULTILINE)
-
-# Collect the locations and labels of all sections
-sections = []
+print("*********\n")
+# Store the extracted information in a list of dictionaries
+occurrences = []
+#for match in chapter_matches:
+#    occurrences.append({'type': 'chapter', 'name': match[0], 'label': match[1]})
 for match in section_matches:
-    section_label = match.group(1)
-    section_location = match.start()
-    sections.append((section_label, section_location))
+    print()
+    occurrences.append({'type': 'section', 'name': match.groups()[0], 'label': match.groups()[1], 'location':match.start()})
+for match in subsection_matches:
+    occurrences.append({'type': 'subsection', 'name': match.groups()[0], 'label': match.groups()[1], 'location':match.start()})
 
-# Print the locations and labels of all sections
-for section in sections:
-    print(f"Section Label: {section[0]}\nLocation: {section[1]}\n")
 
-text_file = open("Output.txt", "w")
+occurrences.append({'type': 'end of file', 'name': "end of file", 'label': "eof", 'location':len(tex_content)})
 
-text_file.write(tex_content[sections[-6][1]:sections[-5][1]])
+# Print the stored information
+for occurrence in occurrences:
+    print(f"Type: {occurrence['type']}, Name: {occurrence['name']}, Label: {occurrence['label']}, location: {occurrence['location']}")
 
-text_file.close()
+import pandas as pd 
+
+df = pd.DataFrame.from_dict(occurrences).sort_values(by=['location'])
+
+
+
+#print(df[['label','location']])
+
+import networkx as nx
+
+# start with an empty graph 
+G = nx.DiGraph()
+
+
+# add a separate node to the graph G for each chapter, section and subsection.  
+
+for ind in df.index[:-1]:
+  #  if ind < (len(df.index)-1): 
+    G.add_node(ind,label = df['label'][ind],startpos=df['location'][ind],endpos=df['location'][df.index[ind+1]])
+    print("idx :",ind,df['label'][ind], df['location'][ind])
+    
+# add a directed edge from node "a" to node "b" if there is a \ref{} in the chapter/section/subection 
+# "a" to the chatper/section/subsection "b" 
+
+for startnode in G.nodes(): 
+    for endnode in G.nodes():
+        # check if there is a ref in the chapter/section/subsection "startnode" to the 
+        # chapter/section/subsection "endnode" 
+        pattern = r'\\ref\{' + re.escape(G.nodes[endnode]["label"]) + r'\}'
+        nrlinks = len(re.findall(pattern,tex_content[G.nodes[startnode]["startpos"]:G.nodes[startnode]["endpos"]]))
+        print("there are ", nrlinks, "refs from ",G.nodes[startnode]["label"],"to ",G.nodes[endnode]["label"])
+        if nrlinks > 0 : 
+            G.add_edge(startnode,endnode,weight=nrlinks)
+        print(pattern)  
+        
+   
+pos=nx.spring_layout(G) 
+nx.draw(G,pos,labels=nx.get_node_attributes(G, "label"))
+labels = nx.get_edge_attributes(G,'weight')
+nx.draw_networkx_edge_labels(G,pos,edge_labels=labels)
+
+nx.write_latex(G, "my_figure.tex", pos = pos, caption="Structure of "+filename, latex_label="fig1")
+
 
