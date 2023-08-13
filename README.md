@@ -101,9 +101,7 @@ An algoritm has a well-defined input (data, hyper-parameters) and output (e.g., 
 - Put some effort into crafting succinct and informative figure captions (some advice can be found 
 [here](https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf)). 
 
-- Each numbered equation must be referred to at least once in the text ! 
-
-- Each table or figure must be referred to at least once in the text ! 
+- Each numbered equation, table or figure must be referred to at least once in the text. You might find this [package](https://ctan.org/pkg/refcheck?lang=de) useful.
 
 - Ask your friends, family or colleagues to give you feedback. Our group meetings are also a good place to obtain feedback. 
 
