@@ -51,7 +51,7 @@ Some specific aspects that you might useful when preparing the final manuscript 
 during the evaluation of your thesis: 
 
 - As your thesis is most likely about applied ML, it is important that you precisely define/formulate the ML 
-problem at hand. This formulation requires to make crystal clear to the reader what data points are (cows, clouds, measurements, time periods, ...), 
+problem at hand. This formulation requires to make crystal clear to the reader what data points are (e.g., cows, clouds, measurements, specific periods of time, atoms or partial differential equations), 
 which characteristics are used as their features and what is the ultimate quantity of interest (the label). You can 
 read more about the formulation of ML problems in Chapter 2 of [my textbook](https://primo.aalto.fi/discovery/openurl?institution=358AALTO_INST&vid=358AALTO_INST:VU1&ctx_enc=info:ofi%2FencUTF-8&rft_val_fmt=info:ofi%2Fkev:fmt:book&rft.pub=Springer&ctx_tim=2023-08-06T18:10:37EEST&rft_id=info:doi%2F10.1007%2F978-981-16-8193-6&rfr_id=info:sid%2Fpure.atira.dk:pure&ctx_ver=Z39.88-2004&rft.isbn=978-981-16-8192-9&rft.btitle=Machine%20Learning&rft.genre=book&rft.aufirst=Alex&url_ctx_fmt=info:ofi%2Ffmt:kev:mtx:ctx&rft.aulast=Jung&url_ver=Z39.88-2004&rft.auinit=A&rft.date=2022).   
 
@@ -110,11 +110,11 @@ An algoritm has a well-defined input (data, hyper-parameters) and output (e.g., 
 # The Finish Line  
 
 When you have completed the writing of the thesis (draft), I will ask you to prepare a self-assessment of your thesis. 
-This self-assessment amounts to filling out the evaluation form [here](material/Statement_template_CCIS.pdf) 
-that I will also use to evaluate your thesis. Your self-assessment should take into account the typical grade characterizations 
+This self-assessment amounts to filling out the evaluation form [here](https://mycourses.aalto.fi/pluginfile.php/1785438/mod_resource/content/1/thesis-statement-template-CCIS-SCI.pdf). 
+I will use a similar form to evaluate your thesis. Your self-assessment should take into account the typical grade characterizations 
 <a href="https://mycourses.aalto.fi/pluginfile.php/569812/course/section/105302/Typical%20characterization%20of%20theses%20grades_SCI_20161213.pdf" target="_blank">here</a> 
-and include sufficient justifications. These justifications should be as specific as possible and use references to the 
-relevant locations of your thesis. 
+and include sufficient justifications. These justifications should be as specific as possible and include references to the 
+relevant locations of your thesis (e.g., ``as discussed in Section 1.1. the main research questions is ...''). 
 
 Beside the (self-)evaluation of your thesis, finalizing your thesis typically requires to prepare a thesis presentation. 
 Students can choose between different formats of this presentation. These formats include a regular in-person 
