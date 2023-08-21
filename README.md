@@ -114,7 +114,7 @@ This self-assessment amounts to filling out the evaluation form [here](https://m
 I will use a similar form to evaluate your thesis. Your self-assessment should take into account the typical grade characterizations 
 <a href="https://mycourses.aalto.fi/pluginfile.php/569812/course/section/105302/Typical%20characterization%20of%20theses%20grades_SCI_20161213.pdf" target="_blank">here</a> 
 and include sufficient justifications. These justifications should be as specific as possible and include references to the 
-relevant locations of your thesis (e.g., ``as discussed in Section 1.1. the main research questions is ...''). 
+relevant locations of your thesis (e.g., ``as discussed in Section 1.1. the main research question of the thesis is ...''). 
 
 Beside the (self-)evaluation of your thesis, finalizing your thesis typically requires to prepare a thesis presentation. 
 Students can choose between different formats of this presentation. These formats include a regular in-person 
