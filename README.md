@@ -42,9 +42,9 @@ for data gathering and processing and  [`scikit-learn`](https://scikit-learn.org
 At times, you might want to reflect on your design choices and diagnosis by trying to answer the peer grading questions used 
 for the student project in [CS-C3240 Machine Learning](material/CS_C3240_PeerReview.pdf) and [CS-E4740 Federated Learning](material/CS_E4740_PeerReview.pdf).
 
-Beside the actual design and implementation of ML methods and numerical experiments, another main component of the thesis work is the actual 
-writing of the thesis manuscript. To get started on the writing, you might use a template for project reports used in some of my ML courses [CS-C3240 
-Machine Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf) and [CS-E4740 Federated Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf). However, these templates are meant as a support wheel 
+Beside the actual design and implementation of ML methods and numerical experiments, another main component of the thesis 
+work is the actual writing of the thesis manuscript. To get started on the writing, you might use a template for the project reports 
+used in some of my ML courses [CS-C3240 Machine Learning](material/CS_C3240_ProjectReport.pdf) and [CS-E4740 Federated Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf). However, these templates are meant as a support wheel 
 and not as an application form that has to be filled out. In particular, you are very welcome to use a different outline.  
 
 Some specific aspects that you might useful when preparing the final manuscript and that I also use as guidance
@@ -58,10 +58,11 @@ read more about the formulation of ML problems in Chapter 2 of [my textbook](htt
 - For each ML model or method that you apply to your ML problem, you must clearly state and discuss the obtained average loss on 
 training, validation (and test-) set. Comparing these average loss values is important to diagnose the ML method (see Sect. 6.6. of my textbook). 
 
-- A key challenge in applied ML is to know when to stop. For a master thesis project there is a natural stopping criterion, i.e., 
-the deadline by which you want to submit your thesis. However, it might be very helpful to have a benchmark or baseline against 
-which you can compare the obtained validation or test-set errors. If your ML method achieves a test-set error close the baseline level 
-then there is little point to invest significant additional time into exploring other ML methods. 
+- A key challenge in applied ML is to know when to stop iterating the model training/validation/adjustment cycle. For a master 
+thesis project there is a natural stopping criterion, i.e., the deadline by which you want to submit your thesis. However, it 
+might be very helpful to have a benchmark or baseline against which you can compare the obtained validation or test-set errors. 
+If your ML method achieves a test-set error close the baseline level then there is little point to invest significant additional 
+time into exploring other ML methods. 
 
 - Depending on your thesis topic it might be challenging to determine a useful baseline for the achievable performance of ML methods. 
 One source for such a baseline could be the expected loss (risk) of an optimal estimator under a probabilistic model (such as the "i.i.d." assumption) 
