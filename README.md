@@ -84,9 +84,12 @@ from the final Chapter (e.g., "Discussion" or "Conclusion") and then work backwa
 parts of the thesis. In general, I like to see a strong connectivity between different parts of the thesis 
 using these commands. 
 
-- I like to see each Chapter having some introductory paragraphs that explain its sections and their relations. 
-Moreover, these chapter introductions are also a great opportunity to bind the different chapters together. For 
-example, the introduction to a Chapter 3 "Methods and Materials" could explain how it builds on a Chapter 2 "Basic ML Concepts". 
+- It might be a good idea to explain the outline of the thesis (its Sections and their relations) in a paragraph of the Introduction. 
+
+- I like to see each Chapter/Section having some introductory paragraphs that briefly introduces its (sub-)sections 
+and explains their relations. Moreover, these chapter introductions are also a great opportunity to bind the 
+different chapters together. For example, the introduction to a Chapter 3 "Methods and Materials" could explain 
+how it builds on a Chapter 2 "Basic ML Concepts". 
 
 - You might find it useful to draw a dependency graph of your thesis with nodes being individual 
 Sections (or even paragraphs) and edges obtained from references. For example node "Chapter 1" is 
@@ -95,7 +98,7 @@ directed or undirected). You can find a simple Python program that generates suc
 LaTex ("tex") file [here](material/creategraphtex.py). 
 
 - If your thesis presents a new ML method, it should be summarized as an algorithm pseudocode ([click me](https://www.overleaf.com/learn/latex/Algorithms)). 
-An algoritm has a well-defined input (data, hyper-parameters) and output (e.g., model parameters). 
+An algorithm has a well-defined input (data, hyper-parameters) and output (e.g., model parameters). 
 
 - Do not forget to label the axes of every plot. 
 
