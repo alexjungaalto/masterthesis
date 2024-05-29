@@ -114,13 +114,13 @@ An algorithm has a well-defined input (data, hyper-parameters) and output (e.g.,
 # The Finish Line  
 
 When you have completed the writing of the thesis (draft), I will ask you to prepare a self-assessment of your thesis. 
-This self-assessment amounts to filling out the evaluation form [here](https://mycourses.aalto.fi/pluginfile.php/1785438/mod_resource/content/1/thesis-statement-template-CCIS-SCI.pdf). 
+This self-assessment amounts to filling out the evaluation form [here](material/Statement_template_CCIS.docx). 
 I will use a similar form to evaluate your thesis. Your self-assessment should take into account the typical grade characterizations 
 <a href="material/GradeCharact.pdf" target="_blank">here</a> 
 and include sufficient justifications. These justifications should be as specific as possible and include references to the 
 relevant locations of your thesis (e.g., "as discussed in Section 1.1. the main research question of the thesis is ..."). 
 
-Beside the (self-)evaluation of your thesis, finalizing your thesis typically requires to prepare a thesis presentation. 
+Besides the (self-)evaluation of your thesis, finalizing your thesis typically requires to prepare a thesis presentation. 
 Students can choose between different formats of this presentation. These formats include a regular in-person 
 presentation during a group meeting or via a pre-recorded video (see some examples in this [YouTube Playlist](https://youtube.com/playlist?list=PLrbn2dGrLJK8xt7j0tvaL0uMCdrtQ7JY2)). 
 
