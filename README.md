@@ -116,7 +116,7 @@ An algorithm has a well-defined input (data, hyper-parameters) and output (e.g.,
 When you have completed the writing of the thesis (draft), I will ask you to prepare a self-assessment of your thesis. 
 This self-assessment amounts to filling out the evaluation form [here](https://mycourses.aalto.fi/pluginfile.php/1785438/mod_resource/content/1/thesis-statement-template-CCIS-SCI.pdf). 
 I will use a similar form to evaluate your thesis. Your self-assessment should take into account the typical grade characterizations 
-<a href="https://mycourses.aalto.fi/pluginfile.php/569812/course/section/105302/Typical%20characterization%20of%20theses%20grades_SCI_20161213.pdf" target="_blank">here</a> 
+<a href="material/GradeCharact.pdf" target="_blank">here</a> 
 and include sufficient justifications. These justifications should be as specific as possible and include references to the 
 relevant locations of your thesis (e.g., "as discussed in Section 1.1. the main research question of the thesis is ..."). 
 
