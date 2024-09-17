@@ -18,19 +18,22 @@ Besides the above research threads, I am always eager to learn about novel and i
 I am happy to help you in making good use of existing ML methods or develop novel techniques that are tailored to your specific topic. 
 
 If you choose to work with me as your supervisor, I will add you to our group mailing list so that you 
-receive invitations to our regular group meetings ([YouTube Playlist](https://www.youtube.com/playlist?list=PLrbn2dGrLJK8wsi_vpr94Gzas7TzUsFNh)). 
-During these meetings, you can present your work, seek feedback from other group members and also see what 
-they are working on. Note that I will ask for your explicit consent before sharing any recording of you on my Youtube. 
-I will also add you to our discussion forum (currently using [Slack](https://slack.com/)) where you can ask questions 
-and look for help. 
+receive invitations to our regular group meetings. During these meetings, you can present your work, seek 
+feedback from other group members, and see what they are working on. Note that I will ask for your explicit 
+consent before sharing any recording of you on my YouTube. I will also add you to our discussion forum 
+(currently using [Slack](https://slack.com/)) where you can ask for help. 
+
 
 # The Start 
 
-In general, the beginning of your thesis work is the formulation of your topic as a ML problem. This formulation amounts to 
-explaining (the meaning of) data points, their features and label ([see this video](https://youtu.be/2q5jpvD-638)). You should 
-also think about one or two potential ML models that you are familiar with (e.g., you can implement them using a programming 
-language such as Python). Beside the choice of data and model, you should also think about possible performance criteria or 
-loss functions that are used to evaluate the usefulness of a (trained) model. 
+Your thesis work generally begins with formulating your topic as an ML problem. This formulation amounts to 
+explaining (the meaning of) data points, their features and labels ([see this video](https://youtu.be/2q5jpvD-638)). 
+It would help if you also thought about one or two potential ML models you are familiar with 
+(e.g., you can implement them using a programming language such as Python). Besides the choice of 
+data and model, you should also think about possible performance criteria or loss functions that 
+are used to evaluate the usefulness of a (trained) model. These criteria can include statistical 
+aspects (such as the Test-set accuracy) as well as computational aspects (e.g., can the resulting 
+ML method be implemented on a specific type of hardware?). 
 
 You can read more about these design choices (for data, model and loss) in Chapter 2 of my textbook <a href="https://primo.aalto.fi/discovery/openurl?institution=358AALTO_INST&vid=358AALTO_INST:VU1&ctx_enc=info:ofi%2FencUTF-8&rft_val_fmt=info:ofi%2Fkev:fmt:book&rft.pub=Springer&ctx_tim=2023-08-06T18:10:37EEST&rft_id=info:doi%2F10.1007%2F978-981-16-8193-6&rfr_id=info:sid%2Fpure.atira.dk:pure&ctx_ver=Z39.88-2004&rft.isbn=978-981-16-8192-9&rft.btitle=Machine%20Learning&rft.genre=book&rft.aufirst=Alex&url_ctx_fmt=info:ofi%2Ffmt:kev:mtx:ctx&rft.aulast=Jung&url_ver=Z39.88-2004&rft.auinit=A&rft.date=2022" target="_blank">here</a>. I have also prepared some lectures on these design choices which can be found [here](https://youtube.com/playlist?list=PLrbn2dGrLJK9zB7pdEd8QOtmC9-eoqoch) .
 
@@ -42,10 +45,9 @@ for data gathering and processing and  [`scikit-learn`](https://scikit-learn.org
 At times, you might want to reflect on your design choices and diagnosis by trying to answer the peer grading questions used 
 for the student project in [CS-C3240 Machine Learning](material/CS_C3240_PeerReview.pdf) and [CS-E4740 Federated Learning](material/CS_E4740_PeerReview.pdf).
 
-Beside the actual design and implementation of ML methods and numerical experiments, another main component of the thesis 
-work is the actual writing of the thesis manuscript. To get started on the writing, you might use a template for the project reports 
-used in some of my ML courses [CS-C3240 Machine Learning](material/CS_C3240_ProjectReport.pdf) and [CS-E4740 Federated Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf). However, these templates are meant as a support wheel 
-and not as an application form that has to be filled out. In particular, you are very welcome to use a different outline.  
+Besides the actual design and implementation of ML methods and numerical experiments, another main component of the thesis 
+work is the actual writing of the thesis manuscript. To get started on the writing, you might use a template for the project reports used in some of my ML courses, [CS-C3240 Machine Learning](material/CS_C3240_ProjectReport.pdf) and [CS-E4740 Federated Learning](https://github.com/alexjungaalto/FederatedLearning/blob/main/material/FederatedLearningPaper.pdf). Note that these templates are meant as a support wheel to get you started. They are not meant as a "fill-in-the-blanks-form" (such as tax authority forms). 
+I also strongly encourage you to use a different outline if you consider it useful. 
 
 Some specific aspects that you might useful when preparing the final manuscript and that I also use as guidance
 during the evaluation of your thesis: 
@@ -107,7 +109,7 @@ An algorithm has a well-defined input (data, hyper-parameters) and output (e.g.,
 
 - Each numbered equation, table or figure must be referred to at least once in the text. You might find this [package](https://ctan.org/pkg/refcheck?lang=de) useful.
 
-- Ask your friends, family or colleagues to give you feedback. Our group meetings are also a good place to obtain feedback. 
+- Ask your friends, family, colleagues or LLM to give you feedback. Our group meetings are also a good place to obtain feedback. 
 
 
 
@@ -115,7 +117,8 @@ An algorithm has a well-defined input (data, hyper-parameters) and output (e.g.,
 
 When you have completed the writing of the thesis (draft), I will ask you to prepare a self-assessment of your thesis. 
 This self-assessment amounts to filling out the evaluation form [here](material/Statement_template_CCIS.docx). 
-I will use a similar form to evaluate your thesis. Your self-assessment should take into account the typical grade characterizations 
+I will use a similar form to evaluate your thesis. Your self-assessment should take into account the 
+typical grade characterizations 
 <a href="material/GradeCharact.pdf" target="_blank">here</a> 
 and include sufficient justifications. These justifications should be as specific as possible and include references to the 
 relevant locations of your thesis (e.g., "as discussed in Section 1.1. the main research question of the thesis is ..."). 
