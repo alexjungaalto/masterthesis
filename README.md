@@ -1,8 +1,8 @@
 # Doing a Master Thesis on Applied Machine Learning 
 
 Do you have some topic, application or research question that you would like to explore during a master thesis? 
-If you think that machine learning methods could be useful for your thesis you might consider having [me]
-(https://alexjungaalto.github.io/) as your thesis supervisor. 
+If you think that machine learning methods could be useful for your thesis you might consider having <a href="https://alexjungaalto.github.io/" target="_blank">me</a> 
+as your thesis supervisor. 
 
 # What can you expect from me as your thesis supervisor ?
 
