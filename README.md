@@ -1,8 +1,6 @@
 # Doing a Master Thesis on Applied Machine Learning
 
-Applied machine learning (ML) transforms data into meaningful insights across domains—from healthcare 
-and finance to climate science and beyond. If you're interested in exploring a research question or 
-application using ML, consider having [me](https://machinelearningforall.github.io/about/) as your thesis supervisor.
+Applied machine learning (ML) transforms data into meaningful insights across domains—from healthcare and finance to climate science and beyond. If you're interested in exploring a research question or application using ML, consider having [me](https://machinelearningforall.github.io/about/) as your thesis supervisor.
 
 You can find a list of master theses currently supervised by me [here](material/MasterThesisSupervisedCurrent.pdf).
 
@@ -62,6 +60,8 @@ When preparing your thesis, ensure:
 - New methods are presented as pseudocode ([see examples](https://www.overleaf.com/learn/latex/Algorithms)).
 - Figures are clear, labeled, and have informative captions ([guidelines](https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf)).
 - References are formatted according to the [IEEE guidelines](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf).
+
+For guidance on creating effective and visually appealing figures, consider consulting Edward Tufte's classic book ["The Visual Display of Quantitative Information"](https://www.edwardtufte.com/tufte/books_vdqi).
 
 ## Iterative Writing Process
 
