@@ -61,7 +61,8 @@ When preparing your thesis, ensure:
 - Figures are clear, labeled, and have informative captions ([guidelines](https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf)).
 - References are formatted according to the [IEEE guidelines](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf).
 
-For guidance on creating effective and visually appealing figures, consider consulting Edward Tufte's classic book ["The Visual Display of Quantitative Information"](https://www.edwardtufte.com/tufte/books_vdqi).
+For guidance on creating effective and visually appealing figures, consider consulting Edward Tufte's classic 
+book ["The Visual Display of Quantitative Information"](https://www.edwardtufte.com/tufte/books_vdqi).
 
 ## Iterative Writing Process
 
@@ -95,5 +96,5 @@ I'm always eager for your feedback or questions. Reach out via:
 
 - **Email:** firstname.lastname@aalto.fi  
 - **LinkedIn:** [linkedin.com/in/aljung/](https://www.linkedin.com/in/aljung/)  
-- **Twitter:** [@alexjungaalto](https://twitter.com/alexjungaalto)  
+- **YouTube:** [@alexjung111](https://www.youtube.com/@alexjung111)  
 - **GitHub:** Use issues or pull requests.
