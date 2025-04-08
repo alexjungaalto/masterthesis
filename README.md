@@ -1,17 +1,20 @@
 # Doing a Master Thesis on Applied Machine Learning 
 
-Do you have some topic, application or research question that you would like to explore during a master thesis? 
-If you think that machine learning methods could be useful for your thesis you might consider having <a href="https://alexjungaalto.github.io/" target="_blank">me</a> 
+Do you have some topic, application or research question that you would like to explore 
+during a master thesis? If you think that machine learning methods could be useful for 
+your thesis you might consider having <a href="https://machinelearningforall.github.io/about/" target="_blank">me</a> 
 as your thesis supervisor. 
 
 # What can you expect from me as your thesis supervisor ?
 
-My main expertise is on the statistical and computational aspects of machine learning (ML) from network-structured data. 
-Networked-data arises in many important application domains and provides a rich mathematical structure that can be exploited 
-for the training of ML models. Our recent work includes [this paper](https://arxiv.org/abs/2105.12769) and <a href="https://ieeexplore.ieee.org/document/9298875" target="__blank">that paper</a>. 
+My main expertise is on the statistical and computational aspects of machine learning (ML) 
+from network-structured data. Networked-data arises in many important application domains 
+and provides a rich mathematical structure that can be exploited for the training of ML models. 
+Our recent work includes [this paper](https://arxiv.org/abs/2105.12769) and <a href="https://ieeexplore.ieee.org/document/9298875" target="__blank">that paper</a>. 
 
-Another recent focus of my research is the application of information theory to explainable ML. We have introduced a quantitative measure 
-for the subjective explainability of predictions <a href="https://ieeexplore.ieee.org/document/9089200" target="__blank">in this paper</a>
+Another recent focus of my research is the application of information theory to explainable ML. 
+We have introduced a quantitative measure for the subjective explainability of a ML model 
+<a href="https://ieeexplore.ieee.org/document/9089200" target="__blank">in this paper</a>
 and used it to regularize the training of any given ML model  <a href="https://arxiv.org/abs/2009.01492" target="_blank">in this paper</a>. 
 
 Besides the above research threads, I am always eager to learn about novel and important applications of ML techniques. 
@@ -20,9 +23,7 @@ I am happy to help you in making good use of existing ML methods or develop nove
 If you choose to work with me as your supervisor, I will add you to our group mailing list so that you 
 receive invitations to our regular group meetings. During these meetings, you can present your work, seek 
 feedback from other group members, and see what they are working on. Note that I will ask for your explicit 
-consent before sharing any recording of you on my YouTube. I will also add you to our discussion forum 
-(currently using [Slack](https://slack.com/)) where you can ask for help. 
-
+consent before sharing any recording of you on my YouTube. 
 
 # The Start 
 
@@ -86,7 +87,7 @@ from the final Chapter (e.g., "Discussion" or "Conclusion") and then work backwa
 parts of the thesis. In general, I like to see a strong connectivity between different parts of the thesis 
 using these commands. 
 
-- It might be a good idea to explain the outline of the thesis (its Sections and their relations) in a paragraph of the Introduction. 
+- You need to explain the outline of the thesis (its Sections and their relations) in a paragraph of the Introduction. 
 
 - I like to see each Chapter/Section having some introductory paragraphs that briefly introduces its (sub-)sections 
 and explains their relations. Moreover, these chapter introductions are also a great opportunity to bind the 
@@ -104,12 +105,20 @@ An algorithm has a well-defined input (data, hyper-parameters) and output (e.g.,
 
 - Do not forget to label the axes of every plot. 
 
+- Put some effort into crafting pleasant figures. You can find some advice on how to to this in this 
+[book](https://primo.aalto.fi/discovery/fulldisplay?vid=358AALTO_INST:VU1&docid=alma992812874406526&lang=en&context=SP) 
+or related lecture notes [click me](https://ics.uci.edu/~djpatter/classes/2012_09_UNISTU3/Lectures/). 
+
 - Put some effort into crafting succinct and informative figure captions (some advice can be found 
 [here](https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf)). 
 
-- Each numbered equation, table or figure must be referred to at least once in the text. You might find this [package](https://ctan.org/pkg/refcheck?lang=de) useful.
+- Each numbered equation, table or figure must be referred to at least once in the text. You might 
+find this [package](https://ctan.org/pkg/refcheck?lang=de) useful.
 
-- Ask your friends, family, colleagues or LLM to give you feedback. Our group meetings are also a good place to obtain feedback. 
+- For the use of references, pls follow the guide here: [IEEE Reference Guide](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf). 
+
+- Ask your friends, family, colleagues or some LLM to give you feedback. Our group meetings are also 
+a good place to obtain feedback. 
 
 
 
