@@ -88,6 +88,7 @@ Before submitting your thesis, verify:
 Upon completion:
 
 - Complete a detailed self-assessment ([evaluation form](material/Statement_template_CCIS.docx)), clearly referencing sections of your thesis.
+- Review the [grade characterization PDF](material/GradeCharact.pdf) for guidance on what constitutes a high-quality thesis.
 - Prepare your thesis presentation (live during a group meeting or as a recorded video; see [examples here](https://youtube.com/playlist?list=PLrbn2dGrLJK8xt7j0tvaL0uMCdrtQ7JY2)).
 
 ## Feedback and Questions
