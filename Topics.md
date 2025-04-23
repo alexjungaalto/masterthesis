@@ -1,70 +1,74 @@
 # 🎓 Master Thesis Topic Proposal  
-## Political Choices and Public Health Behavior: A Data-Driven Study of Austria
+## Political Influence and Everyday Life: A Data-Driven Analysis of Childcare Provision in Rural Austria
 
 ![data.gv.at logo](datagvat.png)
 
-**Supervisor:** _[Your Name Here]_  
+**Supervisor:** Alexander Jung, Associate Professor for Machine Learning
 **Affiliation:** _Aalto University, Department of Computer Science_  
-**Contact:** [your.email@aalto.fi](mailto:your.email@aalto.fi)
 
 ---
 
 ### 🧭 Motivation
 
-We Europeans are fortunate to live in democratic societies where we can choose our political leaders. But what are the real-world consequences of our choices? And on the flip side, what influences the decisions we make at the ballot box?
+In democratic Europe, we enjoy the freedom to choose our political representatives. But how do these political choices affect 
+everyday quality of life in concrete, measurable ways? And conversely, what real-life needs shape our political preferences?
 
-This thesis explores the interconnection between political preferences and aspects of everyday life, with a focus on public health behavior during and after the Covid-19 pandemic. Specifically, it investigates whether and how vaccination rates across Austrian municipalities relate to voting outcomes in elections held during and after the pandemic.
+This thesis explores the connection between **local political representation** and the **provision of essential services**, using 
+the availability of **childcare places in rural Austrian municipalities** as a case in point. The central idea is to analyze whether — 
+and how — the local or regional political landscape supports or hinders investments in childcare infrastructure, especially outside urban centers.
 
 ---
 
 ### ❓ Research Questions
 
-- How are Covid-19 vaccination rates across Austrian municipalities correlated with election results during the pandemic (e.g., 2020–2021)?
-- How did these patterns evolve in elections held after the height of the pandemic?
-- To what extent do socioeconomic and regional factors mediate or explain the relationship between public health behavior and political preferences?
+- How does the availability of childcare in rural areas correlate with political leadership at the municipal or state level?
+- Are municipalities governed by certain political parties more likely to invest in expanding childcare services?
+- Can changes in childcare provision be linked to changes in voting behavior or shifts in political control?
+- What socioeconomic factors mediate this relationship (e.g., population aging, female labor participation, economic development)?
 
 ---
 
 ### 🧪 Methodology
 
-This thesis takes a **data-driven approach**, combining:
+This thesis adopts a **data-driven approach**, including:
 
-- Exploratory data analysis and statistical modeling
-- Geospatial visualization and clustering of municipalities
-- Regression analysis and hypothesis testing
-- (Optional) Causal inference techniques such as matching or instrumental variables
+- Data aggregation from open government datasets
+- Statistical correlation and regression analysis
+- Temporal comparisons (e.g., before/after election cycles)
+- (Optional) Causal inference tools to assess policy effects
 
-Tools: Python, pandas, geopandas, matplotlib, seaborn
+Tools: Python, pandas, geopandas, matplotlib, seaborn, and optionally statsmodels or scikit-learn.
 
 ---
 
 ### 📊 Main Data Source
 
-The primary source of data for this thesis is [**data.gv.at**](https://data.gv.at/en/), Austria’s official open government data platform. This portal provides access to:
+The primary source for this research is Austria’s open government portal: [**data.gv.at**](https://data.gv.at/en/). Available datasets include:
 
-- Covid-19 vaccination rates at the municipality level
-- Electoral outcomes from national and regional elections
-- Demographic, socioeconomic, and health-related data
-- Geospatial boundary files (shapefiles) for visualization and analysis
+- Number of publicly funded childcare places by municipality and year
+- Demographic and labor market statistics (e.g., population structure, employment rates)
+- Election results by municipality
+- Political party control at municipal and regional level
+- Spatial data (municipality boundaries and regional identifiers)
 
-Other sources (such as Statistik Austria and Eurostat) may be used to enrich the dataset when necessary.
+Other sources such as Statistik Austria or Eurostat may be used to complement this data.
 
 ---
 
 ### 🎯 Expected Outcomes
 
-The thesis aims to uncover whether political choices and health behaviors are intertwined in measurable, spatially localized ways. The results could inform discussions around public trust, political polarization, and health communication in democratic societies.
+The thesis aims to quantify the relationship between political leadership and the availability of early childhood care. It may reveal patterns of political prioritization (or neglect) in rural Austria and help us better understand how governance shapes access to critical life services — with broader implications for voter behavior and trust in democratic institutions.
 
 ---
 
 ### ✅ Recommended Background
 
-This thesis is suitable for students interested in:
+This topic is suitable for students with interests in:
 
-- Data science, political science, or public policy
-- Applied statistics and data analysis
-- Social impact and interdisciplinary research
+- Political data science and public service analytics
+- Social infrastructure and regional development
+- Interdisciplinary research across political science, sociology, and data analysis
 
-A solid background in Python and data analysis is recommended.
+A strong foundation in Python and statistical methods is recommended.
 
 ---
