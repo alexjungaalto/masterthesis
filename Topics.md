@@ -1,7 +1,7 @@
 # 🎓 Master Thesis Topic Proposal  
 ## Political Influence and Everyday Life: A Data-Driven Analysis of Childcare Provision in Rural Austria
 
-![data.gv.at logo](datagvat.png)
+<img src="datagvat.png" alt="data.gv.at logo" width="200"/>
 
 **Supervisor:** Alexander Jung, Associate Professor for Machine Learning
 **Affiliation:** _Aalto University, Department of Computer Science_  
