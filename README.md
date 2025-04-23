@@ -4,6 +4,8 @@ Applied machine learning (ML) transforms data into meaningful insights across do
 
 You can find a list of master theses currently supervised by me [here](material/MasterThesisSupervisedCurrent.pdf).
 
+You can find potential topics for a master thesis [here](Topics)
+
 ## What can you expect from me as your supervisor?
 
 As your supervisor, you can expect me to:
@@ -12,6 +14,8 @@ As your supervisor, you can expect me to:
 - Advise you on suitable ML methods, tools, and resources.
 - Provide regular feedback during our group meetings.
 - Guide you through thesis writing and evaluation.
+
+
 
 ### My Research Interests
 
