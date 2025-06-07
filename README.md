@@ -15,18 +15,6 @@ As your supervisor, you can expect me to:
 - Provide regular feedback during our weekly group meetings.
 - Guide you through thesis writing and evaluation.
 
-
-
-### My Research Interests
-
-My expertise includes:
-
-- **Networked data analysis:** Leveraging relational structures in data ([recent example](https://arxiv.org/abs/2105.12769)).
-- **Explainable ML:** Using information theory to measure and improve interpretability ([example paper](https://ieeexplore.ieee.org/document/9089200)).
-- **Applied ML:** Exploring novel and impactful applications of ML techniques.
-
-I'm also open to supervising projects outside these areas if the topic is exciting and well-defined.
-
 ## Getting Started
 
 To start your thesis:
@@ -67,6 +55,41 @@ When preparing your thesis, ensure:
 
 For guidance on creating effective and visually appealing figures, consider consulting Edward Tufte's classic 
 book ["The Visual Display of Quantitative Information"](https://www.edwardtufte.com/tufte/books_vdqi).
+
+## Typesetting Mathematical Texts
+
+If your thesis includes equations or derivations, follow these typesetting conventions:
+
+### Display vs Inline Math
+
+- Use **inline math** (`$...$`) for short expressions:  
+  `The loss is defined as $L(\theta)$.`
+- Use **display math** (`\[ ... \]` or `equation` environment) for standalone equations that are central or referenced.
+
+### Punctuation with Displayed Equations
+
+- **Punctuate displayed math as part of the sentence**:
+  ```latex
+  \[
+  L(\theta) = \frac{1}{n} \sum_{i=1}^n \ell(f(x_i;\theta), y_i).
+  \]
+
+### References
+
+- AMS Author Guide: https://www.ams.org/publications/authors/tex/amslatex  
+- Edward Tufte: *The Visual Display of Quantitative Information*  
+- George Grätzer: *More Math Into LaTeX*
+
+### Classic References by Donald Knuth
+
+- Donald E. Knuth — *The TeXbook* (Addison-Wesley, 1984)  
+The definitive guide to the TeX typesetting system by its creator. Covers low-level control of math mode and spacing.
+
+- Donald E. Knuth — *Mathematical Writing*  
+Co-authored with Tracy Larrabee and Paul Roberts. Practical guide on writing math clearly and correctly.  
+[PDF available here](https://tex.loria.fr/typographie/mathwriting.pdf)
+
+
 
 ## Iterative Writing Process
 
