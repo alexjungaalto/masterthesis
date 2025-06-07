@@ -76,18 +76,11 @@ If your thesis includes equations or derivations, follow these typesetting conve
 
 ### References
 
-- AMS Author Guide: https://www.ams.org/publications/authors/tex/amslatex  
-- Edward Tufte: *The Visual Display of Quantitative Information*  
-- George Grätzer: *More Math Into LaTeX*
+- IEEE Style Guide: [Editing Mathematics for IEEE Style](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/Editing-Mathematics.pdf)
 
-### Classic References by Donald Knuth
-
-- Donald E. Knuth — *The TeXbook* (Addison-Wesley, 1984)  
-The definitive guide to the TeX typesetting system by its creator. Covers low-level control of math mode and spacing.
-
-- Donald E. Knuth — *Mathematical Writing*  
-Co-authored with Tracy Larrabee and Paul Roberts. Practical guide on writing math clearly and correctly.  
-[PDF available here](https://tex.loria.fr/typographie/mathwriting.pdf)
+- Donald E. Knuth, Tracy Larrabee, and Paul M. Roberts — Mathematical Writing
+A concise and insightful guide on how to write mathematics clearly and precisely.
+[Available as a free PDF](https://tex.loria.fr/typographie/mathwriting.pdf)
 
 
 
