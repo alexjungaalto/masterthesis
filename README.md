@@ -48,7 +48,7 @@ When preparing your thesis, ensure:
 - Your results are thoroughly analyzed and clearly presented.
 - Appropriate baselines or benchmarks are used (e.g., [Kaggle competitions](https://kaggle.com)).
 - Chapters and sections are clearly structured, with introductory paragraphs explaining content and connections.
-- Equations, figures, and tables are consistently referenced using LaTeX commands (`\ref{}`, `\eqref{}`).
+- Equations, figures, and tables are consistently referenced using LaTeX commands (`\ref{}`, `\eqref{}`). **Only number math displays that are referenced in the text; unreferenced equations should remain unnumbered.**
 - New methods are presented as pseudocode ([see examples](https://www.overleaf.com/learn/latex/Algorithms)).
 - Figures are clear, labeled, and have informative captions ([guidelines](https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf)).
 - References are formatted according to the [IEEE guidelines](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf).
