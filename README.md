@@ -117,7 +117,7 @@ Upon completion:
 - Review the [grade characterization PDF](material/GradeCharact.pdf) for guidance on what constitutes a high-quality thesis.
 - Prepare your thesis presentation (live during a group meeting or as a recorded video; see [examples here](https://youtube.com/playlist?list=PLrbn2dGrLJK8xt7j0tvaL0uMCdrtQ7JY2)).
 
-I discus my approach to grading master theses in this [YouTube video]()
+I discus my approach to grading master theses in this [YouTube video](https://youtu.be/HWHWAy9sOFk?si=-6sPplFx0Gvj0SFJ)
 
 ## Feedback and Questions
 
