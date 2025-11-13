@@ -1,6 +1,9 @@
 # Doing a Master Thesis on Applied Machine Learning
 
-Applied machine learning (ML) transforms data into meaningful insights across domains—from healthcare and finance to climate science and beyond. If you're interested in exploring a research question or application using ML, consider having [me](https://machinelearningforall.github.io/about/) as your thesis supervisor.
+Applied machine learning (ML) transforms data into meaningful insights across 
+domains—from healthcare and finance to climate science and beyond. If you're 
+interested in exploring a research question or application using ML, consider 
+having [me](https://machinelearningforall.github.io/about/) as your thesis supervisor.
 
 You can find a list of master theses currently supervised by me [here](material/MasterThesisSupervisedCurrent.pdf).
 
@@ -56,6 +59,8 @@ When preparing your thesis, ensure:
 For guidance on creating effective and visually appealing figures, consider consulting Edward Tufte's classic 
 book ["The Visual Display of Quantitative Information"](https://www.edwardtufte.com/tufte/books_vdqi).
 
+I also strongly encourage you to make use of our open-source Aalto Dictionary of Machine Learning which provides tex code for core ML terms and figures. You can find the dictionary here: [click me](https://github.com/AaltoDictionaryofML/AaltoDictionaryofML.github.io). 
+
 ## Typesetting Mathematical Texts
 
 If your thesis includes equations or derivations, follow these typesetting conventions:
@@ -76,12 +81,13 @@ If your thesis includes equations or derivations, follow these typesetting conve
 
 ### References
 
+- [Ten Simple Rules for Mathematical Writing](https://www.mit.edu/~dimitrib/Ten_Rules.html) by D. Bertsekas. 
+
 - IEEE Style Guide: [Editing Mathematics for IEEE Style](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/Editing-Mathematics.pdf)
 
 - Donald E. Knuth, Tracy Larrabee, and Paul M. Roberts — Mathematical Writing
 A concise and insightful guide on how to write mathematics clearly and precisely.
 [Available as a free PDF](https://tex.loria.fr/typographie/mathwriting.pdf)
-
 
 
 ## Iterative Writing Process
@@ -110,6 +116,8 @@ Upon completion:
 - Complete a detailed self-assessment ([evaluation form](material/Statement_template_CCIS.docx)), clearly referencing sections of your thesis.
 - Review the [grade characterization PDF](material/GradeCharact.pdf) for guidance on what constitutes a high-quality thesis.
 - Prepare your thesis presentation (live during a group meeting or as a recorded video; see [examples here](https://youtube.com/playlist?list=PLrbn2dGrLJK8xt7j0tvaL0uMCdrtQ7JY2)).
+
+I discus my approach to grading master theses in this [YouTube video]()
 
 ## Feedback and Questions
 
