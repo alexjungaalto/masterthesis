@@ -37,7 +37,7 @@ Your thesis typically involves iterative steps of:
 - **Data collection and preprocessing** using [pandas](https://pandas.pydata.org/).
 - **Model selection, training, and evaluation** using [scikit-learn](https://scikit-learn.org/).
 
-To validate your methods, consider reviewing peer-grading guidelines used in:
+To assess your methods, consider the relevant peer-review questions used in:
 
 - [Machine Learning course](material/CS_C3240_PeerReview.pdf)
 - [Federated Learning course](material/CS_E4740_PeerReview.pdf)
@@ -46,8 +46,7 @@ To validate your methods, consider reviewing peer-grading guidelines used in:
 
 When preparing your thesis, ensure:
 
-- The ML problem is precisely defined (data, features, labels).  
-  *(Check definitions using the [Aalto Dictionary of ML](https://aaltodictionaryofml.github.io/))*.
+- The ML problem is precisely defined: you make crystal clear what data points, their features and labels are. You explicitly state the loss function used to measure the quality of a prediction, etc. *(Check definitions using the [Aalto Dictionary of ML](https://aaltodictionaryofml.github.io/))*.
 - Your results are thoroughly analyzed and clearly presented.
 - Appropriate baselines or benchmarks are used (e.g., [Kaggle competitions](https://kaggle.com)).
 - Chapters and sections are clearly structured, with introductory paragraphs explaining content and connections.
@@ -60,6 +59,15 @@ For guidance on creating effective and visually appealing figures, consider cons
 book ["The Visual Display of Quantitative Information"](https://www.edwardtufte.com/tufte/books_vdqi).
 
 I also strongly encourage you to make use of our open-source Aalto Dictionary of Machine Learning which provides tex code for core ML terms and figures. You can find the dictionary here: [click me](https://github.com/AaltoDictionaryofML/AaltoDictionaryofML.github.io). 
+
+
+### References
+
+- [Ten Simple Rules for Mathematical Writing](https://www.mit.edu/~dimitrib/Ten_Rules.html) by D. Bertsekas. 
+
+- E. Tufte, "The Visual Display of Quantitative Information", 2nd Edition 2001.
+
+- A. Jung et.al, "The Aalto Dictionary of Machine Learning," Aalto University. [Click here](https://aaltodictionaryofml.github.io/) for the Github work. 
 
 ## Typesetting Mathematical Texts
 
@@ -80,8 +88,6 @@ If your thesis includes equations or derivations, follow these typesetting conve
   \]
 
 ### References
-
-- [Ten Simple Rules for Mathematical Writing](https://www.mit.edu/~dimitrib/Ten_Rules.html) by D. Bertsekas. 
 
 - IEEE Style Guide: [Editing Mathematics for IEEE Style](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/Editing-Mathematics.pdf)
 
