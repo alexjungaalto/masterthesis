@@ -43,7 +43,7 @@ such as peer-reviewed journal articles, reputable conference papers, and establi
 textbooks. Suitable sources can be found in major academic databases, including:
 
 - **Aalto University Library** (access to licensed databases and books):  
-  https://www.aalto.fi/en/services/aalto-university-library
+ https://primo.aalto.fi/discovery/search?vid=358AALTO_INST:VU1&lang=en
 - **IEEE Xplore**:  
   https://ieeexplore.ieee.org  
 - **ACM Digital Library**:  
