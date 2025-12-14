@@ -42,15 +42,22 @@ For your thesis work, you should primarily rely on **high-quality scientific ref
 such as peer-reviewed journal articles, reputable conference papers, and established 
 textbooks. Suitable sources can be found in major academic databases, including:
 
-- **IEEE Xplore**: https://ieeexplore.ieee.org  
-- **ACM Digital Library**: https://dl.acm.org  
-- **Scopus**: https://www.scopus.com  
-- **Web of Science**: https://www.webofscience.com  
+- **Aalto University Library** (access to licensed databases and books):  
+  https://www.aalto.fi/en/services/aalto-university-library
+- **IEEE Xplore**:  
+  https://ieeexplore.ieee.org  
+- **ACM Digital Library**:  
+  https://dl.acm.org  
+- **Scopus**:  
+  https://www.scopus.com  
+- **Web of Science**:  
+  https://www.webofscience.com  
 
 To assess the standing and quality of journals and conferences, you may consult the **JUFO ranking system**:  
 https://jfp.csc.fi/jufoportal
 
-If you are uncertain about the quality or relevance of a reference, you are encouraged to ask me for guidance on appropriate and credible sources.
+If you are uncertain about the quality or relevance of a reference, you are encouraged to 
+ask me for guidance on appropriate and credible sources.
 
 
 ### References 
