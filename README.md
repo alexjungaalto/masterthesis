@@ -148,15 +148,41 @@ Before submitting your thesis, verify:
 - [ ] Citations formatted correctly
 - [ ] Self-assessment form completed ([form here](material/Statement_template_CCIS.docx))
 
-## Thesis Evaluation and Presentation
+## Thesis Presentation and Self-Evaluation
 
-Upon completion:
+After you have a completed the writing of the thesis,
 
-- Complete a detailed self-assessment ([evaluation form](material/Statement_template_CCIS.docx)), clearly referencing sections of your thesis.
+- Prepare a detailed self-assessment ([evaluation form](material/Statement_template_CCIS.docx)), clearly referencing sections of your thesis.
 - Review the [grade characterization PDF](material/GradeCharact.pdf) for guidance on what constitutes a high-quality thesis.
+- I offer you the opportunity to discuss your self-assessment in a meeting. 
 - Prepare your thesis presentation (live during a group meeting or as a recorded video; see [examples here](https://youtube.com/playlist?list=PLrbn2dGrLJK8xt7j0tvaL0uMCdrtQ7JY2)).
 
-I discuss my approach to grading master’s theses in this [YouTube video](https://youtu.be/HWHWAy9sOFk?si=-6sPplFx0Gvj0SFJ)
+## Thesis Evaluation, Decision, and Appeals (Process Overview) [YouTube video](https://youtu.be/HWHWAy9sOFk?si=-6sPplFx0Gvj0SFJ)
+
+### How the grade is decided
+
+- Your master’s thesis is evaluated according to the **official programme and school-level criteria**.
+- I prepare a written evaluation and a **grade proposal** based on these criteria.
+- The **final grade is confirmed by the programme or school** following Aalto University’s formal procedures.
+- The detailed grading principles are described in the official **grade characterization document**, which you are encouraged to study carefully before submission.
+
+### Transparency and feedback
+
+- You have the right to **see the evaluation criteria** applied to your thesis.
+- You may request clarification on how your thesis was assessed and how the final grade was formed.
+- The **self-assessment form** is an important part of this process: it helps align your own evaluation with the grading criteria and makes the assessment more transparent.
+
+### Appealing a grading decision
+
+- If you believe that an error has occurred in the evaluation, you have the right to **request rectification (appeal)** of the grading decision.
+- Appeals must be submitted **within 14 days** of being notified of the grade or of being given the opportunity to review the evaluation and grading criteria.
+- Appeals follow a **formal university-level procedure**; details and instructions are provided by Aalto University.
+
+[Academic Appeals at Aalto University](https://www.aalto.fi/en/applications-instructions-and-guidelines/academic-appeals)
+
+**Practical advice:** If you are unsure whether an appeal is appropriate, first discuss the evaluation with the supervisor or examiner. Many issues can be clarified at this stage without initiating a formal appeal.
+
+
 
 ## Feedback and Questions
 
