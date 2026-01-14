@@ -124,6 +124,8 @@ If your thesis includes equations or derivations, follow these typesetting conve
 A concise and insightful guide on how to write mathematics clearly and precisely.
 [Available as a free PDF](https://tex.loria.fr/typographie/mathwriting.pdf)
 
+- AMS Style Guide: [AMS Style Guide - Journals](https://www.ams.org/publications/authors/AMS-StyleGuide-online.pdf)
+
 - IEEE Style Guide: [Editing Mathematics for IEEE Style](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/Editing-Mathematics.pdf)
 
 - [IEEE EDITORIAL STYLE MANUAL FOR AUTHORS](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE-Editorial-Style-Manual-for-Authors.pdf), 2024
