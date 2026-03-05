@@ -111,12 +111,6 @@ The key principles are summarised below.
 - **Always disclose** when and how you used AI tools. In a thesis, this belongs in a dedicated statement — not in the Methods section, which is reserved for your actual research methods.
 - Record which tool, version, and settings you used so that your process is transparent (exact reproduction via online services is often impossible as they update frequently).
 
-### Academic Integrity
-
-- Do not present AI-generated text as your own original writing.
-- Do not use AI to complete tasks where independent work is required — check assignment and thesis instructions if uncertain.
-- Do not process another student's work through an AI system without their consent.
-
 ### Data Protection and IP
 
 - Do not upload personal data, confidential data, or unpublished manuscripts to public AI services — this may violate GDPR.
@@ -137,7 +131,6 @@ AI tools can support your work without compromising integrity when used for:
 
 - Your own critical analysis and interpretation of results
 - Independent evaluation of source quality and relevance
-- Original contributions to knowledge — which is what a master's thesis requires
 
 ## Practical Workflow
 
