@@ -268,7 +268,7 @@ After completing the thesis manuscript:
 ### Writing and Typesetting
 
 - D. Bertsekas, [Ten Simple Rules for Mathematical Writing](https://www.mit.edu/~dimitrib/Ten_Rules.html)
-- D. E. Knuth, T. Larrabee, and P. M. Roberts, [Mathematical Writing](https://tex.loria.fr/typographie/mathwriting.pdf)
+- D. E. Knuth, T. Larrabee, and P. M. Roberts, [Mathematical Writing](https://mirror.gutenberg-asso.fr/tex.loria.fr/typographie/mathwriting.pdf)
 - E. Tufte, *The Visual Display of Quantitative Information*, 2nd ed., 2001.
 - [AMS Style Guide for Journals](https://www.ams.org/publications/authors/AMS-StyleGuide-online.pdf)
 - [IEEE Editing Mathematics Style Guide](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/Editing-Mathematics.pdf)
