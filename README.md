@@ -2,7 +2,7 @@
 
 This repository contains guidance for students doing a master's thesis supervised by [Alex Jung](https://machinelearningforall.github.io/about/) at Aalto University.
 
-- Currently supervised theses: [MasterThesisSupervisedCurrent.pdf](material/MasterThesisSupervisedCurrent.pdf)
+- Currently supervised theses: [theses.md](theses.md)
 - Available topics: [Topics.md](Topics.md)
 
 ---
