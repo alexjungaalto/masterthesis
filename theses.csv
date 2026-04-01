@@ -1,17 +1,17 @@
 number,author,title,university,status,date,industry,url
-1,B. Zheng,"Exploring the structure in deep networks: Group, manifold and category theory",Aalto,completed,Dec. 2025,,https://urn.fi/URN:NBN:fi:aalto-202601221854
-2,V. Niemi,Diagnosing and improving a maintenance contract churn prediction model,Aalto,completed,Dec. 2025,,https://urn.fi/URN:NBN:fi:aalto-202601221885
-3,A. Hamalainen,Improving retrieval-augmented generation with LLM-as-a-judge evaluation,Aalto,completed,Nov. 2025,,https://urn.fi/URN:NBN:fi:aalto-202512179401
-4,M. Shaikhum,FedSock & FedBlue: Scalable decentralized federated learning systems with generalized total variation minimization,Aalto,completed,Nov. 2025,,https://urn.fi/URN:NBN:fi:aalto-202512169317
-5,S. Rachidi,Explainable machine learning in cancer survival prediction — A case study of myeloma patients,Aalto,completed,July 2025,,https://urn.fi/URN:NBN:fi:aalto-202508186254
-6,C. Fait,Designing a data pipeline for total column greenhouse gas measurements with portable EM27/SUN spectrometers,Aalto,completed,July 2025,,https://urn.fi/URN:NBN:fi:aalto-202508186244
-7,L. Tuominen,Robust tap gesture recognition on wearable devices with domain adaptation,Aalto,completed,July 2025,,https://urn.fi/URN:NBN:fi:aalto-202508206651
-8,M. Malkki,Predicting vehicle price,Aalto,ongoing,,,
-9,M. Saska,Forecasting seasonality in financial data with machine learning methods,Aalto,ongoing,,,
-10,J. Naveed,Optimized code generation in BIM with retrieval-augmented LLMs,Aalto,completed,"Feb. 2025",,https://urn.fi/URN:NBN:fi:aalto-202505203933
-11,E. Kohvakka,The role of analyst sentiment in excess return forecasting and its implications for investors,Aalto,completed,"Apr. 2025",,https://urn.fi/URN:NBN:fi:aalto-202506174917
-12,A. Sarkima,Graph-based anomaly detection: Evaluating Logs2Graphs with non-benchmark logs,Aalto,completed,"Mar. 2025",,https://urn.fi/URN:NBN:fi:aalto-202505203903
-13,O. Lauronen,Unsupervised semantic matching of support tickets,Aalto,completed,"May 2025",Polycon Oy,https://urn.fi/URN:NBN:fi:aalto-202506174861
+1,M. Malkki,Predicting vehicle price,Aalto,ongoing,,,
+2,M. Saska,Forecasting seasonality in financial data with machine learning methods,Aalto,ongoing,,,
+3,B. Zheng,"Exploring the structure in deep networks: Group, manifold and category theory",Aalto,completed,Dec. 2025,,https://urn.fi/URN:NBN:fi:aalto-202601221854
+4,V. Niemi,Diagnosing and improving a maintenance contract churn prediction model,Aalto,completed,Dec. 2025,,https://urn.fi/URN:NBN:fi:aalto-202601221885
+5,A. Hamalainen,Improving retrieval-augmented generation with LLM-as-a-judge evaluation,Aalto,completed,Nov. 2025,,https://urn.fi/URN:NBN:fi:aalto-202512179401
+6,M. Shaikhum,FedSock & FedBlue: Scalable decentralized federated learning systems with generalized total variation minimization,Aalto,completed,Nov. 2025,,https://urn.fi/URN:NBN:fi:aalto-202512169317
+7,S. Rachidi,Explainable machine learning in cancer survival prediction — A case study of myeloma patients,Aalto,completed,July 2025,,https://urn.fi/URN:NBN:fi:aalto-202508186254
+8,C. Fait,Designing a data pipeline for total column greenhouse gas measurements with portable EM27/SUN spectrometers,Aalto,completed,July 2025,,https://urn.fi/URN:NBN:fi:aalto-202508186244
+9,L. Tuominen,Robust tap gesture recognition on wearable devices with domain adaptation,Aalto,completed,July 2025,,https://urn.fi/URN:NBN:fi:aalto-202508206651
+10,O. Lauronen,Unsupervised semantic matching of support tickets,Aalto,completed,May 2025,Polycon Oy,https://urn.fi/URN:NBN:fi:aalto-202506174861
+11,E. Kohvakka,"The role of analyst sentiment in excess return forecasting, and its implications for investors",Aalto,completed,Apr. 2025,,https://urn.fi/URN:NBN:fi:aalto-202506174917
+12,A. Sarkima,Graph-based anomaly detection: Evaluating Logs2Graphs with non-benchmark logs,Aalto,completed,Mar. 2025,,https://urn.fi/URN:NBN:fi:aalto-202505203903
+13,J. Naveed,Optimized code generation in BIM with retrieval-augmented LLMs,Aalto,completed,Feb. 2025,,https://urn.fi/URN:NBN:fi:aalto-202505203933
 14,P. Wiwatphonthana,Machine Learning Assisted Dynamic Scheduling for Energy Efficient Serverless Cloud Workloads,Aalto,completed,Jan. 2025,Ericsson Oy,https://urn.fi/URN:NBN:fi:aalto-202501282068
 15,Q. Diem Luong,Proof of Concept for FedRelax on Kubernetes: An Implementation Guide,Aalto,completed,Jan. 2025,,https://urn.fi/URN:NBN:fi:aalto-202501282110
 16,P. Dang,Model-Agnostic Personalized Federated Learning using Adaptive Client Selection,Aalto,completed,Jan. 2025,,https://urn.fi/URN:NBN:fi:aalto-202501302237
@@ -47,7 +47,7 @@ number,author,title,university,status,date,industry,url
 46,G. Rivi,Software Defined Networking Controlled Energy Optimization through Traffic Prediction on Microwave Access Network,Aalto,completed,Sept. 2023,Ericsson Finland,https://aaltodoc.aalto.fi/items/f3545faf-7aec-4453-b123-6be572a0ac80
 47,A. Garcia Gutierrez,Anomaly Detection on Osmosis Trades,Aalto,completed,Sep. 2023,Numia Data,https://aaltodoc.aalto.fi/items/0c0526a5-b55e-432f-9d03-f265f0df63d1
 48,Z. Liu,Deep Learning based method for Fire Detection,Aalto,completed,Sept. 2023,Detectium,https://aaltodoc.aalto.fi/items/e721634e-004a-4a29-b018-1d41a17d33e8
-49,M. Bogdanova,"Contextual bandits for staffing in consulting companies: An exploration of personalized decision making",Aalto,completed,Sept. 2023,,https://aaltodoc.aalto.fi/items/041f9210-3920-43fa-b4b7-dda5de9079f7
+49,M. Bogdanova,Contextual bandits for staffing in consulting companies: An exploration of personalized decision making,Aalto,completed,Sept. 2023,,https://aaltodoc.aalto.fi/items/041f9210-3920-43fa-b4b7-dda5de9079f7
 50,Y. SarcheshmehPour,Application of Reinforcement Learning in Electrical Machine Design,Aalto,completed,Aug. 2023,ABB Oy,https://aaltodoc.aalto.fi/handle/123456789/122863
 51,L. G. Tejada,Applying Machine Learning to Forecast Formula 1 Race Outcomes,Aalto,completed,Aug. 2023,,https://aaltodoc.aalto.fi/handle/123456789/122937
 52,C. Segercrantz,Experimental evaluation of record linkage algorithms in a secure banking environment,Aalto,completed,Aug. 2023,Nordea Bank Oyj,https://aaltodoc.aalto.fi/handle/123456789/123205
@@ -75,38 +75,38 @@ number,author,title,university,status,date,industry,url
 74,E. Hattula,Transfer Learning Technology for Building Extraction from Orthophotos and Open-Source Data,Aalto,completed,Jan. 2022,National Land Survey of Finland,https://aaltodoc.aalto.fi/handle/123456789/112450
 75,A. Channabasaiah,Applying machine learning methods to predict taxi pickups using historical taxi data,Aalto,completed,Jan. 2022,,https://aaltodoc.aalto.fi/handle/123456789/112871
 76,R. Hellstrom,Aspect Based Sentiment Analysis in Finnish,Aalto,completed,Jan. 2022,Crowst Oy,https://aaltodoc.aalto.fi/handle/123456789/112857
-77,M. Leinonen,Federated Multi-task Learning over Networked Data,Aalto,completed,June 2021,,https://aaltodoc.aalto.fi/handle/123456789/108261
-78,M. Uutaniemi,Extraction of labeled fields from images of structured documents,Aalto,completed,Aug. 2021,,https://aaltodoc.aalto.fi/handle/123456789/109305
-79,A. Orre,Pedestrian movement analysis from drone perspective,Aalto,completed,Dec. 2021,,https://aaltodoc.aalto.fi/handle/123456789/111730
-80,P. Vijayakrishnan,Semi-supervised machine learning techniques for infant motility classification,Aalto,completed,Oct. 2021,,https://aaltodoc.aalto.fi/handle/123456789/110565
-81,J. Seppala,Application of machine learning to link click predictions in Facebook Family of Apps advertising,Aalto,completed,2021,,https://aaltodoc.aalto.fi/handle/123456789/106829
-82,K. Kutlu,Machine Learning based Chaos Engineering for Cloud-Native Microservice Architectures,Aalto,completed,Aug. 2021,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/109355
-83,K. Ariko,Increasing the safety in the proximity of the mobile working machines: a study of detecting people,Aalto,completed,Oct. 2021,Epec Oy,https://aaltodoc.aalto.fi/handle/123456789/110498
+77,A. Orre,Pedestrian movement analysis from drone perspective,Aalto,completed,Dec. 2021,,https://aaltodoc.aalto.fi/handle/123456789/111730
+78,P. Vijayakrishnan,Semi-supervised machine learning techniques for infant motility classification,Aalto,completed,Oct. 2021,,https://aaltodoc.aalto.fi/handle/123456789/110565
+79,K. Ariko,Increasing the safety in the proximity of the mobile working machines: a study of detecting people,Aalto,completed,Oct. 2021,Epec Oy,https://aaltodoc.aalto.fi/handle/123456789/110498
+80,M. Uutaniemi,Extraction of labeled fields from images of structured documents,Aalto,completed,Aug. 2021,,https://aaltodoc.aalto.fi/handle/123456789/109305
+81,K. Kutlu,Machine Learning based Chaos Engineering for Cloud-Native Microservice Architectures,Aalto,completed,Aug. 2021,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/109355
+82,M. Leinonen,Federated Multi-task Learning over Networked Data,Aalto,completed,June 2021,,https://aaltodoc.aalto.fi/handle/123456789/108261
+83,J. Seppala,Application of machine learning to link click predictions in Facebook Family of Apps advertising,Aalto,completed,2021,,https://aaltodoc.aalto.fi/handle/123456789/106829
 84,M. Afteniy,Predicting time series with Transformer,Aalto,completed,May 2021,,https://aaltodoc.aalto.fi/handle/123456789/107662
 85,Z. Mohammadi,Better Utilization of Relational Data in Machine Learning,Aalto,completed,May 2021,Lamia Oy,https://aaltodoc.aalto.fi/handle/123456789/107604
 86,T. Nguyen,Applying Machine Learning to Develop Black-box Control Model of Active Double-Skin Facade,Aalto,completed,Jan. 2021,,https://aaltodoc.aalto.fi/handle/123456789/102547
 87,P. Pyrro,AIR: Aerial Inspection RetinaNet for Land Search and Rescue Missions,Aalto,completed,Jan. 2021,Accenture,https://aaltodoc.aalto.fi/handle/123456789/112856
 88,T. Kokkonen,Classifying Restaurant Menu Items With Supervised Learning,Aalto,completed,Jan. 2021,,https://aaltodoc.aalto.fi/handle/123456789/102433
-89,C. Dikmen,Application of Contextual Bandits Models in a Supervised Learning Setting,Aalto,completed,Aug. 2020,,https://aaltodoc.aalto.fi/handle/123456789/46314
-90,J. Laiho,Recognizing Thoughts from Bioelectric Patterns? A Brain-Computer Interface with Deep Learning,Aalto,completed,Aug. 2020,Accenture Liquid Studio (NL),https://aaltodoc.aalto.fi/handle/123456789/46105
-91,X. Zhang,Diagnostic and Prognostic Analysis Optimization of Field Problems for EV Charging Stations,Aalto,completed,Aug. 2020,ABB,https://aaltodoc.aalto.fi/handle/123456789/46045
-92,T. Hamminen,Clustering IoT devices for network intrusion detection systems,Aalto,completed,May 2020,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/44266
-93,T. Valentijn,The Practical Applicability of a CNN for Automated Building Damage Assessment,Aalto,completed,June 2020,Red Cross NL,https://aaltodoc.aalto.fi/handle/123456789/44991
-94,J. Nieminen,Framework for application of machine learning algorithms in telecommunications,Aalto,completed,Mar. 2020,Nokia Oy,https://aaltodoc.aalto.fi/handle/123456789/43572
-95,M. Mishin,Anomaly Detection Algorithms and Techniques for Network Intrusion Detection Systems,Aalto,completed,Aug. 2020,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/46076
-96,D. Tokmurzina,Road marking condition monitoring and classification using deep learning for city of Helsinki,Aalto,completed,Oct. 2020,,https://aaltodoc.aalto.fi/handle/123456789/47388
-97,I. Vikstrom,Deep reinforcement learning approach for HVAC control,Aalto,completed,Dec. 2020,TietoEVRY Oyj,https://aaltodoc.aalto.fi/handle/123456789/97613
-98,K. Klemets,Forecasting Hourly Parking Occupancy with Multiple Seasonalities,Aalto,completed,Aug. 2020,City of Helsinki,https://aaltodoc.aalto.fi/handle/123456789/45990
-99,J. Moisala,Optimizing the mark-up of foreign exchange derivative contracts using machine learning,Aalto,completed,May 2020,,https://aaltodoc.aalto.fi/handle/123456789/44353
+89,I. Vikstrom,Deep reinforcement learning approach for HVAC control,Aalto,completed,Dec. 2020,TietoEVRY Oyj,https://aaltodoc.aalto.fi/handle/123456789/97613
+90,D. Tokmurzina,Road marking condition monitoring and classification using deep learning for city of Helsinki,Aalto,completed,Oct. 2020,,https://aaltodoc.aalto.fi/handle/123456789/47388
+91,C. Dikmen,Application of Contextual Bandits Models in a Supervised Learning Setting,Aalto,completed,Aug. 2020,,https://aaltodoc.aalto.fi/handle/123456789/46314
+92,J. Laiho,Recognizing Thoughts from Bioelectric Patterns? A Brain-Computer Interface with Deep Learning,Aalto,completed,Aug. 2020,Accenture Liquid Studio (NL),https://aaltodoc.aalto.fi/handle/123456789/46105
+93,X. Zhang,Diagnostic and Prognostic Analysis Optimization of Field Problems for EV Charging Stations,Aalto,completed,Aug. 2020,ABB,https://aaltodoc.aalto.fi/handle/123456789/46045
+94,M. Mishin,Anomaly Detection Algorithms and Techniques for Network Intrusion Detection Systems,Aalto,completed,Aug. 2020,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/46076
+95,K. Klemets,Forecasting Hourly Parking Occupancy with Multiple Seasonalities,Aalto,completed,Aug. 2020,City of Helsinki,https://aaltodoc.aalto.fi/handle/123456789/45990
+96,T. Valentijn,The Practical Applicability of a CNN for Automated Building Damage Assessment,Aalto,completed,June 2020,Red Cross NL,https://aaltodoc.aalto.fi/handle/123456789/44991
+97,T. Hamminen,Clustering IoT devices for network intrusion detection systems,Aalto,completed,May 2020,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/44266
+98,J. Moisala,Optimizing the mark-up of foreign exchange derivative contracts using machine learning,Aalto,completed,May 2020,,https://aaltodoc.aalto.fi/handle/123456789/44353
+99,J. Nieminen,Framework for application of machine learning algorithms in telecommunications,Aalto,completed,Mar. 2020,Nokia Oy,https://aaltodoc.aalto.fi/handle/123456789/43572
 100,L. Kolehmainen,A web scraping system for extracting news articles,Aalto,completed,Dec. 2019,Vainu Finland Oy,https://aaltodoc.aalto.fi/handle/123456789/41693
-101,T. Wiro,Market influence on purchase prices in procurement,Aalto,completed,June 2019,Sievo,https://aaltodoc.aalto.fi/handle/123456789/39059
-102,J. Eskonen,Deep Reinforcement Learning in Automated User Interface Testing,Aalto,completed,May 2019,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/37895
-103,A. Moskalev,Demand forecasting for fast-moving products in grocery retail,Aalto,completed,May 2019,Relex,https://aaltodoc.aalto.fi/handle/123456789/37915
-104,D. Baad,Automatic Job Skill Taxonomy Generation For Recruitment Systems,Aalto,completed,June 2019,VXT Research Oy,https://aaltodoc.aalto.fi/handle/123456789/38986
-105,K. Karapetyan,Process Mining of Automation Services with Long Short-Term Memory Neural Networks,Aalto,completed,March 2019,Posti Group Oyj,https://aaltodoc.aalto.fi/handle/123456789/37178
-106,J. Kahles,Applying Machine Learning to Root Cause Analysis in Agile CI/CD Software Testing Environments,Aalto,completed,Jan. 2019,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/36347
+101,M. Torres Porta,Anti-Money Laundering system based on customer behavior,Aalto,completed,Aug. 2019,,https://aaltodoc.aalto.fi/handle/123456789/39938
+102,T. Wiro,Market influence on purchase prices in procurement,Aalto,completed,June 2019,Sievo,https://aaltodoc.aalto.fi/handle/123456789/39059
+103,D. Baad,Automatic Job Skill Taxonomy Generation For Recruitment Systems,Aalto,completed,June 2019,VXT Research Oy,https://aaltodoc.aalto.fi/handle/123456789/38986
+104,J. Eskonen,Deep Reinforcement Learning in Automated User Interface Testing,Aalto,completed,May 2019,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/37895
+105,A. Moskalev,Demand forecasting for fast-moving products in grocery retail,Aalto,completed,May 2019,Relex,https://aaltodoc.aalto.fi/handle/123456789/37915
+106,K. Karapetyan,Process Mining of Automation Services with Long Short-Term Memory Neural Networks,Aalto,completed,March 2019,Posti Group Oyj,https://aaltodoc.aalto.fi/handle/123456789/37178
 107,H. Ambos,Semi-Supervised Learning over Complex Networks,Aalto,completed,Mar. 2019,,https://aaltodoc.aalto.fi/handle/123456789/37130
-108,M. Torres Porta,Anti-Money Laundering system based on customer behavior,Aalto,completed,Aug. 2019,,https://aaltodoc.aalto.fi/handle/123456789/39938
+108,J. Kahles,Applying Machine Learning to Root Cause Analysis in Agile CI/CD Software Testing Environments,Aalto,completed,Jan. 2019,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/36347
 109,A. Shehata,Cellular Network Average User Throughput-Downlink Prediction by Machine Learning,Aalto,completed,Dec. 2018,Nokia,https://aaltodoc.aalto.fi/handle/123456789/35471
 110,O. Abramenko,Graph signal sampling via reinforcement learning,Aalto,completed,Nov. 2018,,https://aaltodoc.aalto.fi/handle/123456789/34750
 111,M.O. Nasir,Supervised Learning in Lighting Control Systems,Aalto,completed,Oct. 2018,,https://aaltodoc.aalto.fi/handle/123456789/34394
