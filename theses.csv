@@ -8,10 +8,10 @@ number,author,title,university,status,date,industry,url
 7,L. Tuominen,Robust tap gesture recognition on wearable devices with domain adaptation,Aalto,completed,July 2025,,https://urn.fi/URN:NBN:fi:aalto-202508206651
 8,M. Malkki,Predicting vehicle price,Aalto,ongoing,,,
 9,M. Saska,Forecasting seasonality in financial data with machine learning methods,Aalto,ongoing,,,
-10,J. Naveed,Code Generation in Building Information Modeling (BIM) Applications using Retrieval-Augmented Generation with Large Language Models,Aalto,ongoing,,,
-11,E. Kohvakka,Outperforming SP500 with machine learning portfolios,Aalto,ongoing,,,
-12,A. Sarkima,Log-based anomaly detection in 5G L3 deployment unit using GNNs,Aalto,ongoing,,,
-13,O. Lauronen,AI tool for a company's internal support ticket system,Aalto,ongoing,,Polycon Oy,
+10,J. Naveed,Optimized code generation in BIM with retrieval-augmented LLMs,Aalto,completed,"Feb. 2025",,https://urn.fi/URN:NBN:fi:aalto-202505203933
+11,E. Kohvakka,The role of analyst sentiment in excess return forecasting and its implications for investors,Aalto,completed,"Apr. 2025",,https://urn.fi/URN:NBN:fi:aalto-202506174917
+12,A. Sarkima,Graph-based anomaly detection: Evaluating Logs2Graphs with non-benchmark logs,Aalto,completed,"Mar. 2025",,https://urn.fi/URN:NBN:fi:aalto-202505203903
+13,O. Lauronen,Unsupervised semantic matching of support tickets,Aalto,completed,"May 2025",Polycon Oy,https://urn.fi/URN:NBN:fi:aalto-202506174861
 14,P. Wiwatphonthana,Machine Learning Assisted Dynamic Scheduling for Energy Efficient Serverless Cloud Workloads,Aalto,completed,Jan. 2025,Ericsson Oy,https://urn.fi/URN:NBN:fi:aalto-202501282068
 15,Q. Diem Luong,Proof of Concept for FedRelax on Kubernetes: An Implementation Guide,Aalto,completed,Jan. 2025,,https://urn.fi/URN:NBN:fi:aalto-202501282110
 16,P. Dang,Model-Agnostic Personalized Federated Learning using Adaptive Client Selection,Aalto,completed,Jan. 2025,,https://urn.fi/URN:NBN:fi:aalto-202501302237

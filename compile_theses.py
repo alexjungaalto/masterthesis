@@ -93,18 +93,18 @@ def generate_markdown(theses: list[dict], output_path: Path) -> None:
             lines.append(f"### Ongoing ({len(ongoing)})\n")
             lines.append("| # | Author | Title | Industry |")
             lines.append("|---|--------|-------|----------|")
-            for t in ongoing:
-                lines.append(f"| {t['number']} | {t['author']} | {t['title']} | {t['industry']} |")
+            for i, t in enumerate(ongoing, 1):
+                lines.append(f"| {i} | {t['author']} | {t['title']} | {t['industry']} |")
             lines.append("")
 
         if completed:
             lines.append(f"### Completed ({len(completed)})\n")
             lines.append("| # | Author | Title | Date | Industry | Link |")
             lines.append("|---|--------|-------|------|----------|------|")
-            for t in completed:
+            for i, t in enumerate(completed, 1):
                 link = f"[link]({t['url']})" if t["url"] else ""
                 lines.append(
-                    f"| {t['number']} | {t['author']} | {t['title']} "
+                    f"| {i} | {t['author']} | {t['title']} "
                     f"| {t['date']} | {t['industry']} | {link} |"
                 )
             lines.append("")
