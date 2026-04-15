@@ -157,9 +157,10 @@ def generate_tex(theses: list[dict], output_path: Path) -> None:
         r"\setlength{\parskip}{0.5em}",
         r"\newcommand{\thesislink}[1]{\href{#1}{link}}",
         r"",
-        r"\title{Supervised Master Theses}",
+        r"\title{Co-Supervised by Dipl.-Ing.\ Dr.techn.\ Alexander Helmut Jung,\\"
+        r" Associate Professor for Machine Learning at Aalto University}",
         r"\author{}",
-        r"\date{}",
+        r"\date{\today}",
         r"",
         r"\begin{document}",
         r"\maketitle",
@@ -200,11 +201,11 @@ def generate_tex(theses: list[dict], output_path: Path) -> None:
             lines.append("")
             lines.append(r"\begin{longtable}{@{}r p{3cm} p{6.5cm} p{1.8cm} p{2.2cm} r@{}}")
             lines.append(r"\toprule")
-            lines.append(r"\# & Author & Title & Date & Industry & Link \\")
+            lines.append(r"\# & Author & Title & Date & Industry & \\")
             lines.append(r"\midrule")
             lines.append(r"\endfirsthead")
             lines.append(r"\toprule")
-            lines.append(r"\# & Author & Title & Date & Industry & Link \\")
+            lines.append(r"\# & Author & Title & Date & Industry & \\")
             lines.append(r"\midrule")
             lines.append(r"\endhead")
             lines.append(r"\bottomrule")
