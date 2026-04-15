@@ -155,7 +155,6 @@ def generate_tex(theses: list[dict], output_path: Path) -> None:
         r"\usepackage{xurl}",
         r"\setlength{\parindent}{0pt}",
         r"\setlength{\parskip}{0.5em}",
-        r"\newcommand{\thesislink}[1]{\href{#1}{link}}",
         r"",
         r"\title{Co-Supervised Master Theses \\[0.3em]"
         r" \large by Alex Jung, Assoc.\ Prof.\ for Machine Learning}",
@@ -199,22 +198,24 @@ def generate_tex(theses: list[dict], output_path: Path) -> None:
         if completed:
             lines.append(rf"\subsection*{{Completed ({len(completed)})}}")
             lines.append("")
-            lines.append(r"\begin{longtable}{@{}r p{3cm} p{6.5cm} p{1.8cm} p{2.2cm} r@{}}")
+            lines.append(r"\begin{longtable}{@{}r p{3cm} p{9cm} p{1.8cm} p{2.2cm}@{}}")
             lines.append(r"\toprule")
-            lines.append(r"\# & Author & Title & Date & Industry & \\")
+            lines.append(r"\# & Author & Title & Date & Industry \\")
             lines.append(r"\midrule")
             lines.append(r"\endfirsthead")
             lines.append(r"\toprule")
-            lines.append(r"\# & Author & Title & Date & Industry & \\")
+            lines.append(r"\# & Author & Title & Date & Industry \\")
             lines.append(r"\midrule")
             lines.append(r"\endhead")
             lines.append(r"\bottomrule")
             lines.append(r"\endfoot")
             for i, t in enumerate(completed, 1):
-                link = rf"\thesislink{{{t['url']}}}" if t["url"] else ""
+                title_tex = tex_escape(t['title'])
+                if t['url']:
+                    title_tex = rf"\href{{{t['url']}}}{{{title_tex}}}"
                 lines.append(
-                    f"{i} & {tex_escape(t['author'])} & {tex_escape(t['title'])} & "
-                    f"{tex_escape(t['date'])} & {tex_escape(t['industry'])} & {link} \\\\"
+                    f"{i} & {tex_escape(t['author'])} & {title_tex} & "
+                    f"{tex_escape(t['date'])} & {tex_escape(t['industry'])} \\\\"
                 )
             lines.append(r"\end{longtable}")
             lines.append("")
