@@ -157,8 +157,8 @@ def generate_tex(theses: list[dict], output_path: Path) -> None:
         r"\setlength{\parskip}{0.5em}",
         r"\newcommand{\thesislink}[1]{\href{#1}{link}}",
         r"",
-        r"\title{Co-Supervised by Dipl.-Ing.\ Dr.techn.\ Alexander Helmut Jung,\\"
-        r" Associate Professor for Machine Learning at Aalto University}",
+        r"\title{Co-Supervised Master Theses \\[0.3em]"
+        r" \large by Alex Jung, Assoc.\ Prof.\ for Machine Learning}",
         r"\author{}",
         r"\date{\today}",
         r"",
