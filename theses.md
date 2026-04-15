@@ -1,13 +1,22 @@
 # Supervised Master Theses
 
-## Aalto (117 total)
+## Aalto (126 total)
 
-### Ongoing (2)
+### Ongoing (11)
 
 | # | Author | Title | Industry |
 |---|--------|-------|----------|
-| 1 | M. Malkki | Predicting vehicle price |  |
-| 2 | M. Saska | Forecasting seasonality in financial data with machine learning methods |  |
+| 1 | G. Argyrou | Federated Learning for Vision Tasks in Edge-AI Systems |  |
+| 2 | J. Haapanen | Improving the quality of maritime data using artificial intelligence and machine learning methods |  |
+| 3 | A. von Hertzen | Interpretability-Driven Regularization for Deep Weather Forecasting |  |
+| 4 | M. Holmström | Diagnostics, debugging and analysis tools for ML enabled 5G telecommunication systems |  |
+| 5 | M. Malkki | Vehicle value modelling |  |
+| 6 | S. Mättö | Forecasting seasonality in financial data with machine learning methods |  |
+| 7 | A. Nygård | Agent-System Interface Designs for Enterprise Applications: A Comparative Empirical Study |  |
+| 8 | A. Päkkilä | Learning Active Constraint Sets with Machine Learning for Constrained Optimization |  |
+| 9 | I. Viita | Automated Validation of Construction Documentation: A Machine Learning Approach Using Industry Data |  |
+| 10 | H. Välimäki | Generating synthetic 3D food objects for the development of automatic dietary assessment |  |
+| 11 | I. Zalesskii | Bid Optimization in Real-Time Bidding Display Advertising |  |
 
 ### Completed (115)
 
