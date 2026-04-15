@@ -22,6 +22,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_CSV = SCRIPT_DIR / "theses.csv"
 DEFAULT_MD = SCRIPT_DIR / "theses.md"
+DEFAULT_TEX = SCRIPT_DIR / "theses.tex"
 
 
 def load_theses(csv_path: Path) -> list[dict]:
@@ -114,6 +115,116 @@ def generate_markdown(theses: list[dict], output_path: Path) -> None:
     print(f"Markdown written to {output_path}")
 
 
+def tex_escape(s: str) -> str:
+    """Escape LaTeX special characters in a string."""
+    if not s:
+        return ""
+    replacements = [
+        ("\\", r"\textbackslash{}"),
+        ("&", r"\&"),
+        ("%", r"\%"),
+        ("$", r"\$"),
+        ("#", r"\#"),
+        ("_", r"\_"),
+        ("{", r"\{"),
+        ("}", r"\}"),
+        ("~", r"\textasciitilde{}"),
+        ("^", r"\textasciicircum{}"),
+    ]
+    for a, b in replacements:
+        s = s.replace(a, b)
+    return s
+
+
+def generate_tex(theses: list[dict], output_path: Path) -> None:
+    """Write a standalone LaTeX file with thesis tables grouped by university."""
+    by_uni = {}
+    for t in theses:
+        by_uni.setdefault(t["university"], []).append(t)
+
+    lines = [
+        r"\documentclass[11pt,a4paper]{article}",
+        r"\usepackage[utf8]{inputenc}",
+        r"\usepackage[T1]{fontenc}",
+        r"\usepackage{lmodern}",
+        r"\usepackage[margin=2cm]{geometry}",
+        r"\usepackage{longtable}",
+        r"\usepackage{array}",
+        r"\usepackage{booktabs}",
+        r"\usepackage[hidelinks]{hyperref}",
+        r"\usepackage{xurl}",
+        r"\setlength{\parindent}{0pt}",
+        r"\setlength{\parskip}{0.5em}",
+        r"\newcommand{\thesislink}[1]{\href{#1}{link}}",
+        r"",
+        r"\title{Supervised Master Theses}",
+        r"\author{}",
+        r"\date{}",
+        r"",
+        r"\begin{document}",
+        r"\maketitle",
+        r"",
+    ]
+
+    for uni, records in by_uni.items():
+        ongoing = [r for r in records if r["status"].lower() == "ongoing"]
+        completed = [r for r in records if r["status"].lower() != "ongoing"]
+
+        lines.append(rf"\section*{{{tex_escape(uni)} ({len(records)} total)}}")
+        lines.append("")
+
+        if ongoing:
+            lines.append(rf"\subsection*{{Ongoing ({len(ongoing)})}}")
+            lines.append("")
+            lines.append(r"\begin{longtable}{@{}r p{3.5cm} p{7cm} p{3cm}@{}}")
+            lines.append(r"\toprule")
+            lines.append(r"\# & Author & Title & Industry \\")
+            lines.append(r"\midrule")
+            lines.append(r"\endfirsthead")
+            lines.append(r"\toprule")
+            lines.append(r"\# & Author & Title & Industry \\")
+            lines.append(r"\midrule")
+            lines.append(r"\endhead")
+            lines.append(r"\bottomrule")
+            lines.append(r"\endfoot")
+            for i, t in enumerate(ongoing, 1):
+                lines.append(
+                    f"{i} & {tex_escape(t['author'])} & "
+                    f"{tex_escape(t['title'])} & {tex_escape(t['industry'])} \\\\"
+                )
+            lines.append(r"\end{longtable}")
+            lines.append("")
+
+        if completed:
+            lines.append(rf"\subsection*{{Completed ({len(completed)})}}")
+            lines.append("")
+            lines.append(r"\begin{longtable}{@{}r p{3cm} p{6.5cm} p{1.8cm} p{2.2cm} r@{}}")
+            lines.append(r"\toprule")
+            lines.append(r"\# & Author & Title & Date & Industry & Link \\")
+            lines.append(r"\midrule")
+            lines.append(r"\endfirsthead")
+            lines.append(r"\toprule")
+            lines.append(r"\# & Author & Title & Date & Industry & Link \\")
+            lines.append(r"\midrule")
+            lines.append(r"\endhead")
+            lines.append(r"\bottomrule")
+            lines.append(r"\endfoot")
+            for i, t in enumerate(completed, 1):
+                link = rf"\thesislink{{{t['url']}}}" if t["url"] else ""
+                lines.append(
+                    f"{i} & {tex_escape(t['author'])} & {tex_escape(t['title'])} & "
+                    f"{tex_escape(t['date'])} & {tex_escape(t['industry'])} & {link} \\\\"
+                )
+            lines.append(r"\end{longtable}")
+            lines.append("")
+
+    lines.append(r"\end{document}")
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    print(f"LaTeX written to {output_path}")
+
+
 def print_stats(theses: list[dict]) -> None:
     """Print summary statistics."""
     print(f"\nTotal theses: {len(theses)}")
@@ -156,6 +267,8 @@ def main():
     parser.add_argument("--csv", type=Path, default=DEFAULT_CSV, help="Path to theses.csv")
     parser.add_argument("--markdown", action="store_true", help="Generate theses.md")
     parser.add_argument("--output", type=Path, default=DEFAULT_MD, help="Markdown output path")
+    parser.add_argument("--tex", action="store_true", help="Generate theses.tex")
+    parser.add_argument("--tex-output", type=Path, default=DEFAULT_TEX, help="LaTeX output path")
     parser.add_argument("--stats", action="store_true", help="Print statistics")
     parser.add_argument("--university", type=str, help="Filter by university")
     parser.add_argument("--status", type=str, help="Filter by status (ongoing/completed)")
@@ -178,6 +291,9 @@ def main():
 
     if args.markdown:
         generate_markdown(theses, args.output)
+
+    if args.tex:
+        generate_tex(theses, args.tex_output)
 
     return 0
 
