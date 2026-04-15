@@ -13,7 +13,7 @@ number,author,title,university,status,date,industry,url
 12,B. Zheng,"Exploring the structure in deep networks: Group, manifold and category theory",Aalto,completed,Dec. 2025,,https://urn.fi/URN:NBN:fi:aalto-202601221854
 13,V. Niemi,Diagnosing and improving a maintenance contract churn prediction model,Aalto,completed,Dec. 2025,,https://urn.fi/URN:NBN:fi:aalto-202601221885
 14,A. Hamalainen,Improving retrieval-augmented generation with LLM-as-a-judge evaluation,Aalto,completed,Nov. 2025,,https://urn.fi/URN:NBN:fi:aalto-202512179401
-15,M. Shaikhum,FedSock & FedBlue: Scalable decentralized federated learning systems with generalized total variation minimization,Aalto,completed,Nov. 2025,,https://urn.fi/URN:NBN:fi:aalto-202512169317
+15,S. Monira,FedSock & FedBlue: Scalable decentralized federated learning systems with generalized total variation minimization,Aalto,completed,Nov. 2025,,https://urn.fi/URN:NBN:fi:aalto-202512169317
 16,S. Rachidi,Explainable machine learning in cancer survival prediction — A case study of myeloma patients,Aalto,completed,July 2025,,https://urn.fi/URN:NBN:fi:aalto-202508186254
 17,C. Fait,Designing a data pipeline for total column greenhouse gas measurements with portable EM27/SUN spectrometers,Aalto,completed,July 2025,,https://urn.fi/URN:NBN:fi:aalto-202508186244
 18,L. Tuominen,Robust tap gesture recognition on wearable devices with domain adaptation,Aalto,completed,July 2025,,https://urn.fi/URN:NBN:fi:aalto-202508206651
@@ -43,16 +43,16 @@ number,author,title,university,status,date,industry,url
 42,L. Ban,Neural Motif Counting in Uncertain Graphs,Aalto,completed,May 2024,,https://urn.fi/URN:NBN:fi:aalto-202405263699
 43,R. Virtanen,Explainable AI Techniques in Trustworthy Object Detection,Aalto,completed,May 2024,TietoEVRY Oyj,https://urn.fi/URN:NBN:fi:aalto-202405263770
 44,T. Kulokoski,How well can Machine Learning teach Humans about Machine Learning?,Aalto,completed,Mar. 2024,,https://urn.fi/URN:NBN:fi:aalto-202403172727
-45,S. Facchini,Predicting Fuel Usage in Airline Industry,Aalto,completed,Mar. 2024,Finnair,https://urn.fi/URN:NBN:fi:aalto-202403172740
+45,S. Facchini,Prediction of fuel usage consumption in the airline industry,Aalto,completed,Mar. 2024,Finnair,https://urn.fi/URN:NBN:fi:aalto-202403172740
 46,L. Veneranta,Optimization of Web Page Advertisements using Contextual Bandits,Aalto,completed,Jan. 2024,Sanoma Media,https://urn.fi/URN:NBN:fi:aalto-202401282006
 47,J. Li,Empirical Emissions Modeling using Machine Learning,Aalto,completed,Jan. 2024,aurobay.com,https://urn.fi/URN:NBN:fi:aalto-202401281970
 48,K. Izadi Garmaseh,Frequency Offset Estimation Using Deep Learning,Aalto,completed,Jan. 2024,Nokia,https://urn.fi/URN:NBN:fi:aalto-202401282059
-49,S. Chowdhury,Safety-focused multi-object detection and tracking in industrial settings leveraging private 5G-network technology,Aalto,completed,Jan. 2024,TietoEVRY Oyj,https://urn.fi/URN:NBN:fi:aalto-202401282114
+49,S. Chowdhury,Computer vision-assisted safety alert system for industrial settings in private 5G networks,Aalto,completed,Jan. 2024,TietoEVRY Oyj,https://urn.fi/URN:NBN:fi:aalto-202401282114
 50,T. Kontola,Predicting User Web Behaviour with Machine Learning Methods,Aalto,completed,Jan. 2024,Columbia Road Oy,https://urn.fi/URN:NBN:fi:aalto-202401282008
 51,R. Siljander,Extreme gradient boosting methods for covariate forecasting of housing market demand in Finnish postal code areas,Aalto,completed,Dec. 2023,Alma Talent Oy,https://urn.fi/URN:NBN:fi:aalto-202312187385
 52,J. Jakara,From Candles to Ticks - Improving financial backtesting accuracy,Aalto,completed,Dec. 2023,Aekos Trading Oy,https://urn.fi/URN:NBN:fi:aalto-202312187389
 53,X. Landa Oregi,MLOps data ingestion pipeline for reciprocal benefit between customer and provider,Aalto,completed,Nov. 2023,Huawei,https://urn.fi/URN:NBN:fi:aalto-202401071333
-54,T. Brumani,Microservices-Based Anomaly Detection for Mobile Network Observability,Aalto,completed,Sept. 2023,Ericsson Oy,https://aaltodoc.aalto.fi/items/747916fb-98a1-4195-93a6-841cf0b6be71
+54,T. Brumani,Microservices-based autonomous anomaly detection for mobile network observability,Aalto,completed,Sept. 2023,Ericsson Oy,https://aaltodoc.aalto.fi/items/747916fb-98a1-4195-93a6-841cf0b6be71
 55,G. Rivi,Software Defined Networking Controlled Energy Optimization through Traffic Prediction on Microwave Access Network,Aalto,completed,Sept. 2023,Ericsson Finland,https://aaltodoc.aalto.fi/items/f3545faf-7aec-4453-b123-6be572a0ac80
 56,A. Garcia Gutierrez,Anomaly Detection on Osmosis Trades,Aalto,completed,Sep. 2023,Numia Data,https://aaltodoc.aalto.fi/items/0c0526a5-b55e-432f-9d03-f265f0df63d1
 57,Z. Liu,Deep Learning based method for Fire Detection,Aalto,completed,Sept. 2023,Detectium,https://aaltodoc.aalto.fi/items/e721634e-004a-4a29-b018-1d41a17d33e8
@@ -62,7 +62,7 @@ number,author,title,university,status,date,industry,url
 61,C. Segercrantz,Experimental evaluation of record linkage algorithms in a secure banking environment,Aalto,completed,Aug. 2023,Nordea Bank Oyj,https://aaltodoc.aalto.fi/handle/123456789/123205
 62,H. Wang,Material Capture and Generative Rendering with Phenomenological Reflectance Models,Aalto,completed,Aug. 2023,Huawei,https://aaltodoc.aalto.fi/handle/123456789/122900
 63,G. Jiang,Parallel Training of Neural Networks in 6G L1,Aalto,completed,Aug. 2023,Nokia Oy,https://aaltodoc.aalto.fi/handle/123456789/122835
-64,K. Lasocki,Deep Learning for generating continuous melodies conditioned on lyrics and initial melodies,Aalto,completed,Aug. 2023,,https://www.finna.fi/Record/aaltodoc.123456789_122794
+64,K. Lasocki,Deep learning for continuous symbolic melody generation conditioned on lyrics and initial melodies,Aalto,completed,Aug. 2023,,https://www.finna.fi/Record/aaltodoc.123456789_122794
 65,T. Vanhala,Data-driven xVA exposure calculation for a portfolio of interest rate swaps,Aalto,completed,May 2023,Nordea Markets,https://aaltodoc.aalto.fi/handle/123456789/120932
 66,A. Agisheva,Ethics in machine learning publications: Peer-review analysis using NLP methods,Aalto,completed,May 2023,,https://aaltodoc.aalto.fi/handle/123456789/120999
 67,R. Tikkanen,Clustering fitness tracker data to correct interdevice differences in energy expenditure estimation,Aalto,completed,May 2023,Fjuul,https://urn.fi/URN:NBN:fi:aalto-202305213241
@@ -104,7 +104,7 @@ number,author,title,university,status,date,industry,url
 103,M. Mishin,Anomaly Detection Algorithms and Techniques for Network Intrusion Detection Systems,Aalto,completed,Aug. 2020,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/46076
 104,K. Klemets,Forecasting Hourly Parking Occupancy with Multiple Seasonalities,Aalto,completed,Aug. 2020,City of Helsinki,https://aaltodoc.aalto.fi/handle/123456789/45990
 105,T. Valentijn,The Practical Applicability of a CNN for Automated Building Damage Assessment,Aalto,completed,June 2020,Red Cross NL,https://aaltodoc.aalto.fi/handle/123456789/44991
-106,T. Hamminen,Clustering IoT devices for network intrusion detection systems,Aalto,completed,May 2020,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/44266
+106,T. Hammainen,Clustering IoT devices for network intrusion detection systems,Aalto,completed,May 2020,Ericsson,https://aaltodoc.aalto.fi/handle/123456789/44266
 107,J. Moisala,Optimizing the mark-up of foreign exchange derivative contracts using machine learning,Aalto,completed,May 2020,,https://aaltodoc.aalto.fi/handle/123456789/44353
 108,J. Nieminen,Framework for application of machine learning algorithms in telecommunications,Aalto,completed,Mar. 2020,Nokia Oy,https://aaltodoc.aalto.fi/handle/123456789/43572
 109,L. Kolehmainen,A web scraping system for extracting news articles,Aalto,completed,Dec. 2019,Vainu Finland Oy,https://aaltodoc.aalto.fi/handle/123456789/41693
@@ -121,7 +121,7 @@ number,author,title,university,status,date,industry,url
 120,M.O. Nasir,Supervised Learning in Lighting Control Systems,Aalto,completed,Oct. 2018,,https://aaltodoc.aalto.fi/handle/123456789/34394
 121,D. Wu,Unsupervised Learning for Lighting Control System,Aalto,completed,Oct. 2018,Helvar Oy,https://aaltodoc.aalto.fi/handle/123456789/34384
 122,N. Pokhrel,Drone Obstacle Avoidance and Navigation Using Artificial Intelligence,Aalto,completed,May 2018,Nokia,https://aaltodoc.aalto.fi/handle/123456789/31561
-123,D. Koskeniemi,Do financial networks improve the explanatory power of the Fama-French factors? A comparison of propagation algorithms on stock market returns,Aalto,completed,Mar. 2018,,https://aaltodoc.aalto.fi/handle/123456789/30542
+123,D. Koskenniemi,Do financial networks improve the explanatory power of the Fama-French factors? A comparison of propagation algorithms on stock market returns,Aalto,completed,Mar. 2018,,https://aaltodoc.aalto.fi/handle/123456789/30542
 124,S.B. Jahromi,Compressed Sensing for Big Data Over Complex Networks,Aalto,completed,Jan. 2018,,https://aaltodoc.aalto.fi/handle/123456789/29671
 125,A. Mara,A Comparative Analysis of Graph Signal Recovery Methods for Big Data Networks,Aalto,completed,Oct. 2017,,https://aaltodoc.aalto.fi/handle/123456789/28567
 126,Y. Gao,Graphical Model Selection in Big Data Application,Aalto,completed,Dec. 2016,,https://aaltodoc.aalto.fi/handle/123456789/23908
