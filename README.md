@@ -4,6 +4,7 @@ This repository contains guidance for students doing a master's thesis supervise
 
 - Currently supervised theses: [theses.md](theses.md)
 - Available topics: [Topics.md](Topics.md)
+- Official SCI thesis guide (templates, forms, evaluation rules): [SCI Master's Thesis Guide on MyCourses](https://mycourses.aalto.fi/course/view.php?id=41665) — start with the "Get oriented" section
 
 ---
 
@@ -196,8 +197,10 @@ L(\theta) = \frac{1}{n} \sum_{i=1}^n \ell(f(x_i;\theta), y_i).
 
 ## Iterative Writing Process
 
-- Write your first draft quickly to capture main ideas — do not wait until results are final.
-- Write non-linearly if helpful: start from results or discussion, then work backwards to the introduction.
+- While experimenting, keep a separate working notes file with the methods you try, the hyperparameters used, and the results — without worrying about prose, formatting, or citations. Treat it as a lab notebook.
+- Start serious writing with the **literature review** or **methodology** chapters. These stabilise earliest and rarely need to be rewritten when results shift.
+- Defer the **results** and **discussion** chapters until your experiments have converged — results often change substantially over the process, and writing them up too early wastes effort.
+- Write the **abstract last**. It is the shortest section but depends on everything else being settled.
 - Incorporate feedback regularly from peers, group meetings, or, where appropriate, LLM-based tools.
 - Expect and budget for multiple revision rounds before submission.
 
