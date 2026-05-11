@@ -1,4 +1,4 @@
-# Master Thesis in Applied Machine Learning
+# Master's Thesis in Applied Machine Learning
 
 This repository contains guidance for students doing a master's thesis supervised by [Alex Jung](https://machinelearningforall.github.io/about/) at Aalto University.
 
@@ -167,7 +167,7 @@ When preparing your thesis, ensure:
 - **Structure**: Begin each chapter and section with an introductory paragraph explaining its content and its connection to the rest of the thesis.
 - **Equations**: Reference all numbered equations using `\eqref{}`. Only number equations that are referenced in the text; leave unreferenced equations unnumbered.
 - **Algorithms**: Present new methods as pseudocode ([see examples](https://www.overleaf.com/learn/latex/Algorithms)).
-- **Figures**: Ensure all figures are clear, labeled, and have informative captions ([caption guidelines](https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf)).
+- **Figures**: Ensure all figures are clear, labelled, and have informative captions ([caption guidelines](https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf)).
 - **References**: Format according to [IEEE guidelines](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf).
 
 For creating effective figures, see Edward Tufte's [The Visual Display of Quantitative Information](https://www.edwardtufte.com/tufte/books_vdqi).
@@ -199,7 +199,7 @@ L(\theta) = \frac{1}{n} \sum_{i=1}^n \ell(f(x_i;\theta), y_i).
 
 - While experimenting, keep a separate working notes file with the methods you try, the hyperparameters used, and the results — without worrying about prose, formatting, or citations. Treat it as a lab notebook.
 - Start serious writing with the **literature review** or **methodology** chapters. These stabilise earliest and rarely need to be rewritten when results shift.
-- Defer the **results** and **discussion** chapters until your experiments have converged — results often change substantially over the process, and writing them up too early wastes effort.
+- Defer the **results** and **discussion** chapters until your experiments have converged — results often change substantially as experiments progress, and writing them up too early wastes effort.
 - Write the **abstract last**. It is the shortest section but depends on everything else being settled.
 - Incorporate feedback regularly from peers, group meetings, or, where appropriate, LLM-based tools.
 - Expect and budget for multiple revision rounds before submission.
@@ -214,7 +214,7 @@ Before submitting, verify each item below. Links point to the relevant section o
 - [ ] Loss functions for training and evaluation are explicitly stated (see [Manuscript Preparation](#thesis-manuscript-preparation))
 - [ ] Methods are clearly described, including pseudocode for new algorithms
 - [ ] Baselines or benchmarks are included and discussed
-- [ ] All figures have labeled axes and informative captions
+- [ ] All figures have labelled axes and informative captions
 - [ ] All numbered equations, tables, and figures are referenced in the text
 - [ ] Citations are formatted according to IEEE guidelines
 - [ ] Self-assessment form is completed ([form here](material/Statement_template_CCIS.docx))
@@ -226,7 +226,7 @@ Before submitting, verify each item below. Links point to the relevant section o
 After completing the thesis manuscript:
 
 - Complete the detailed self-assessment ([evaluation form](material/Statement_template_CCIS.docx)), with explicit references to sections of your thesis.
-- Review the [grade characterization PDF](material/GradeCharact.pdf) to understand what constitutes a high-quality thesis.
+- Review the [grade characterisation PDF](material/GradeCharact.pdf) to understand what constitutes a high-quality thesis.
 - Optionally, request a meeting to discuss your self-assessment before submission.
 - Prepare your thesis presentation — either live during a group meeting or as a recorded video ([see examples](https://youtube.com/playlist?list=PLrbn2dGrLJK8xt7j0tvaL0uMCdrtQ7JY2)).
 
@@ -241,7 +241,7 @@ After completing the thesis manuscript:
 - Your thesis is evaluated against the **official programme and school-level criteria**.
 - I prepare a written evaluation and a **grade proposal** based on these criteria.
 - The **final grade is confirmed by the programme or school** following Aalto University's formal procedures.
-- Study the [grade characterization document](material/GradeCharact.pdf) carefully before submission.
+- Study the [grade characterisation document](material/GradeCharact.pdf) carefully before submission.
 
 ### Transparency and feedback
 
