@@ -13,6 +13,12 @@
   vertical-align: top;
 }
 
+/* Render checked task-list items (e.g. the Final Thesis Checklist) as green
+   checkmarks, like the success ticks in the Claude Code extension. */
+.md-typeset .task-list-control [type="checkbox"]:checked + .task-list-indicator::before {
+  background-color: #2ea043;
+}
+
 /* Collapse the leading thesis-number column to exactly its digits. The
    width:1px + nowrap idiom forces a min-content column; the slack flows to the
    Title column (the longest content) instead of padding the number column. */

@@ -64,7 +64,7 @@ Detailed guidance is available in [Chapter 2 of the textbook](https://primo.aalt
 
 ## Typical Timeline
 
-A master's thesis typically spans 6–12 months. Below is a rough breakdown:
+A master's thesis typically spans 6–12 months:
 
 | Phase | Activities |
 |---|---|
@@ -89,49 +89,40 @@ The [Claude Code extension for VS Code](https://marketplace.visualstudio.com/ite
 - Generate boilerplate (e.g., plotting code, pseudocode skeletons)
 - Ask questions about your codebase without leaving the editor
 
-> **Note:** Treat AI-generated content critically. Verify any code it produces, and do not use it to write substantive thesis text — your analysis and conclusions must be your own.
+> **Note:** You are accountable for everything in your thesis; an LLM cannot be. Verify every AI-generated output before you rely on it.
 
 ---
 
 ## Responsible Use of AI
 
-Aalto University has official policies on AI use in research and studies. You are expected to follow these:
+Follow Aalto University's official policies:
 
-- [Responsible use of AI in the research process](https://www.aalto.fi/en/services/responsible-use-of-artificial-intelligence-in-the-research-process) — Aalto University
-- [Tips for using AI for students](https://www.aalto.fi/en/services/tips-for-using-artificial-intelligence-for-students) — Aalto University
+- [Responsible use of AI in the research process](https://www.aalto.fi/en/services/responsible-use-of-artificial-intelligence-in-the-research-process)
+- [Tips for using AI for students](https://www.aalto.fi/en/services/tips-for-using-artificial-intelligence-for-students)
 
-The key principles are summarised below.
+### Accountability
 
-### Authorship and Accountability
-
-- AI cannot be listed as an author. You bear full responsibility for every claim, result, and conclusion in your thesis.
-- Never use AI as a disclaimer — the fact that AI produced something does not excuse errors or misconduct.
+You are accountable for the entire content of your thesis — every claim, result, and conclusion. An LLM cannot be: it cannot be examined, cannot answer for a mistake, and cannot be listed as an author. "The AI produced it" excuses nothing. Whatever tools you use, you must be able to defend every statement in your thesis as if you had written it unaided.
 
 ### Disclosure
 
-- **Always disclose** when and how you used AI tools. In a thesis, this belongs in a dedicated statement — not in the Methods section, which is reserved for your actual research methods.
-- Record which tool, version, and settings you used so that your process is transparent (exact reproduction via online services is often impossible as they update frequently).
+- Disclose when and how you used AI tools, in a dedicated statement — not in the Methods section, which is reserved for research methods.
+- Record the tool, version, and settings; online services change frequently, so exact reproduction is rarely possible.
 
 ### Data Protection and IP
 
-- Do not upload personal data, confidential data, or unpublished manuscripts to public AI services — this may violate GDPR.
-- Be aware that AI-generated content may embed others' work without traceable references. Verify all citations independently.
-- For sensitive data, use local or GDPR-compliant AI tools only.
+- Do not upload personal, confidential, or unpublished material to public AI services — this may breach GDPR. Use local or GDPR-compliant tools for sensitive data.
+- AI output may reproduce others' work without attribution. Verify every citation independently.
 
-### Permitted Uses in Thesis Work
+### Integrity-Preserving Uses
 
-AI tools can support your work without compromising integrity when used for:
+AI tools can support your work when used for:
 
 - Proofreading language and grammar
 - Brainstorming research directions or experiment designs
-- Explaining concepts or summarising background literature (always verify)
-- Generating boilerplate code or plotting templates (always review and test)
-- Identifying counterarguments to strengthen your reasoning
-
-### What AI Cannot Replace
-
-- Your own critical analysis and interpretation of results
-- Independent evaluation of source quality and relevance
+- Explaining concepts or summarising background (always verify)
+- Generating boilerplate or plotting templates (always review and test)
+- Surfacing counterarguments to test your reasoning
 
 ## Practical Workflow
 
@@ -199,7 +190,7 @@ L(\theta) = \frac{1}{n} \sum_{i=1}^n \ell(f(x_i;\theta), y_i).
 
 - While experimenting, keep a separate working notes file with the methods you try, the hyperparameters used, and the results — without worrying about prose, formatting, or citations. Treat it as a lab notebook.
 - Start serious writing with the **literature review** or **methodology** chapters. These stabilise earliest and rarely need to be rewritten when results shift.
-- Defer the **results** and **discussion** chapters until your experiments have converged — results often change substantially as experiments progress, and writing them up too early wastes effort.
+- Defer the **results** and **discussion** chapters until your experiments have converged — they often change substantially, and writing them up too early wastes effort.
 - Write the **abstract last**. It is the shortest section but depends on everything else being settled.
 - Incorporate feedback regularly from peers, group meetings, or, where appropriate, LLM-based tools.
 - Expect and budget for multiple revision rounds before submission.
@@ -210,14 +201,14 @@ L(\theta) = \frac{1}{n} \sum_{i=1}^n \ell(f(x_i;\theta), y_i).
 
 Before submitting, verify each item below. Links point to the relevant section of this guide.
 
-- [ ] ML problem is precisely formulated: data points, features, and labels are clearly defined (see [Getting Started](#getting-started))
-- [ ] Loss functions for training and evaluation are explicitly stated (see [Manuscript Preparation](#thesis-manuscript-preparation))
-- [ ] Methods are clearly described, including pseudocode for new algorithms
-- [ ] Baselines or benchmarks are included and discussed
-- [ ] All figures have labelled axes and informative captions
-- [ ] All numbered equations, tables, and figures are referenced in the text
-- [ ] Citations are formatted according to IEEE guidelines
-- [ ] Self-assessment form is completed ([form here](material/Statement_template_CCIS.docx))
+- [x] ML problem is precisely formulated: data points, features, and labels are clearly defined (see [Getting Started](#getting-started))
+- [x] Loss functions for training and evaluation are explicitly stated (see [Manuscript Preparation](#thesis-manuscript-preparation))
+- [x] Methods are clearly described, including pseudocode for new algorithms
+- [x] Baselines or benchmarks are included and discussed
+- [x] All figures have labelled axes and informative captions
+- [x] All numbered equations, tables, and figures are referenced in the text
+- [x] Citations are formatted according to IEEE guidelines
+- [x] Self-assessment form is completed ([form here](material/Statement_template_CCIS.docx))
 
 ---
 
