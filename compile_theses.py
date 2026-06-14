@@ -103,14 +103,14 @@ def generate_markdown(theses: list[dict], output_path: Path) -> None:
 
         if completed:
             lines.append(f"### Completed ({len(completed)})\n")
-            lines.append("| # | Author | Title | Date | Industry | Link | Recording |")
-            lines.append("|---|--------|-------|------|----------|------|-----------|")
+            lines.append("| # | Author | Title | Date | Industry | Recording |")
+            lines.append("|---|--------|-------|------|----------|-----------|")
             for i, t in enumerate(completed, 1):
-                link = f"[link]({t['url']})" if t["url"] else ""
+                title = f"[{t['title']}]({t['url']})" if t["url"] else t["title"]
                 rec = f"[video]({t['recording']})" if t.get("recording") else ""
                 lines.append(
-                    f"| {i} | {t['author']} | {t['title']} "
-                    f"| {t['date']} | {t['industry']} | {link} | {rec} |"
+                    f"| {i} | {t['author']} | {title} "
+                    f"| {t['date']} | {t['industry']} | {rec} |"
                 )
             lines.append("")
 

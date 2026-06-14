@@ -52,6 +52,10 @@ cp -R material docs/material
 # Strip files that should not be published with the materials.
 rm -f docs/material/.DS_Store docs/material/creategraphtex.py
 
+# Custom stylesheet (table layout tweaks etc.).
+mkdir -p docs/stylesheets
+cp web/extra.css docs/stylesheets/extra.css
+
 if [[ "${1:-}" == "serve" ]]; then
   echo "==> Serving live preview (Ctrl-C to stop)"
   exec $MKDOCS serve

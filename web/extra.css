@@ -1,0 +1,24 @@
+/* Custom tweaks for ml-theses.org (copied into docs/stylesheets by build_site.sh). */
+
+/* Supervised-theses table: fit all columns (including Recording) within the
+   content width so nothing is hidden behind a horizontal scrollbar. */
+.md-typeset table:not([class]) {
+  width: 100%;
+  font-size: 0.70rem;        /* slightly smaller text packs the 7 columns in */
+}
+
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td {
+  padding: 0.35em 0.5em;     /* tighter cells */
+  vertical-align: top;
+}
+
+/* Collapse the leading thesis-number column to exactly its digits. The
+   width:1px + nowrap idiom forces a min-content column; the slack flows to the
+   Title column (the longest content) instead of padding the number column. */
+.md-typeset table:not([class]) th:first-child,
+.md-typeset table:not([class]) td:first-child {
+  width: 1px;
+  white-space: nowrap;
+  text-align: left;
+}
