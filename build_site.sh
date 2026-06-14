@@ -21,6 +21,9 @@ cd "$(dirname "$0")"
 echo "==> Regenerating theses.md from theses.csv"
 python3 compile_theses.py --markdown
 
+echo "==> Regenerating Topics.md from topics.csv"
+python3 compile_topics.py --markdown
+
 echo "==> Assembling docs/ from source files"
 rm -rf docs site
 mkdir -p docs
@@ -30,7 +33,6 @@ mkdir -p docs
 cp README.md   docs/index.md
 cp Topics.md   docs/Topics.md
 cp theses.md   docs/theses.md
-cp datagvat.png docs/datagvat.png
 cp -R material docs/material
 
 # Strip files that should not be published with the materials.

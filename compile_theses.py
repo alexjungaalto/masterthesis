@@ -92,21 +92,25 @@ def generate_markdown(theses: list[dict], output_path: Path) -> None:
 
         if ongoing:
             lines.append(f"### Ongoing ({len(ongoing)})\n")
-            lines.append("| # | Author | Title | Industry |")
-            lines.append("|---|--------|-------|----------|")
+            lines.append("| # | Author | Title | Industry | Recording |")
+            lines.append("|---|--------|-------|----------|-----------|")
             for i, t in enumerate(ongoing, 1):
-                lines.append(f"| {i} | {t['author']} | {t['title']} | {t['industry']} |")
+                rec = f"[video]({t['recording']})" if t.get("recording") else ""
+                lines.append(
+                    f"| {i} | {t['author']} | {t['title']} | {t['industry']} | {rec} |"
+                )
             lines.append("")
 
         if completed:
             lines.append(f"### Completed ({len(completed)})\n")
-            lines.append("| # | Author | Title | Date | Industry | Link |")
-            lines.append("|---|--------|-------|------|----------|------|")
+            lines.append("| # | Author | Title | Date | Industry | Link | Recording |")
+            lines.append("|---|--------|-------|------|----------|------|-----------|")
             for i, t in enumerate(completed, 1):
                 link = f"[link]({t['url']})" if t["url"] else ""
+                rec = f"[video]({t['recording']})" if t.get("recording") else ""
                 lines.append(
                     f"| {i} | {t['author']} | {t['title']} "
-                    f"| {t['date']} | {t['industry']} | {link} |"
+                    f"| {t['date']} | {t['industry']} | {link} | {rec} |"
                 )
             lines.append("")
 
@@ -176,21 +180,22 @@ def generate_tex(theses: list[dict], output_path: Path) -> None:
         if ongoing:
             lines.append(rf"\subsection*{{Ongoing ({len(ongoing)})}}")
             lines.append("")
-            lines.append(r"\begin{longtable}{@{}r p{3.5cm} p{7cm} p{3cm}@{}}")
+            lines.append(r"\begin{longtable}{@{}r p{3cm} p{6.5cm} p{2.8cm} p{2cm}@{}}")
             lines.append(r"\toprule")
-            lines.append(r"\# & Author & Title & Industry \\")
+            lines.append(r"\# & Author & Title & Industry & Recording \\")
             lines.append(r"\midrule")
             lines.append(r"\endfirsthead")
             lines.append(r"\toprule")
-            lines.append(r"\# & Author & Title & Industry \\")
+            lines.append(r"\# & Author & Title & Industry & Recording \\")
             lines.append(r"\midrule")
             lines.append(r"\endhead")
             lines.append(r"\bottomrule")
             lines.append(r"\endfoot")
             for i, t in enumerate(ongoing, 1):
+                rec = rf"\href{{{t['recording']}}}{{video}}" if t.get("recording") else ""
                 lines.append(
                     f"{i} & {tex_escape(t['author'])} & "
-                    f"{tex_escape(t['title'])} & {tex_escape(t['industry'])} \\\\"
+                    f"{tex_escape(t['title'])} & {tex_escape(t['industry'])} & {rec} \\\\"
                 )
             lines.append(r"\end{longtable}")
             lines.append("")
@@ -198,13 +203,13 @@ def generate_tex(theses: list[dict], output_path: Path) -> None:
         if completed:
             lines.append(rf"\subsection*{{Completed ({len(completed)})}}")
             lines.append("")
-            lines.append(r"\begin{longtable}{@{}r p{3cm} p{9cm} p{1.8cm} p{2.2cm}@{}}")
+            lines.append(r"\begin{longtable}{@{}r p{2.8cm} p{6.3cm} p{1.6cm} p{2cm} p{1.8cm}@{}}")
             lines.append(r"\toprule")
-            lines.append(r"\# & Author & Title & Date & Industry \\")
+            lines.append(r"\# & Author & Title & Date & Industry & Recording \\")
             lines.append(r"\midrule")
             lines.append(r"\endfirsthead")
             lines.append(r"\toprule")
-            lines.append(r"\# & Author & Title & Date & Industry \\")
+            lines.append(r"\# & Author & Title & Date & Industry & Recording \\")
             lines.append(r"\midrule")
             lines.append(r"\endhead")
             lines.append(r"\bottomrule")
@@ -213,9 +218,10 @@ def generate_tex(theses: list[dict], output_path: Path) -> None:
                 title_tex = tex_escape(t['title'])
                 if t['url']:
                     title_tex = rf"\href{{{t['url']}}}{{{title_tex}}}"
+                rec = rf"\href{{{t['recording']}}}{{video}}" if t.get("recording") else ""
                 lines.append(
                     f"{i} & {tex_escape(t['author'])} & {title_tex} & "
-                    f"{tex_escape(t['date'])} & {tex_escape(t['industry'])} \\\\"
+                    f"{tex_escape(t['date'])} & {tex_escape(t['industry'])} & {rec} \\\\"
                 )
             lines.append(r"\end{longtable}")
             lines.append("")
