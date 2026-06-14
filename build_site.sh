@@ -18,6 +18,20 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+# Resolve the mkdocs executable: prefer a local virtualenv, then PATH, then
+# `python3 -m mkdocs`. Avoids "mkdocs: not found" when the venv isn't active.
+if [[ -x ".venv/bin/mkdocs" ]]; then
+  MKDOCS=".venv/bin/mkdocs"
+elif command -v mkdocs >/dev/null 2>&1; then
+  MKDOCS="mkdocs"
+elif python3 -c "import mkdocs" >/dev/null 2>&1; then
+  MKDOCS="python3 -m mkdocs"
+else
+  echo "Error: mkdocs not found. Install the site dependencies first:" >&2
+  echo "  python3 -m venv .venv && ./.venv/bin/pip install -r requirements-docs.txt" >&2
+  exit 1
+fi
+
 echo "==> Regenerating theses.md from theses.csv"
 python3 compile_theses.py --markdown
 
@@ -40,10 +54,10 @@ rm -f docs/material/.DS_Store docs/material/creategraphtex.py
 
 if [[ "${1:-}" == "serve" ]]; then
   echo "==> Serving live preview (Ctrl-C to stop)"
-  exec mkdocs serve
+  exec $MKDOCS serve
 fi
 
 echo "==> Building static site into site/"
-mkdocs build --strict
+$MKDOCS build --strict
 
 echo "==> Done. Static site is in ./site/"

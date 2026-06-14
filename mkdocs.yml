@@ -67,12 +67,7 @@ plugins:
   - search
 
 extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/alexjungaalto/masterthesis
-    - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/in/aljung/
-    - icon: fontawesome/brands/youtube
-      link: https://www.youtube.com/@alexjung111
+  # Hide the "Made with Material for MkDocs" generator attribution.
+  generator: false
 
 copyright: Copyright &copy; Alex Jung, Aalto University
