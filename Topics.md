@@ -4,16 +4,6 @@ Open topics for a master's thesis supervised by [Alex Jung](https://machinelearn
 
 To discuss a topic or propose your own, get in touch — see the contact links in the [thesis guide](index.md#feedback-and-questions).
 
-## Political data science
-
-### Political Influence on Childcare Provision in Rural Austria
-
-**Difficulty:** Intermediate · **Data source:** data.gv.at
-
-Analyse whether and how local political leadership correlates with the availability of publicly funded childcare in rural Austrian municipalities, using open government data. Methods: data aggregation, correlation and regression analysis, before/after-election comparisons, and optionally causal inference. Tools: Python, pandas, geopandas. Suits students interested in political data science and regional development with a solid Python and statistics background.
-
-[Ask about this topic](mailto:alex.jung@aalto.fi?subject=Thesis%20topic:%20Political%20Influence%20on%20Childcare%20Provision%20in%20Rural%20Austria)
-
 ## Distributed ML systems and AI policy
 
 ### A National Inference Grid: Could a Country Run Its Own AI Beyond Big Tech?
@@ -28,3 +18,13 @@ Today, powerful AI language models usually run inside the data centres of a few 
 2. European Commission, "AI Factories," *Shaping Europe's Digital Future*. [Online]. Available: <https://digital-strategy.ec.europa.eu/en/policies/ai-factories>
 
 [Ask about this topic](mailto:alex.jung@aalto.fi?subject=Thesis%20topic:%20A%20National%20Inference%20Grid:%20Could%20a%20Country%20Run%20Its%20Own%20AI%20Beyond%20Big%20Tech?)
+
+## Political data science
+
+### Political Influence on Childcare Provision in Rural Austria
+
+**Difficulty:** Intermediate · **Data source:** data.gv.at
+
+Analyse whether and how local political leadership correlates with the availability of publicly funded childcare in rural Austrian municipalities, using open government data. Methods: data aggregation, correlation and regression analysis, before/after-election comparisons, and optionally causal inference. Tools: Python, pandas, geopandas. Suits students interested in political data science and regional development with a solid Python and statistics background.
+
+[Ask about this topic](mailto:alex.jung@aalto.fi?subject=Thesis%20topic:%20Political%20Influence%20on%20Childcare%20Provision%20in%20Rural%20Austria)
