@@ -16,10 +16,15 @@ Analyse whether and how local political leadership correlates with the availabil
 
 ## Distributed ML systems and AI policy
 
-### A National Inference Grid: Technical and Institutional Feasibility of Distributed LLMs Beyond the Hyperscaler
+### A National Inference Grid: Could a Country Run Its Own AI Beyond Big Tech?
 
-**Difficulty:** Advanced · **Data source:** Petals-style capacity simulation; public compute and telecom data
+**Difficulty:** Advanced · **Data source:** Public compute and telecom data
 
-Reframe distributed LLM inference (Borzunov et al.'s Petals, where a fault-tolerant swarm of unreliable devices serves 100B+ models) as a national infrastructure question: could pooled distributed compute underpin a nationally provisioned LLM capability, and under which ownership model? An ownership spectrum (public roads, then a regulated mobile-network oligopoly, then a peer-produced commons, with accelerator capacity playing the role of scarce spectrum) connects the technical feasibility envelope to an institutional design argument. Four research questions span achievable SLAs under churn (a Petals-style capacity simulation), techno-economics versus hyperscaler procurement, viable governance models informed by the telecom precedent, and sovereignty/policy (GDPR, EU AI Act, EuroHPC). Deliberately scoped to one load-bearing axis, the technical simulation or the techno-economic/governance analysis, with the rest as framing. Strong background in distributed systems and/or infrastructure economics recommended.
+Today, powerful AI language models usually run inside the data centres of a few large technology companies. This topic asks a different question: could a country instead run such a model itself, by pooling together many ordinary computers spread across the country? And if so, who should own and run that shared system? A useful comparison is the mobile phone network. It is essential, everyday infrastructure that a whole country depends on, yet it is not owned by the state: it is built and run by a small number of private companies that are licensed and regulated to serve the public. Could a national AI capability be organised the same way? The thesis weighs this telecom model against other options too, from public roads that everyone can use to community-run projects with no central owner. The student studies whether the idea could work well enough in practice, whether it would be cheaper than renting from big cloud providers, and what ownership and rules would make it trustworthy and independent. The work stays focused on one main angle so it remains a single thesis. Suitable for a student interested in AI, computing infrastructure, and technology policy.
 
-[Ask about this topic](mailto:alex.jung@aalto.fi?subject=Thesis%20topic:%20A%20National%20Inference%20Grid:%20Technical%20and%20Institutional%20Feasibility%20of%20Distributed%20LLMs%20Beyond%20the%20Hyperscaler)
+**References**
+
+1. A. Borzunov et al., "Distributed Inference and Fine-tuning of Large Language Models Over the Internet," in *Proc. NeurIPS*, 2023. [Online]. Available: <https://arxiv.org/abs/2312.08361>
+2. European Commission, "AI Factories," *Shaping Europe's Digital Future*. [Online]. Available: <https://digital-strategy.ec.europa.eu/en/policies/ai-factories>
+
+[Ask about this topic](mailto:alex.jung@aalto.fi?subject=Thesis%20topic:%20A%20National%20Inference%20Grid:%20Could%20a%20Country%20Run%20Its%20Own%20AI%20Beyond%20Big%20Tech?)

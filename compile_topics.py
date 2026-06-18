@@ -118,6 +118,14 @@ def generate_markdown(topics: list[dict], output_path: Path) -> None:
                 lines.append(f"[Read the full proposal]({t['url']})")
                 lines.append("")
 
+            refs = [r.strip() for r in t.get("references", "").split("|") if r.strip()]
+            if refs:
+                lines.append("**References**")
+                lines.append("")
+                for j, ref in enumerate(refs, 1):
+                    lines.append(f"{j}. {ref}")
+                lines.append("")
+
             subject = t["title"].replace(" ", "%20")
             lines.append(
                 f"[Ask about this topic](mailto:{CONTACT_EMAIL}"
