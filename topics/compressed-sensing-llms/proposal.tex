@@ -62,9 +62,9 @@ high-dimensional signal and each query as a point evaluation, how much of
 $f_\theta$ can be recovered from $m \ll |\Voc|^L$ evaluations, under what
 structural conditions, and with what query designs?
 
-Everything below is organised around this one abstraction. There are no separate
-``attacks'' --- only different \emph{targets} (the whole function, a restriction
-of it, or a functional of it) recovered through the same evaluation operator.
+There are no separate ``attacks,'' only different \emph{targets} --- the whole
+function, a restriction, or a functional of it --- recovered through one
+evaluation operator.
 
 % =============================================================================
 \section{Why Compressed Sensing Applies: the Compressibility Priors}
@@ -79,21 +79,23 @@ stealing~\citep{tramer2016stealing}:
 \begin{enumerate}[label=\textbf{(P\arabic*)},leftmargin=*]
   \item \textbf{Low-rank codomain.} The logits factor as $z = W_U\,h(c)$ with
   hidden state $h(c)\in\RR^{d}$ and un-embedding $W_U\in\RR^{\Voc\times d}$,
-  $d \ll |\Voc|$. Hence $\mathrm{range}(f_\theta)$ lies in a $d$-dimensional
-  subspace (affine after softmax centring). The effective output dimension is
-  $d$, not $|\Voc|$.
+  $d \ll |\Voc|$~\citep{vaswani2017attention}. Hence $\mathrm{range}(f_\theta)$
+  lies in a $d$-dimensional subspace (affine after softmax centring): the
+  effective output dimension is $d$, not $|\Voc|$ --- the softmax
+  bottleneck~\citep{yang2018softmax}.
   \item \textbf{Continuous factorisation.} $f_\theta$ factors through token
   embeddings $c \mapsto E(c)\in\RR^{L\times d}$, so it is the discrete lift of a
-  smooth map on a continuous, comparatively low-dimensional domain rather than an
-  arbitrary function on a combinatorial set.
+  smooth map on a continuous, low-dimensional domain rather than an arbitrary
+  function on a combinatorial set.
   \item \textbf{Lipschitz smoothness.} Bounded attention/MLP operator norms make
-  $f_\theta$ Lipschitz in the embedding domain: nearby contexts produce nearby
-  logits. This controls ``spikiness'' and is exactly the condition under which
-  point evaluations are informative (Section~\ref{sec:rip}).
+  $f_\theta$ Lipschitz on the compact embedding domain~\citep{kim2021lipschitz}:
+  nearby contexts produce nearby logits --- the condition under which point
+  evaluations are informative (Section~\ref{sec:rip}).
   \item \textbf{Small description complexity.} The transformer-realizable class
   $\Fclass$ has metric entropy far below that of generic Lipschitz functions on
-  the same domain --- polynomial in $1/\varepsilon$ with an exponent set by the
-  network's effective complexity, not by the ambient domain dimension.
+  the same domain~\citep{elbraechter2021dnn} --- polynomial in $1/\varepsilon$,
+  with an exponent set by the network's effective complexity, not the ambient
+  domain dimension.
 \end{enumerate}
 
 These four properties are the compressibility priors. The thesis makes precise
@@ -172,12 +174,12 @@ algorithm; deriving the two-sided isometry of Condition~\ref{cond:rip} still
 requires an empirical-process argument over $\Fclass-\Fclass$.
 
 \paragraph{Lower bounds via packing.} A maximal $\varepsilon$-packing of
-$\Fclass$ together with Fano's inequality lower-bounds the query complexity by the
-metric entropy: no recovery scheme --- adaptive or not --- can identify $f_\theta$
-to accuracy $\varepsilon$ from fewer than $\sim\Hent_\varepsilon(\Fclass)$
-informative evaluations. This pins the query complexity to the \emph{intrinsic}
-complexity of the model class, independent of vocabulary size or context length
-except through $\Hent_\varepsilon$.
+$\Fclass$ with Fano's inequality lower-bounds the query complexity by the metric
+entropy~\citep{yangbarron1999minimax}: no recovery scheme --- adaptive or not ---
+identifies $f_\theta$ to accuracy $\varepsilon$ from fewer than
+$\sim\Hent_\varepsilon(\Fclass)$ informative evaluations. This pins query
+complexity to the \emph{intrinsic} complexity of the model class, independent of
+vocabulary size and context length except through $\Hent_\varepsilon$.
 
 % =============================================================================
 \section{Recoverable Targets}
