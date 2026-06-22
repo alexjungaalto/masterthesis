@@ -50,16 +50,14 @@ We model a language model as a single deterministic nonlinear function
   f_\theta : \Voc^L \to \RR^{\Voc}, \qquad c \mapsto z = f_\theta(c),
 \]
 mapping a context window $c$ (a token sequence of length up to $L$) to the logit
-vector $z$ over the next token, where $\Voc$ is the vocabulary. Autoregressive
-generation is iterated application of $f_\theta$, so $f_\theta$ is the
-\emph{complete} object: knowing it everywhere determines the model's entire
-input--output behaviour.
+vector $z$ over the next token, where $\Voc$ is the vocabulary. 
 
-Black-box access is the ability to \emph{evaluate} this function: submit a
-context $c$, observe (some view of) $f_\theta(c)$. The thesis asks the
-compressed-sensing question in its purest form: treating $f_\theta$ as an unknown
-high-dimensional signal and each query as a point evaluation, how much of
-$f_\theta$ can be recovered from $m \ll |\Voc|^L$ evaluations, under what
+Auditing a closed LLM can be framed as a function recovery problem: Given observed 
+conversations, estimate the underlying function $f_\theta$.
+
+The thesis asks the compressed-sensing question in its purest form: 
+treating $f_\theta$ as an unknown high-dimensional signal, how much of 
+it can be recovered from $m \ll |\Voc|^L$ evaluations, under what 
 structural conditions, and with what query designs?
 
 There are no separate ``attacks,'' only different \emph{targets} --- the whole
@@ -72,7 +70,7 @@ evaluation operator.
 A generic function $\Voc^L \to \RR^{\Voc}$ is unrecoverable from few samples ---
 the domain has size $|\Voc|^L$. Recovery is possible only because $f_\theta$ is
 \emph{not} generic. Four structural facts play the role that sparsity plays in
-classical compressed sensing~\citep{donoho2006compressed,candes2005decoding},
+classical compressed sensing~\citep{candes2005decoding,donoho2006compressed,candestao2006near},
 and that earlier underpinned prediction-API model
 stealing~\citep{tramer2016stealing}:
 
@@ -80,22 +78,37 @@ stealing~\citep{tramer2016stealing}:
   \item \textbf{Low-rank codomain.} The logits factor as $z = W_U\,h(c)$ with
   hidden state $h(c)\in\RR^{d}$ and un-embedding $W_U\in\RR^{\Voc\times d}$,
   $d \ll |\Voc|$~\citep{vaswani2017attention}. Hence $\mathrm{range}(f_\theta)$
-  lies in a $d$-dimensional subspace (affine after softmax centring): the
-  effective output dimension is $d$, not $|\Voc|$ --- the softmax
-  bottleneck~\citep{yang2018softmax}.
+  lies in a $d$-dimensional subspace, and since $\mathrm{softmax}(z+c\mathbf 1)=\mathrm{softmax}(z)$
+  the next-token distribution identifies $z$ only modulo the constant direction
+  $\mathrm{span}\{\mathbf 1\}$: the effective output dimension is $d$ (at most $d-1$ for the
+  distribution), not $|\Voc|$ --- the softmax bottleneck~\citep{yang2018softmax}.
   \item \textbf{Continuous factorisation.} $f_\theta$ factors through token
   embeddings $c \mapsto E(c)\in\RR^{L\times d}$, so it is the discrete lift of a
   smooth map on a continuous, low-dimensional domain rather than an arbitrary
   function on a combinatorial set.
-  \item \textbf{Lipschitz smoothness.} Bounded attention/MLP operator norms make
-  $f_\theta$ Lipschitz on the compact embedding domain~\citep{kim2021lipschitz}:
-  nearby contexts produce nearby logits --- the condition under which point
-  evaluations are informative (Section~\ref{sec:rip}).
-  \item \textbf{Small description complexity.} The transformer-realizable class
-  $\Fclass$ has metric entropy far below that of generic Lipschitz functions on
-  the same domain~\citep{elbraechter2021dnn} --- polynomial in $1/\varepsilon$,
-  with an exponent set by the network's effective complexity, not the ambient
-  domain dimension.
+  \item \textbf{Lipschitz smoothness.} On the compact embedding domain (bounded
+  token embeddings plus positional encodings), $f_\theta$ is a composition of
+  $C^1$ maps and is therefore Lipschitz, with constant controlled by the product
+  of per-layer operator norms. The restriction to a bounded domain is essential:
+  standard dot-product self-attention is provably \emph{not} Lipschitz on the
+  unbounded domain $\RR^{L\times d}$~\citep[Thm.~3.1]{kim2021lipschitz}, but on a
+  ball of radius $R$ its local Lipschitz constant scales as
+  $\sqrt{L}\cdot\mathrm{poly}(R,\|W\|)$~\citep[Thm.~3.3]{castin2024smooth} (see
+  also \citealp{vuckovic2021regularity}). Thus nearby contexts produce nearby
+  logits --- the condition under which point evaluations are informative
+  (Section~\ref{sec:rip}).
+  \item \textbf{Small description complexity.} For a bounded-weight, fixed
+  architecture the metric entropy of the realizable class grows only
+  polynomially in $1/\varepsilon$ --- roughly
+  $\Hent_\varepsilon(\Fclass)\lesssim W\log(1/\varepsilon)$ with $W$ the parameter
+  count --- rather than the $(1/\varepsilon)^{D}$ entropy of generic Lipschitz
+  functions on $[0,1]^{D}$, which is exponential in the ambient dimension
+  $D$~\citep{kolmogorov1959entropy,anthonybartlett1999}. For the transformer
+  class specifically, norm- and rank-based covering-number bounds make the
+  dependence on embedding dimension and context length only
+  logarithmic~\citep{edelman2022inductive,trauger2024sequence}; networks remain
+  Kolmogorov--Donoho rate-distortion optimal approximants of structured function
+  classes~\citep{elbraechter2021dnn}.
 \end{enumerate}
 
 These four properties are the compressibility priors. The thesis makes precise
@@ -117,8 +130,10 @@ several realism levels:
   $\mathrm{softmax}(z)$ --- \emph{noisy, quantised} measurements requiring
   repetition to denoise.
   \item \textbf{Adaptive logit-bias oracle:} query-time perturbations
-  (\citet{carlini2024stealing}) act as designed measurement vectors, enabling
-  subspace probing under restricted output access.
+  (\citet{carlini2024stealing}) act as designed measurement vectors that
+  reconstruct individual logit coordinates through a top-$k$ API, after which the
+  codomain subspace is identified by SVD --- subspace probing under restricted
+  output access.
 \end{itemize}
 
 A central practical theme is how these restricted oracles degrade the recovery
@@ -155,31 +170,36 @@ develops this object along three established lines.
 
 \paragraph{Sample complexity via metric entropy.} The uniform isometry is an
 empirical-process statement; the required $m$ is governed by the metric entropy
-$\Hent_\varepsilon(\Fclass)$ of the transformer class --- the
-Bölcskei/Kolmogorov--Donoho machinery~\citep{elbraechter2021dnn}. Roughly
+$\Hent_\varepsilon(\Fclass)$ of the transformer class. Norm- and rank-based
+covering-number bounds for self-attention show $\Hent_\varepsilon(\Fclass)$ scales
+polynomially in $1/\varepsilon$ and only logarithmically (or not at all) in the
+sequence length~\citep{edelman2022inductive,trauger2024sequence}, so heuristically
 $m\gtrsim\Hent_\varepsilon(\Fclass)/(1-\delta)$. The closest prior on recovering a
 \emph{system} from input--output traces in a metric-entropy-optimal manner is
 \citet{hutter2022metric}.
 
 \paragraph{Well-posedness via smoothness (sampling numbers).} Whether point
 samples suffice --- rather than arbitrary linear functionals --- is the subject of
-information-based complexity. Recent results show that for sufficiently smooth
-classes, sampling numbers decay at the same polynomial rate as approximation
-numbers, so point evaluations are essentially as powerful as optimal linear
-measurements~\citep{krieg2021function,krieg2021functionII,novak2010tractability}.
+information-based complexity. Recent results show that whenever the approximation
+numbers are square-summable (decay rate $s>\tfrac12$), the sampling numbers decay
+at the same polynomial rate, so point evaluations are essentially as powerful as
+optimal linear measurements~\citep{krieg2021function,krieg2021functionII,novak2010tractability};
+the sharp, logarithm-free form $g_{cm}^2\lesssim\tfrac1m\sum_{k\ge m}a_k^2$ is due to
+\citet{dolbeault2023sharp}.
 The Lipschitz prior (P3) is exactly what places $\Fclass$ in this regime,
 justifying that query access loses little against an idealised measurement
 operator. Note that these results establish the \emph{rate} of an optimal sampling
 algorithm; deriving the two-sided isometry of Condition~\ref{cond:rip} still
 requires an empirical-process argument over $\Fclass-\Fclass$.
 
-\paragraph{Lower bounds via packing.} A maximal $\varepsilon$-packing of
-$\Fclass$ with Fano's inequality lower-bounds the query complexity by the metric
-entropy~\citep{yangbarron1999minimax}: no recovery scheme --- adaptive or not ---
-identifies $f_\theta$ to accuracy $\varepsilon$ from fewer than
-$\sim\Hent_\varepsilon(\Fclass)$ informative evaluations. This pins query
-complexity to the \emph{intrinsic} complexity of the model class, independent of
-vocabulary size and context length except through $\Hent_\varepsilon$.
+\paragraph{Lower bounds via packing.} Applying Fano's inequality to a maximal
+$\varepsilon$-packing of $\Fclass$ converts metric entropy into a minimax lower
+bound: the achievable accuracy $\varepsilon_m$ is fixed by the entropy-balance
+$\Hent_{\varepsilon_m}(\Fclass)\asymp m\,\varepsilon_m^2$ for the noisy
+(sampled-token) oracle~\citep{yangbarron1999minimax}, so no recovery scheme ---
+adaptive or not --- beats this rate. This pins query complexity to the
+\emph{intrinsic} complexity of the model class, independent of vocabulary size and
+context length except through $\Hent_\varepsilon$.
 
 % =============================================================================
 \section{Recoverable Targets}
@@ -191,9 +211,13 @@ low-complexity \emph{targets} derived from $f_\theta$, all under the single
 evaluation operator of Section~3.
 
 \begin{target}[Codomain structure]
-The subspace $\mathrm{range}(W_U)$ and the hidden dimension $d$. This is a
-functional of $f_\theta$, provably recoverable as minimum-rank / subspace recovery
-from logit queries, with sample complexity $O(d\log|\Voc|)$.
+The subspace $\mathrm{range}(W_U)$ and the hidden dimension $d$ --- the latter being
+identifiable, since $W_U$ itself is recoverable only up to an $\Voc$-irrelevant
+$d\times d$ symmetry (affine in practice, orthogonal in principle). This is a
+functional of $f_\theta$, recoverable as numerical-rank / subspace recovery (SVD of
+stacked logit vectors) from $O(d)$ full-logit queries; under a restricted
+top-$k$/logit-bias API the cost rises to $O(d\,|\Voc|)$, since each full logit
+vector must first be reconstructed coordinate-by-coordinate.
 \citet{carlini2024stealing} is the empirical existence proof and the controlled
 benchmark.
 \end{target}
