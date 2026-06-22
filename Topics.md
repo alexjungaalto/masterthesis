@@ -28,3 +28,21 @@ Today, powerful AI language models usually run inside the data centres of a few 
 Analyse whether and how local political leadership correlates with the availability of publicly funded childcare in rural Austrian municipalities, using open government data. Methods: data aggregation, correlation and regression analysis, before/after-election comparisons, and optionally causal inference. Tools: Python, pandas, geopandas. Suits students interested in political data science and regional development with a solid Python and statistics background.
 
 [Ask about this topic](mailto:alex.jung@aalto.fi?subject=Thesis%20topic:%20Political%20Influence%20on%20Childcare%20Provision%20in%20Rural%20Austria)
+
+## Machine learning theory and model auditing
+
+### Compressed Sensing of LLMs: Query-Efficient Recovery of a Black-Box Next-Token Function
+
+**Difficulty:** Advanced · **Data source:** Open-weight LLMs (Pythia, Qwen, Llama)
+
+An LLM can be viewed as a single unknown function: give it a context, it returns scores for the next token. This topic poses a compressed-sensing question about that function: how much of it can be reconstructed from a limited number of black-box queries, and what is the smallest number of queries needed? Classical compressed sensing recovers a high-dimensional signal from few measurements when the signal is structured; here the structure comes from how transformers are built (low-dimensional hidden states, smoothness, limited model complexity) and each query is one measurement. The thesis develops the theory (when do queries pin the model down, and a matching lower bound on how many are required) and tests it on open-weight models such as Pythia, Qwen and Llama, including under realistic API limits (top-k outputs, sampling noise, rate limits). The pay-off is a precise account of how auditable a deployed model is from the outside, and which deployment choices provably limit what an outsider can recover - a contribution to model auditing and trustworthy AI. Strong background in linear algebra, high-dimensional probability and statistical learning theory (or compressed sensing) recommended, plus comfort running open-weight LLMs in PyTorch.
+
+[Read the full proposal](topics/compressed-sensing-llms/proposal.pdf)
+
+**References**
+
+1. D. L. Donoho, "Compressed sensing," *IEEE Trans. Inf. Theory*, vol. 52, no. 4, pp. 1289-1306, 2006.
+2. F. Tramèr, F. Zhang, A. Juels, M. K. Reiter, and T. Ristenpart, "Stealing machine learning models via prediction APIs," in *Proc. 25th USENIX Security Symp.*, 2016, pp. 601-618.
+3. N. Carlini et al., "Stealing part of a production language model," in *Proc. ICML*, 2024. [Online]. Available: <https://arxiv.org/abs/2403.06634>
+
+[Ask about this topic](mailto:alex.jung@aalto.fi?subject=Thesis%20topic:%20Compressed%20Sensing%20of%20LLMs:%20Query-Efficient%20Recovery%20of%20a%20Black-Box%20Next-Token%20Function)

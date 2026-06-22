@@ -1,0 +1,329 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[expansion=false]{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage[numbers,sort&compress]{natbib}
+% This document uses natbib + bibtex for maximum portability.
+% For a biblatex/biber setup, delete the natbib line above and the
+% \bibliographystyle/\bibliography lines at the end, then use instead:
+%   \usepackage[backend=biber,style=numeric-comp,sorting=none,maxbibnames=99]{biblatex}
+%   \addbibresource{references.bib}
+% and replace \citet{...}/\citep{...} with \textcite{...}/\autocite{...},
+% and the two bibliography commands at the end with
+% \printbibliography[title={References}].
+
+% --- Theorem-style environments ----------------------------------------------
+\theoremstyle{definition}
+\newtheorem{condition}{Condition}
+\newtheorem{target}{Target}
+
+% --- Notation shortcuts ------------------------------------------------------
+\newcommand{\Voc}{\mathcal{V}}
+\newcommand{\Fclass}{\mathcal{F}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\Hent}{\mathcal{H}}
+
+\title{\textbf{Compressed Sensing of LLMs}\\[0.3em]
+\large Query-Efficient Recovery of a Black-Box Next-Token Function}
+\author{Master's Thesis Proposal\\[0.4em]
+\normalsize MSc in Computer Science / Machine Learning, Data Science and Artificial Intelligence\\
+\normalsize 30 ECTS \quad$\cdot$\quad Supervisor: Prof.\ A.\ Jung\\
+\normalsize Department of Computer Science, Aalto University}
+\date{}
+
+\begin{document}
+\maketitle
+
+% =============================================================================
+\section{The Abstraction}
+
+We model a language model as a single deterministic nonlinear function
+\[
+  f_\theta : \Voc^L \to \RR^{\Voc}, \qquad c \mapsto z = f_\theta(c),
+\]
+mapping a context window $c$ (a token sequence of length up to $L$) to the logit
+vector $z$ over the next token, where $\Voc$ is the vocabulary. Autoregressive
+generation is iterated application of $f_\theta$, so $f_\theta$ is the
+\emph{complete} object: knowing it everywhere determines the model's entire
+input--output behaviour.
+
+Black-box access is the ability to \emph{evaluate} this function: submit a
+context $c$, observe (some view of) $f_\theta(c)$. The thesis asks the
+compressed-sensing question in its purest form: treating $f_\theta$ as an unknown
+high-dimensional signal and each query as a point evaluation, how much of
+$f_\theta$ can be recovered from $m \ll |\Voc|^L$ evaluations, under what
+structural conditions, and with what query designs?
+
+Everything below is organised around this one abstraction. There are no separate
+``attacks'' --- only different \emph{targets} (the whole function, a restriction
+of it, or a functional of it) recovered through the same evaluation operator.
+
+% =============================================================================
+\section{Why Compressed Sensing Applies: the Compressibility Priors}
+
+A generic function $\Voc^L \to \RR^{\Voc}$ is unrecoverable from few samples ---
+the domain has size $|\Voc|^L$. Recovery is possible only because $f_\theta$ is
+\emph{not} generic. Four structural facts play the role that sparsity plays in
+classical compressed sensing~\citep{donoho2006compressed,candes2005decoding},
+and that earlier underpinned prediction-API model
+stealing~\citep{tramer2016stealing}:
+
+\begin{enumerate}[label=\textbf{(P\arabic*)},leftmargin=*]
+  \item \textbf{Low-rank codomain.} The logits factor as $z = W_U\,h(c)$ with
+  hidden state $h(c)\in\RR^{d}$ and un-embedding $W_U\in\RR^{\Voc\times d}$,
+  $d \ll |\Voc|$. Hence $\mathrm{range}(f_\theta)$ lies in a $d$-dimensional
+  subspace (affine after softmax centring). The effective output dimension is
+  $d$, not $|\Voc|$.
+  \item \textbf{Continuous factorisation.} $f_\theta$ factors through token
+  embeddings $c \mapsto E(c)\in\RR^{L\times d}$, so it is the discrete lift of a
+  smooth map on a continuous, comparatively low-dimensional domain rather than an
+  arbitrary function on a combinatorial set.
+  \item \textbf{Lipschitz smoothness.} Bounded attention/MLP operator norms make
+  $f_\theta$ Lipschitz in the embedding domain: nearby contexts produce nearby
+  logits. This controls ``spikiness'' and is exactly the condition under which
+  point evaluations are informative (Section~\ref{sec:rip}).
+  \item \textbf{Small description complexity.} The transformer-realizable class
+  $\Fclass$ has metric entropy far below that of generic Lipschitz functions on
+  the same domain --- polynomial in $1/\varepsilon$ with an exponent set by the
+  network's effective complexity, not by the ambient domain dimension.
+\end{enumerate}
+
+These four properties are the compressibility priors. The thesis makes precise
+how each one reduces the number of evaluations needed.
+
+% =============================================================================
+\section{Measurement Model}
+
+Black-box access furnishes an \emph{evaluation operator}
+$\Phi:\Fclass\to(\RR^{\Voc})^m$, $\Phi(f)=(f(c_1),\dots,f(c_m))$, instantiated at
+several realism levels:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Full-logit oracle:} $y_i=f_\theta(c_i)\in\RR^{\Voc}$ (clean linear
+  measurements of the codomain).
+  \item \textbf{Top-$k$ log-probability oracle:} only the $k$ largest entries are
+  observed --- a \emph{compressed/partial} measurement of each output vector.
+  \item \textbf{Sampled-token oracle:} only stochastic draws from
+  $\mathrm{softmax}(z)$ --- \emph{noisy, quantised} measurements requiring
+  repetition to denoise.
+  \item \textbf{Adaptive logit-bias oracle:} query-time perturbations
+  (\citet{carlini2024stealing}) act as designed measurement vectors, enabling
+  subspace probing under restricted output access.
+\end{itemize}
+
+A central practical theme is how these restricted oracles degrade the recovery
+guarantees of the full-logit case --- i.e.\ how API defenses act as perturbations
+of the measurement operator.
+
+% =============================================================================
+\section{Core Theoretical Object: Restricted Isometry over $\Fclass$ via Point Evaluation}
+\label{sec:rip}
+
+Fix a context distribution $\mathcal{D}$ and the population seminorm
+$\|f\|^2=\EE_{c\sim\mathcal{D}}\|f(c)\|^2$. Draw probe contexts
+$c_1,\dots,c_m\sim\mathcal{D}$ and form the empirical evaluation seminorm
+$\widehat{\|f\|}^2=\tfrac1m\sum_i\|f(c_i)\|^2$. The recovery problem is well-posed
+precisely when the evaluation operator is a restricted isometry over the
+difference set $\Fclass-\Fclass$.
+
+\begin{condition}[Evaluation-RIP over $\Fclass$]\label{cond:rip}
+There exists $\delta\in(0,1)$ such that, for all $f,g\in\Fclass$,
+\[
+  (1-\delta)\,\|f-g\|^2
+  \;\le\;
+  \frac1m\sum_{i=1}^{m}\|f(c_i)-g(c_i)\|^2
+  \;\le\;
+  (1+\delta)\,\|f-g\|^2 .
+\]
+\end{condition}
+
+Condition~\ref{cond:rip} says: any two models agreeing on the $m$ probe contexts
+must be globally close. When it holds with small $\delta$, evaluations at
+$\{c_i\}$ form a norm-preserving sketch of the entire function class, and recovery
+(find $\hat f\in\Fclass$ consistent with the measurements) is stable. The thesis
+develops this object along three established lines.
+
+\paragraph{Sample complexity via metric entropy.} The uniform isometry is an
+empirical-process statement; the required $m$ is governed by the metric entropy
+$\Hent_\varepsilon(\Fclass)$ of the transformer class --- the
+Bölcskei/Kolmogorov--Donoho machinery~\citep{elbraechter2021dnn}. Roughly
+$m\gtrsim\Hent_\varepsilon(\Fclass)/(1-\delta)$. The closest prior on recovering a
+\emph{system} from input--output traces in a metric-entropy-optimal manner is
+\citet{hutter2022metric}.
+
+\paragraph{Well-posedness via smoothness (sampling numbers).} Whether point
+samples suffice --- rather than arbitrary linear functionals --- is the subject of
+information-based complexity. Recent results show that for sufficiently smooth
+classes, sampling numbers decay at the same polynomial rate as approximation
+numbers, so point evaluations are essentially as powerful as optimal linear
+measurements~\citep{krieg2021function,krieg2021functionII,novak2010tractability}.
+The Lipschitz prior (P3) is exactly what places $\Fclass$ in this regime,
+justifying that query access loses little against an idealised measurement
+operator. Note that these results establish the \emph{rate} of an optimal sampling
+algorithm; deriving the two-sided isometry of Condition~\ref{cond:rip} still
+requires an empirical-process argument over $\Fclass-\Fclass$.
+
+\paragraph{Lower bounds via packing.} A maximal $\varepsilon$-packing of
+$\Fclass$ together with Fano's inequality lower-bounds the query complexity by the
+metric entropy: no recovery scheme --- adaptive or not --- can identify $f_\theta$
+to accuracy $\varepsilon$ from fewer than $\sim\Hent_\varepsilon(\Fclass)$
+informative evaluations. This pins the query complexity to the \emph{intrinsic}
+complexity of the model class, independent of vocabulary size or context length
+except through $\Hent_\varepsilon$.
+
+% =============================================================================
+\section{Recoverable Targets}
+\label{sec:targets}
+
+Recovering all of $f_\theta$ to high accuracy is infeasible when
+$\Hent_\varepsilon(\Fclass)$ is large; the tractable regime is recovery of
+low-complexity \emph{targets} derived from $f_\theta$, all under the single
+evaluation operator of Section~3.
+
+\begin{target}[Codomain structure]
+The subspace $\mathrm{range}(W_U)$ and the hidden dimension $d$. This is a
+functional of $f_\theta$, provably recoverable as minimum-rank / subspace recovery
+from logit queries, with sample complexity $O(d\log|\Voc|)$.
+\citet{carlini2024stealing} is the empirical existence proof and the controlled
+benchmark.
+\end{target}
+
+\begin{target}[Restriction to a structured sub-domain]
+$f_\theta|_{\mathcal{S}}$, where $\mathcal{S}$ is a prompt family varying along
+$k\ll Ld$ axes (e.g.\ in-context demonstrations of a function
+class~\citep{garg2022what}). Recovery is local nonlinear function
+approximation with sample complexity controlled by
+$\Hent_\varepsilon(\Fclass|_{\mathcal{S}})$, small when $\mathcal{S}$ is
+low-dimensional. This subsumes ``identify the algorithm implemented in-context''
+as recovery of $f_\theta$ on a structured slice.
+\end{target}
+
+\begin{target}[General functionals]
+$P(f_\theta)$ --- a decision boundary on a sub-domain, the presence of a
+watermark, a behavioural property. Such a functional is recoverable under a
+restricted isometry on the relevant quotient of $\Fclass$, typically with far
+fewer queries than full recovery.
+\end{target}
+
+% =============================================================================
+\section{Research Questions}
+
+\begin{description}[leftmargin=*,style=nextline]
+  \item[RQ1.] When does the point-evaluation operator satisfy a restricted
+  isometry over the transformer-realizable class $\Fclass$, and how do the four
+  compressibility priors (P1--P4) enter the isometry constant?
+  \item[RQ2.] What is the query complexity $m$ for each target in terms of the
+  metric entropy / sampling numbers of the relevant (restricted or quotiented)
+  class, and does it match the packing lower bound?
+  \item[RQ3.] How do the restricted oracles of Section~3 --- top-$k$ truncation,
+  sampling noise, finite precision, rate limits --- degrade the isometry constant,
+  and which defenses provably destroy recoverability versus merely inflating $m$?
+\end{description}
+
+% =============================================================================
+\section{Methodology}
+
+\paragraph{Theory track.} Establish the evaluation-RIP condition for $\Fclass$;
+import metric-entropy bounds for transformer-type classes and sampling-number
+results to convert them into query-complexity upper bounds; prove matching packing
+lower bounds; analyse restricted oracles as perturbations of the isometry.
+
+\paragraph{Empirical track.} On open-weight models where $f_\theta$ is fully
+known (Pythia, Qwen, Llama across scales): (i)~empirically estimate the
+evaluation-isometry constant for different probe designs (random vs structured vs
+adaptively chosen contexts); (ii)~recover targets T1--T3 and compare achieved
+query counts against the theory; (iii)~stress-test under simulated top-$k$ and
+sampling oracles. Deliverables include a reproducible probing/recovery harness and
+empirical query-complexity scaling curves.
+
+% =============================================================================
+\section{Evaluation}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Recovery accuracy:} subspace/parameter error (T1),
+  function-approximation error on $\mathcal{S}$ (T2), functional error (T3).
+  \item \textbf{Query efficiency:} measured $m$ vs predicted complexity; scaling
+  against $d$, $|\Voc|$, and the dimensionality of $\mathcal{S}$.
+  \item \textbf{Isometry diagnostics:} empirical $\delta$ as a function of probe
+  design and budget.
+  \item \textbf{Robustness:} degradation across the oracle hierarchy; lower-bound
+  tightness (achieved vs information-theoretic $m$).
+\end{itemize}
+
+% =============================================================================
+\section{Expected Contributions}
+
+\begin{enumerate}[leftmargin=*]
+  \item A single compressed-sensing formalism for black-box LLMs: the model as one
+  nonlinear function, query access as point evaluation, recovery governed by a
+  restricted isometry over the function class.
+  \item Query-complexity upper bounds (via metric entropy and sampling numbers)
+  and matching packing lower bounds for codomain structure, sub-domain
+  restrictions, and functionals.
+  \item A robustness theory relating realistic API oracles to the isometry
+  constant, with provable separations between benign and recovery-destroying
+  defenses.
+  \item An open, reproducible harness and empirical scaling laws relating query
+  budget to recoverable structure.
+\end{enumerate}
+
+The framework quantifies \emph{how auditable} a deployed model is from the
+outside, and conversely which deployment choices provably limit external recovery
+--- a direct contribution to trustworthy-AI and model-auditing goals.
+
+% =============================================================================
+\section{Risks and Contingencies}
+
+\begin{itemize}[leftmargin=*]
+  \item \emph{The point-evaluation operator may resist a clean RIP for the full
+  class.} Mitigation: smoothness places $\Fclass$ in the sampling-numbers regime;
+  where a global RIP is unavailable, restrict attention to targets T1--T3, whose
+  quotient classes have small metric entropy and admit isometries directly.
+  \item \emph{Restricted oracles may block logit access entirely.} Mitigation: the
+  open-weight track is independent of any external API; oracle restrictions are
+  simulated locally with controlled corruption layers.
+  \item \emph{Theory--experiment gap.} Mitigation: T1 (validated by
+  \citet{carlini2024stealing}) guarantees a defensible empirical result even if
+  the bounds for T2/T3 come out only partial.
+\end{itemize}
+
+% =============================================================================
+\section{Indicative Timeline (6 months)}
+
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+\textbf{Month} & \textbf{Milestone}\\
+\midrule
+1 & Formalise the function/measurement model; consolidate metric-entropy and sampling-number tools\\
+2 & Evaluation-RIP theory; codomain recovery (T1) + benchmark harness\\
+3 & T1 empirical validation; oracle-robustness study\\
+4 & Sub-domain restriction (T2) and functionals (T3): complexity upper/lower bounds\\
+5 & T2/T3 experiments; query-complexity scaling laws\\
+6 & Synthesis, writing, defense preparation\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =============================================================================
+\section{Prerequisites for the Student}
+
+Linear algebra and high-dimensional probability; prior exposure to compressed
+sensing or statistical learning theory (sample complexity, covering/packing
+arguments); comfort with PyTorch and running open-weight LLMs. Familiarity with
+metric-entropy / information-based-complexity arguments is an asset but can be
+acquired during Month~1.
+
+% =============================================================================
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

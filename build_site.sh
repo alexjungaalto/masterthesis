@@ -56,6 +56,16 @@ rm -f docs/material/.DS_Store docs/material/creategraphtex.py
 mkdir -p docs/stylesheets
 cp web/extra.css docs/stylesheets/extra.css
 
+# Publish full topic proposal PDFs at the same relative path they live in the
+# repo, so a catalog `url` like `topics/<slug>/proposal.pdf` resolves both on
+# the website and in the GitHub view of Topics.md.
+shopt -s nullglob
+for pdf in topics/*/proposal.pdf; do
+  mkdir -p "docs/$(dirname "$pdf")"
+  cp "$pdf" "docs/$pdf"
+done
+shopt -u nullglob
+
 if [[ "${1:-}" == "serve" ]]; then
   echo "==> Serving live preview (Ctrl-C to stop)"
   exec $MKDOCS serve

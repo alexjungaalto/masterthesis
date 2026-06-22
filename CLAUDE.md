@@ -17,6 +17,8 @@ This is a **public GitHub repository** providing guidance to master thesis stude
 - `material/` — PDFs and templates (grade characterization, self-assessment form, peer-review forms, current thesis list PDF)
 - `material/creategraphtex.py` — Utility to extract LaTeX document structure as a graph
 - `mkdocs.yml`, `build_site.sh`, `requirements-docs.txt` — Static website (ml-theses.org) build config; see `DEPLOY.md`
+- `topics/<slug>/` — Optional full proposal for a topic (`proposal.tex`, `references.bib`, `proposal.pdf`). The PDF is published to the website and linked from the catalog via the topic's `url`.
+- `docs/`, `site/` — **Generated** by `build_site.sh` (git-ignored build artifacts; never edit by hand). `docs/` is the assembled MkDocs input; `site/` is the final static website.
 
 ## Key Conventions
 
@@ -50,7 +52,8 @@ This is a **public GitHub repository** providing guidance to master thesis stude
   python compile_topics.py --markdown
   ```
 - `status` is `open` or `taken`. The published catalog lists only `open` topics by default; use `--all` to include taken ones.
-- Each topic is one short CSV row (no per-topic long-form pages). Keep `description` to a concise paragraph.
+- Each topic is one short CSV row. Keep `description` to a concise paragraph.
+- For a topic with a full written proposal, store its source and PDF in `topics/<slug>/` (`proposal.tex`, `references.bib`, `proposal.pdf`) and set the row's `url` to `topics/<slug>/proposal.pdf`. The catalog renders this as a "Read the full proposal" link, and `build_site.sh` publishes the PDF at the same relative path (so the link works both on the website and in the GitHub view of `Topics.md`).
 
 ## Style Notes
 
