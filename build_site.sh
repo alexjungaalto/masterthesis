@@ -56,6 +56,10 @@ rm -f docs/material/.DS_Store docs/material/creategraphtex.py
 mkdir -p docs/stylesheets
 cp web/extra.css docs/stylesheets/extra.css
 
+# robots.txt (points crawlers at the auto-generated sitemap). Copied to the
+# docs root so MkDocs publishes it at site root: https://ml-theses.org/robots.txt
+cp web/robots.txt docs/robots.txt
+
 # Publish full topic proposal PDFs at the same relative path they live in the
 # repo, so a catalog `url` like `topics/<slug>/proposal.pdf` resolves both on
 # the website and in the GitHub view of Topics.md.
