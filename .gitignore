@@ -11,6 +11,10 @@ __pycache__/
 .venv/
 venv/
 
+# Thesis-list exports (regenerate with: python compile_theses.py --tex)
+/theses.tex
+/theses.pdf
+
 # LaTeX build artifacts
 *.aux
 *.fdb_latexmk

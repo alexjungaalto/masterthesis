@@ -23,7 +23,9 @@ pip install -r requirements-docs.txt
 ```
 
 You normally only ever hand-edit `theses.csv`, `README.md`, or `Topics.md`.
-`docs/`, `site/`, and `theses.md` are regenerated and git-ignored.
+`docs/` and `site/` are regenerated and git-ignored. `theses.md` is also
+regenerated from the CSV, but stays committed so the README's link to it
+works in the GitHub repo view.
 
 ## 2. DNS (domain registrar)
 
