@@ -20,11 +20,12 @@ This repository contains guidance for students doing a master's thesis supervise
 8. [Thesis Manuscript Preparation](#thesis-manuscript-preparation)
 9. [Typesetting Mathematical Texts](#typesetting-mathematical-texts)
 10. [Iterative Writing Process](#iterative-writing-process)
-11. [Final Thesis Checklist](#final-thesis-checklist)
-12. [Thesis Presentation and Self-Evaluation](#thesis-presentation-and-self-evaluation)
-13. [Thesis Evaluation, Decision, and Appeals](#thesis-evaluation-decision-and-appeals)
-14. [References](#references)
-15. [Feedback and Questions](#feedback-and-questions)
+11. [Self-Editing Pass (Prose Linter)](#self-editing-pass-prose-linter)
+12. [Final Thesis Checklist](#final-thesis-checklist)
+13. [Thesis Presentation and Self-Evaluation](#thesis-presentation-and-self-evaluation)
+14. [Thesis Evaluation, Decision, and Appeals](#thesis-evaluation-decision-and-appeals)
+15. [References](#references)
+16. [Feedback and Questions](#feedback-and-questions)
 
 ---
 
@@ -197,6 +198,23 @@ L(\theta) = \frac{1}{n} \sum_{i=1}^n \ell(f(x_i;\theta), y_i).
 
 ---
 
+## Self-Editing Pass (Prose Linter)
+
+Once a draft is near-final, read it through once looking **only** for the recurring prose defects below. Each is cheap to fix yourself and distracting for a reader — or your supervisor — to flag repeatedly. Fixing them before review means feedback can focus on the substance of your work rather than on mechanics.
+
+- **Excessive forward referencing** — "as we will see in Chapter 5" scattered throughout. Present material where the reader needs it; a few pointers are fine, but a habit of them signals disorganised structure. A small helper script, [`forward_reference_linter.py`](assets/forward_reference_linter.py), flags forward-looking cue phrases and any `\ref`/`\eqref` whose `\label` is defined later in the document — run `python3 forward_reference_linter.py chapter1.tex chapter2.tex ...` (files in reading order) as a first pass.
+- **Undefined or re-defined acronyms** — expand each acronym at first use, then use it consistently; do not re-expand it later.
+- **Inconsistent terminology** — pick one term per concept (following the [Aalto Dictionary of ML](https://aaltodictionaryofml.github.io/)) and do not silently switch between synonyms (e.g., "data point" vs "sample" vs "instance").
+- **Vague quantifiers** — "significantly", "very", "a lot" without a number. Give the figure or drop the word.
+- **Uncited claims** — every empirical or historical assertion that is not your own result needs a citation.
+- **Dangling references** — "this shows", "it follows" where "this" or "it" has no clear antecedent.
+- **Unmotivated sections** — a chapter or section that opens without a sentence stating what it covers and why it belongs here.
+- **Tense drift** — keep the tense consistent within a passage when describing methods and results.
+
+Reading aloud, or reading one defect type at a time from start to finish, catches far more than a single general pass.
+
+---
+
 ## Final Thesis Checklist
 
 Before submitting, verify each item below. Links point to the relevant section of this guide.
@@ -208,6 +226,8 @@ Before submitting, verify each item below. Links point to the relevant section o
 - [x] All figures have labelled axes and informative captions
 - [x] All numbered equations, tables, and figures are referenced in the text
 - [x] Citations are formatted according to IEEE guidelines
+- [x] Acronyms are expanded at first use and terminology is consistent (see [Self-Editing Pass](#self-editing-pass-prose-linter))
+- [x] A prose self-editing pass has been done for forward referencing, vague quantifiers, and dangling references (see [Self-Editing Pass](#self-editing-pass-prose-linter))
 - [x] Self-assessment form is completed ([form here](material/Statement_template_CCIS.docx))
 
 ---

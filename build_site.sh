@@ -60,6 +60,14 @@ cp web/extra.css docs/stylesheets/extra.css
 # docs root so MkDocs publishes it at site root: https://ml-theses.org/robots.txt
 cp web/robots.txt docs/robots.txt
 
+# Standalone tool scripts (e.g. the forward-reference linter) served under
+# /assets/. Copied so a README link like `assets/foo.py` resolves both on the
+# website (https://ml-theses.org/assets/foo.py) and in the GitHub repo view.
+if [[ -d assets ]]; then
+  mkdir -p docs/assets
+  cp -R assets/. docs/assets/
+fi
+
 # Publish full topic proposal PDFs at the same relative path they live in the
 # repo, so a catalog `url` like `topics/<slug>/proposal.pdf` resolves both on
 # the website and in the GitHub view of Topics.md.
