@@ -56,8 +56,9 @@ As a thesis student, you are expected to:
 To start your thesis:
 
 1. **Formulate your ML problem** clearly by identifying data points, their features, and labels ([watch this video](https://youtu.be/2q5jpvD-638)).
-2. **Choose suitable ML models** that you are comfortable implementing (e.g., linear regression, random forests, or neural networks).
-3. **Identify data sources and evaluation criteria** (e.g., test accuracy, computational efficiency).
+2. **Formulate your research questions** so that each is clear, focused on a single problem, and specific about the metrics involved ([guidance](https://www.monash.edu/library/help/assignments-research/developing-research-questions)). Prefer "to what extent does X improve Y on metric Z" over yes/no forms like "can X beat Y", and do not bundle two questions into one.
+3. **Choose suitable ML models** that you are comfortable implementing (e.g., linear regression, random forests, or neural networks).
+4. **Identify data sources and evaluation criteria** (e.g., test accuracy, computational efficiency).
 
 Detailed guidance is available in [Chapter 2 of the textbook](https://primo.aalto.fi/discovery/openurl?institution=358AALTO_INST&vid=358AALTO_INST:VU1&ctx_enc=info:ofi%2FencUTF-8&rft_val_fmt=info:ofi%2Fkev:fmt:book&rft.pub=Springer&rft_id=info:doi%2F10.1007%2F978-981-16-8193-6) and in these [lecture videos](https://youtube.com/playlist?list=PLrbn2dGrLJK9zB7pdEd8QOtmC9-eoqoch).
 
@@ -109,6 +110,7 @@ You are accountable for the entire content of your thesis — every claim, resul
 
 - Disclose when and how you used AI tools, in a dedicated statement — not in the Methods section, which is reserved for research methods.
 - Record the tool, version, and settings; online services change frequently, so exact reproduction is rarely possible.
+- Include the statement also if you used no AI tools, and say so explicitly — an absent statement is indistinguishable from undisclosed use.
 
 ### Data Protection and IP
 
@@ -156,11 +158,11 @@ When preparing your thesis, ensure:
 - **Loss functions**: Explicitly state the loss function used for training and, separately, for validation or testing.
 - **Numerical results**: Present and discuss results thoroughly to answer your research questions.
 - **Baselines**: Use appropriate baselines or benchmarks (e.g., [Kaggle competitions](https://kaggle.com)).
-- **Structure**: Begin each chapter and section with an introductory paragraph explaining its content and its connection to the rest of the thesis.
+- **Structure**: Begin each chapter and section with an introductory paragraph explaining its content and its connection to the rest of the thesis. Where a chapter or section has subsections, the introduction should tell the reader what each subsection covers and how they fit together — stating a theme without mapping it onto the subsections leaves the reader without a map.
 - **Equations**: Reference all numbered equations using `\eqref{}`. Only number equations that are referenced in the text; leave unreferenced equations unnumbered.
 - **Algorithms**: Present new methods as pseudocode ([see examples](https://www.overleaf.com/learn/latex/Algorithms)).
-- **Figures**: Ensure all figures are clear, labelled, and have informative captions ([caption guidelines](https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf)).
-- **References**: Format according to [IEEE guidelines](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf).
+- **Figures**: Ensure all figures are clear, labelled, and have informative captions ([caption guidelines](https://www.scu.edu/media/offices/provost/writing-center/resources/Tips-Figure-Captions.pdf)). Set the figure size to its final print width so that tick, axis, and legend text renders at no less than roughly 80% of the body-text size, and check that all plots remain readable in a grayscale printout.
+- **References**: Format according to [IEEE guidelines](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf). Cite the published, peer-reviewed version of a paper rather than its arXiv preprint whenever one exists (check [dblp](https://dblp.org) or the publisher's site).
 
 For creating effective figures, see Edward Tufte's [The Visual Display of Quantitative Information](https://www.edwardtufte.com/tufte/books_vdqi).
 
@@ -209,9 +211,13 @@ Once a draft is near-final, read it through once looking **only** for the recurr
 - **Uncited claims** — every empirical or historical assertion that is not your own result needs a citation.
 - **Dangling references** — "this shows", "it follows" where "this" or "it" has no clear antecedent.
 - **Unmotivated sections** — a chapter or section that opens without a sentence stating what it covers and why it belongs here.
+- **Jargon and undefined evaluative claims** — "smoothest convergence", "performs well", "training is stable": define and measure the property, or drop the claim. A nearby number (a hyperparameter value, a sample size) does not quantify the claim itself. Beware evaluative use of words with a precise technical meaning ("smooth" means differentiable).
+- **"Statistically significant"** — use only with an actual statistical test. Without one the phrase claims evidence you do not have; write "reduces sampling variability" or report the spread instead.
 - **Tense drift** — keep the tense consistent within a passage when describing methods and results.
 
 Reading aloud, or reading one defect type at a time from start to finish, catches far more than a single general pass.
+
+A linter suite covering every defect on this list — and most of the manuscript checklist above — is available in [`assets/linters/`](assets/linters/): run `python3 run_all_linters.py thesis.pdf` on your compiled PDF (or on your LaTeX sources) before every revision round. The scripts need only Python 3 with `pdftotext` or PyMuPDF; see the [linter README](assets/linters/README.md).
 
 ---
 
@@ -228,6 +234,10 @@ Before submitting, verify each item below. Links point to the relevant section o
 - [x] Citations are formatted according to IEEE guidelines
 - [x] Acronyms are expanded at first use and terminology is consistent (see [Self-Editing Pass](#self-editing-pass-prose-linter))
 - [x] A prose self-editing pass has been done for forward referencing, vague quantifiers, and dangling references (see [Self-Editing Pass](#self-editing-pass-prose-linter))
+- [x] Research questions are focused, specific, and not answerable with a bare yes/no (see [Getting Started](#getting-started))
+- [x] Solver/library versions, key tolerance values, and hardware are reported for all experiments
+- [x] Figure text is legible at print size and in grayscale
+- [x] The AI-use statement is included, naming tools and versions (also if no AI tools were used)
 - [x] Self-assessment form is completed ([form here](material/Statement_template_CCIS.docx))
 
 ---
