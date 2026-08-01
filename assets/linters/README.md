@@ -26,20 +26,20 @@ python3 run_all_linters.py thesis.pdf --llm --bib  # + LLM + bibliography
 
 | Instruction | Linter | How |
 |---|---|---|
-| Problem formulation: state what the data points are, how features and labels are defined | `thesis_checklist_llm.py` | LLM verdict `problem-formulation` with quoted evidence |
-| Research scope/questions well-posed (clear, focused, specific, complex, feasible, relevant — per university guidance) | `rq_quality_lint_llm.py` | per-question criteria verdicts + scope checks (gap, delimitations, alignment) |
+| Problem formulation: data points,<br>features, labels defined | `thesis_checklist_llm.py` | verdict `problem-formulation`<br>with quoted evidence |
+| Research scope/questions well-posed<br>(clear, focused, specific, complex,<br>feasible, relevant) | `rq_quality_lint_llm.py` | per-question criteria verdicts<br>+ scope checks (gap,<br>delimitations, alignment) |
 | Identify data sources and evaluation criteria | `thesis_checklist_llm.py` | verdict `data-sources-eval` |
-| Explicitly state the training loss and, separately, the validation/test loss | `thesis_checklist_llm.py` | verdict `loss-functions` |
-| Present and discuss numerical results thoroughly to answer your research questions | `research_questions_lint_llm.py` (per-question tracing), `thesis_checklist_llm.py` (global verdict `results-discussed`) | LLM |
+| Training loss and validation/test<br>loss explicitly stated | `thesis_checklist_llm.py` | verdict `loss-functions` |
+| Numerical results answer the<br>research questions | `research_questions_lint_llm.py`<br>`thesis_checklist_llm.py` | per-question tracing<br>global verdict `results-discussed` |
 | Use appropriate baselines or benchmarks | `thesis_checklist_llm.py` | verdict `baselines` |
-| Begin each chapter/section with an introductory paragraph | `section_intro_lint_llm.py` (per-unit quality: does the intro map its subsections and tie them together), `thesis_checklist_llm.py` (verdict `section-intros`), `prose_lint_llm.py` (`unmotivated-section`) | LLM |
+| Chapter/section introductions | `section_intro_lint_llm.py`<br>`thesis_checklist_llm.py`<br>`prose_lint_llm.py` | intro maps its subsections<br>verdict `section-intros`<br>`unmotivated-section` |
 | Reference all numbered equations using `\eqref{}` | `math_typeset_lint.py` | `REF-NOT-EQREF` (LaTeX) |
-| Only number equations that are referenced; all numbered equations, tables, figures referenced in the text | `unreferenced_entity_linter.py` | `UNREFERENCED`, `UNLABELED-EQ`, `UNLABELED-FLOAT` (LaTeX + PDF) |
+| All numbered equations, tables,<br>figures referenced in the text | `unreferenced_entity_linter.py` | `UNREFERENCED`, `UNLABELED-EQ`,<br>`UNLABELED-FLOAT` (LaTeX + PDF) |
 | Present new methods as pseudocode | `thesis_checklist_llm.py` | verdict `pseudocode` |
 | Model diagnosis via numerical experiments and mathematical analysis | `thesis_checklist_llm.py` | verdict `model-diagnosis` |
-| Figures clear, labelled, informative captions | `figure_lint_llm.py` (rendered figures: font size, whitespace, contrast, axis labels), `caption_lint.py` (`SHORT-CAPTION`, `NO-CAPTION`), `thesis_checklist_llm.py` (verdict `captions-informative`) | pixels + vision LLM + heuristic |
+| Figures clear, labelled,<br>informative captions | `figure_lint_llm.py`<br>`caption_lint.py`<br>`thesis_checklist_llm.py` | rendered figures: fonts, whitespace,<br>contrast, axes (pixels + vision LLM)<br>`SHORT-CAPTION`, `NO-CAPTION`<br>verdict `captions-informative` |
 | References formatted per IEEE guidelines | `citation_style_lint.py` | style/entry/citation checks (LaTeX + PDF) |
-| Use terms defined in the Aalto Dictionary of ML | `terminology_lint.py` | `NON-DICTIONARY`, `TERM-MIX` (dictionary term listed first per cluster) |
+| Terms from the Aalto<br>Dictionary of ML | `terminology_lint.py` | `NON-DICTIONARY`, `TERM-MIX`<br>(dictionary term first per cluster) |
 
 ### Typesetting mathematical texts
 
@@ -52,14 +52,14 @@ python3 run_all_linters.py thesis.pdf --llm --bib  # + LLM + bibliography
 
 | Instruction | Linter | How |
 |---|---|---|
-| Excessive forward referencing | `prose_lint.py` (`FORWARD-CUE`), `crossref_forward_lint.py` (floats defined pages later), `forward_ref_lint.py` / `forward_ref_lint_llm.py` (concepts used before defined) | heuristic + LLM |
+| Excessive forward referencing | `prose_lint.py`<br>`crossref_forward_lint.py`<br>`forward_ref_lint.py`<br>`forward_ref_lint_llm.py` | `FORWARD-CUE` phrases<br>floats defined pages later<br>concepts used before defined<br>(regex and LLM variants) |
 | Undefined or re-defined acronyms | `acronym_lint.py` | `USED-BEFORE-EXPANSION`, `NEVER-EXPANDED`, `RE-EXPANDED` |
-| Inconsistent terminology / synonym switching | `terminology_lint.py` (`TERM-MIX`), `prose_lint_llm.py` (`synonym-switch`) | heuristic + LLM |
-| Vague quantifiers without a number | `prose_lint.py` (`VAGUE-QUANTIFIER`), `prose_lint_llm.py` | heuristic + LLM |
-| Jargon / undefined evaluative claims ("smoothest convergence", "performs well") | `prose_lint.py` (`JARGON`), `prose_lint_llm.py` (`jargon`) | heuristic + LLM |
-| Uncited claims (empirical/historical assertions need citations) | `prose_lint_llm.py` (`uncited-claim`); `bibliography_linter.py` verifies the cited references themselves | LLM + database lookup |
-| Dangling references ("this shows" without antecedent) | `prose_lint.py` (`DANGLING-REFERENCE`), `prose_lint_llm.py` | heuristic + LLM |
-| Unmotivated sections | `prose_lint_llm.py` (`unmotivated-section`), `thesis_checklist_llm.py` | LLM |
+| Inconsistent terminology /<br>synonym switching | `terminology_lint.py`<br>`prose_lint_llm.py` | `TERM-MIX`<br>`synonym-switch` |
+| Vague quantifiers without a number | `prose_lint.py`<br>`prose_lint_llm.py` | `VAGUE-QUANTIFIER`<br>`vague-quantifier` |
+| Jargon / undefined evaluative claims<br>("smoothest convergence") | `prose_lint.py`<br>`prose_lint_llm.py` | `JARGON`<br>`jargon` |
+| Uncited claims | `prose_lint_llm.py`<br>`bibliography_linter.py` | `uncited-claim`<br>verifies the cited references |
+| Dangling references<br>("this shows" without antecedent) | `prose_lint.py`<br>`prose_lint_llm.py` | `DANGLING-REFERENCE`<br>`dangling-reference` |
+| Unmotivated sections | `prose_lint_llm.py`<br>`thesis_checklist_llm.py` | `unmotivated-section`<br>verdict `section-intros` |
 | Tense drift | `prose_lint_llm.py` (`tense-drift`) | LLM |
 
 ### Responsible use of AI, references quality
@@ -68,7 +68,7 @@ python3 run_all_linters.py thesis.pdf --llm --bib  # + LLM + bibliography
 |---|---|---|
 | Disclose AI use in a dedicated statement (not in Methods) | `ai_disclosure_lint.py` | `NO-AI-STATEMENT`, `IN-METHODS` |
 | Record the tool, version, and settings | `ai_disclosure_lint.py` | `NO-TOOL-NAMED`, `NO-VERSION` |
-| Verify every (AI-generated) citation independently; use high-quality references | `bibliography_linter.py` | existence + author/title/venue checks vs Crossref/arXiv/DBLP; flags `PREPRINT`, `WEB-SOURCE`, `NOT-FOUND` |
+| Citations verified;<br>high-quality references | `bibliography_linter.py` | existence + author/title/venue vs<br>Crossref/arXiv/DBLP; `PREPRINT`,<br>`WEB-SOURCE`, `NOT-FOUND` |
 
 ### Not machine-checkable (process instructions)
 
@@ -82,7 +82,7 @@ them. The closest proxy: run the suite before every revision round.
 
 | Script | Checks | Input | Needs |
 |---|---|---|---|
-| `bibliography_linter.py` | cited references exist; author/title/venue/year match Crossref/arXiv/DBLP | `.bib`, `.pdf` | network |
+| `bibliography_linter.py` | cited references exist; author/title/<br>venue/year match Crossref/arXiv/DBLP | `.bib`, `.pdf` | network |
 | `unreferenced_entity_linter.py` | numbered equations/tables/figures never referenced | `.tex`, `.pdf` | — |
 | `crossref_forward_lint.py` | references to floats defined much later | `.pdf` | PyMuPDF |
 | `forward_ref_lint.py` | concepts used before defined (regex) | `.pdf` | PyMuPDF |
@@ -94,12 +94,12 @@ them. The closest proxy: run the suite before every revision round.
 | `citation_style_lint.py` | IEEE reference/citation format | `.tex`, `.pdf` | — |
 | `caption_lint.py` | missing/too-short figure & table captions | `.tex`, `.pdf` | — |
 | `ai_disclosure_lint.py` | dedicated AI-use statement with tool + version | `.tex`, `.pdf` | — |
-| `thesis_checklist_llm.py` | 9-item manuscript-content checklist, PASS/FAIL + evidence | `.pdf` | Aalto AI API |
-| `research_questions_lint_llm.py` | extracts each stated research question; judges whether it is answered, where, and on what evidence | `.pdf` | Aalto AI API |
-| `rq_quality_lint_llm.py` | judges how well-posed the research questions/scope are, against university guideline criteria | `.pdf` | Aalto AI API |
-| `figure_lint_llm.py` | visual figure quality: font sizes vs body text, whitespace, contrast, unlabeled axes, resolution | `.pdf` | PyMuPDF (+ Aalto AI API unless `--no-llm`) |
-| `section_intro_lint_llm.py` | per chapter/section with subsections: does the intro summarize each subsection and how they tie together | `.pdf` | PyMuPDF + Aalto AI API |
-| `prose_lint_llm.py` | LLM self-editing pass (uncited claims, tense drift, …) | `.tex`, `.pdf` | Aalto AI API |
+| `thesis_checklist_llm.py` | 9-item manuscript checklist,<br>PASS/FAIL + evidence | `.pdf` | Aalto AI API |
+| `research_questions_lint_llm.py` | each stated research question:<br>answered? where? on what evidence? | `.pdf` | Aalto AI API |
+| `rq_quality_lint_llm.py` | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
+| `figure_lint_llm.py` | figure quality: fonts vs body text,<br>whitespace, contrast, axes, resolution | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
+| `section_intro_lint_llm.py` | does each chapter/section intro map<br>its subsections and tie them together? | `.pdf` | PyMuPDF +<br>Aalto AI API |
+| `prose_lint_llm.py` | LLM self-editing pass (uncited<br>claims, tense drift, jargon, …) | `.tex`, `.pdf` | Aalto AI API |
 | `run_all_linters.py` | runs everything above | either | — |
 
 Shared modules: `lintutil.py` (text extraction, report format),
