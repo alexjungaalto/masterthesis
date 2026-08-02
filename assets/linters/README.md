@@ -107,6 +107,11 @@ them. The closest proxy: run the suite before every revision round.
 Shared modules: `lintutil.py` (text extraction, report format),
 `aalto_llm.py` (Aalto AI API client; also used by the `*_llm` linters).
 
+Maintainer note: the suite is mirrored to the ml-theses.org repo
+(`assets/linters/`); after editing, run `./sync_to_site.sh` from the
+source directory (`--check` reports drift without writing), then commit
+and push the site repo to deploy.
+
 ### Notes on individual linters
 
 **`bibliography_linter.py`** — verifies that cited references exist and
