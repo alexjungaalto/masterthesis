@@ -61,6 +61,7 @@ python3 run_all_linters.py thesis.pdf --llm --bib  # + LLM + bibliography
 | Dangling references<br>("this shows" without antecedent) | `prose_lint.py`<br>`prose_lint_llm.py` | `DANGLING-REFERENCE`<br>`dangling-reference` |
 | Unmotivated sections | `prose_lint_llm.py`<br>`thesis_checklist_llm.py` | `unmotivated-section`<br>verdict `section-intros` |
 | Tense drift | `prose_lint_llm.py` (`tense-drift`) | LLM |
+| Section openers stand alone;<br>no narrative jumps between paragraphs | `flow_lint_llm.py` | `OPAQUE-OPENER` (judged without<br>the preceding text), `FLOW-BREAK` |
 
 ### Responsible use of AI, references quality
 
@@ -99,6 +100,7 @@ them. The closest proxy: run the suite before every revision round.
 | `rq_quality_lint_llm.py` | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
 | `figure_lint_llm.py` | figure quality: fonts vs body text,<br>whitespace, contrast, axes, resolution | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
 | `section_intro_lint_llm.py` | does each chapter/section intro map<br>its subsections and tie them together? | `.pdf` | PyMuPDF +<br>Aalto AI API |
+| `flow_lint_llm.py` | narrative flow: section openers that<br>stand alone, no paragraph-to-paragraph<br>discontinuities | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | `prose_lint_llm.py` | LLM self-editing pass (uncited<br>claims, tense drift, jargon, …) | `.tex`, `.pdf` | Aalto AI API |
 | `run_all_linters.py` | runs everything above | either | — |
 
@@ -158,6 +160,23 @@ that never says which subsection treats which theme is judged WEAK — the
 alignment exists only in hindsight. Uses the full GPT-5 model by default
 (the mini tier lets near-miss intros pass). `--match 2.4` restricts to one
 unit; `--levels 1,2` selects outline depths.
+
+**`flow_lint_llm.py`** — two checks on the manuscript as a narrative.
+`opener`: the first sentence(s) after every chapter/section heading are
+judged WITHOUT the preceding text — exactly like a reader entering at
+the heading — and flagged `OPAQUE-OPENER` when they hang on an
+antecedent across the heading (a bare pronoun, or a definite noun
+phrase like "A difference of almost an order of magnitude
+illustrates ..."); named references ("as shown in Section 2.3") and
+deixis to the unit itself are fine. Judged with the full GPT-5 model
+(one call per heading, `--levels 1,2,3`). `flow`: overlapping windows
+of consecutive paragraphs are scanned for non-sequitur transitions and
+paragraphs that presuppose not-yet-introduced material (`FLOW-BREAK`);
+headings legitimately reset the narrative and float furniture is
+skipped. Complements `section_intro_lint_llm.py` (which judges only
+units WITH subsections) and the `dangling-reference` checks (which only
+see pronoun anaphora, and judge resolvability in-chunk rather than
+from the heading).
 
 **`rq_quality_lint_llm.py`** — judges how well-posed the research
 questions and scope are, against criteria compiled from authoritative
