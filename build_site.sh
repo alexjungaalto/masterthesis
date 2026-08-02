@@ -85,7 +85,10 @@ cat >> docs/assets/linters/README.md <<'EOF'
 }
 .md-typeset table:not(:has(th:nth-child(4))) th:first-child,
 .md-typeset table:not(:has(th:nth-child(4))) td:first-child {
+  /* extra.css collapses every table's first column to min-content with
+     nowrap (for the thesis-number column); undo that here. */
   width: 22%;
+  white-space: normal;
 }
 .md-typeset table:not(:has(th:nth-child(4))) td {
   overflow-wrap: break-word;
