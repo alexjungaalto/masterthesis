@@ -8,10 +8,12 @@ supervised by Alex Jung at Aalto University.
 All scripts are run with `python3 <script> ...` and print a findings
 report; exit status is `0` when clean, `1` when findings exist, and `2` on
 usage errors, so they can be scripted. The heuristic linters need at most
-`pdftotext` (poppler) or PyMuPDF; the `*_llm` linters call the **Aalto AI
-API** by default (`$AALTO_API_KEY`, Aalto network/VPN only — see
-`aalto_llm.py`; `--base-url` switches to the Aalto LLM Gateway or any
-OpenAI-style endpoint such as OpenRouter).
+`pdftotext` (poppler) or PyMuPDF; the `*_llm` linters call the
+**[Aalto AI API](https://www.aalto.fi/en/services/ai-services)** by
+default (`$AALTO_API_KEY` — sign up for a key on the
+[Aalto API developer portal](https://ai-apidev.aalto.fi/); Aalto
+network/VPN only — see `aalto_llm.py`; `--base-url` switches to the
+Aalto LLM Gateway or any OpenAI-style endpoint such as OpenRouter).
 
 Run everything at once:
 
