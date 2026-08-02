@@ -76,9 +76,19 @@ fi
 cat >> docs/assets/linters/README.md <<'EOF'
 
 <style>
+/* Material renders tables shrink-to-fit with auto layout, so cell width
+   hints are ignored; fixed layout + full width makes them stick. */
+.md-typeset table:not(:has(th:nth-child(4))) {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
 .md-typeset table:not(:has(th:nth-child(4))) th:first-child,
 .md-typeset table:not(:has(th:nth-child(4))) td:first-child {
-  width: 26%;
+  width: 22%;
+}
+.md-typeset table:not(:has(th:nth-child(4))) td {
+  overflow-wrap: break-word;
 }
 </style>
 EOF
