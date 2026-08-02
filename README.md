@@ -218,7 +218,7 @@ Once a draft is near-final, read it through once looking **only** for the recurr
 
 Reading aloud, or reading one defect type at a time from start to finish, catches far more than a single general pass.
 
-A linter suite covering every defect on this list — and most of the manuscript checklist above — is available in [`assets/linters/`](assets/linters/): run `python3 run_all_linters.py thesis.pdf` on your compiled PDF (or on your LaTeX sources) before every revision round. The scripts need only Python 3 with `pdftotext` or PyMuPDF; see the [linter README](assets/linters/README.md).
+A linter suite covering every defect on this list — and most of the manuscript checklist above — is available in [`assets/linters/`](assets/linters/README.md): run `python3 run_all_linters.py thesis.pdf` on your compiled PDF (or on your LaTeX sources) before every revision round. The scripts need only Python 3 with `pdftotext` or PyMuPDF; see the [linter README](assets/linters/README.md).
 
 ---
 

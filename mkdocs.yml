@@ -50,6 +50,7 @@ nav:
   - Thesis Guide: index.md
   - Available Topics: Topics.md
   - Supervised Theses: theses.md
+  - Thesis Linters: assets/linters/README.md
 
 extra_css:
   - stylesheets/extra.css

@@ -68,6 +68,21 @@ if [[ -d assets ]]; then
   cp -R assets/. docs/assets/
 fi
 
+# The linter README doubles as a nav page (mkdocs.yml: "Thesis Linters").
+# Page-scoped style: keep the first (instruction) column of the 3-column
+# coverage tables narrow — the long instruction text otherwise dominates the
+# layout. The 4-column script table is left alone. docs/ is a build
+# artifact, so the committed README stays clean for the GitHub view.
+cat >> docs/assets/linters/README.md <<'EOF'
+
+<style>
+.md-typeset table:not(:has(th:nth-child(4))) th:first-child,
+.md-typeset table:not(:has(th:nth-child(4))) td:first-child {
+  width: 26%;
+}
+</style>
+EOF
+
 # Publish full topic proposal PDFs at the same relative path they live in the
 # repo, so a catalog `url` like `topics/<slug>/proposal.pdf` resolves both on
 # the website and in the GitHub view of Topics.md.
