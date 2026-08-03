@@ -59,6 +59,13 @@ WEB_HOST_RE = re.compile(
     r"kaggle|roboflow|zenodo|hugging\s*face|huggingface|github|gitlab|medium\.com|"
     r"towardsdatascience|wikipedia|blog|\bdataset\b", re.IGNORECASE)
 PREPRINT_RE = re.compile(r"arxiv|preprint|corr\b|ssrn|techrxiv|biorxiv", re.IGNORECASE)
+STOPWORDS = {"the", "a", "an", "of", "for", "and", "with", "via", "using",
+             "from", "towards", "toward", "on", "in", "to", "by"}
+
+
+def title_tokens(s):
+    return [t for t in re.sub(r"[^a-z0-9]+", " ", s.lower()).split()
+            if t not in STOPWORDS and len(t) > 2]
 
 
 # --------------------------------------------------------------------------
@@ -388,6 +395,28 @@ def check_entry(entry, cache, delay, log):
                              f"({err[:60]}) -- re-run to retry"))
         published = [c for c in res or []
                      if c["venue"] and not PREPRINT_RE.search(c["venue"])]
+    if cited_preprint and entry["arxiv"] and not published:
+        # Semantic Scholar keeps some renamed papers as separate records
+        # (e.g. the Krum paper, arXiv:1703.02757 vs. its NIPS 2017 version):
+        # search DBLP for first author + distinctive title words and accept a
+        # real-venue hit whose title contains (nearly) all cited title words.
+        first = (last_names(entry["authors"]) or [""])[0]
+        tokens = title_tokens(title)
+        if first and tokens:
+            q = " ".join([first] + tokens[:3])
+            res, _ = cached_query(cache, f"dblp:{q}", query_dblp, q, delay, log)
+            cited_tok = set(tokens)
+            for c in res or []:
+                if not c["venue"] or PREPRINT_RE.search(c["venue"]) \
+                        or c.get("type") in {"preprint", "posted-content",
+                                             "Informal and Other Publications"}:
+                    continue
+                if first not in {norm(x) for x in c["authors"]}:
+                    continue
+                if len(cited_tok - set(title_tokens(c["title"]))) \
+                        <= len(cited_tok) // 3:
+                    published = [c]
+                    break
     if cited_preprint and published:
         p = max(published, key=lambda c: sim(title, c["title"]))
         findings.append(("WARN", "PREPRINT",
