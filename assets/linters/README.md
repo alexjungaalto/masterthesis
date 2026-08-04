@@ -7,13 +7,58 @@ supervised by Alex Jung at Aalto University.
 
 All scripts are run with `python3 <script> ...` and print a findings
 report; exit status is `0` when clean, `1` when findings exist, and `2` on
-usage errors, so they can be scripted. The heuristic linters need at most
-`pdftotext` (poppler) or PyMuPDF; the `*_llm` linters call the
+usage errors, so they can be scripted.
+
+## Setup
+
+```sh
+# one-time setup — the venv sidesteps pip's PEP 668
+# "externally managed environment" refusal on Homebrew/Debian Python
+python3 -m venv .venv && source .venv/bin/activate
+pip install pymupdf          # needed by several PDF linters (see "Needs" column)
+export AALTO_API_KEY=...     # *_llm linters only
+```
+
+If you skip the venv and plain `pip install pymupdf` is refused with an
+"externally managed environment" error, use
+`pip3 install --user --break-system-packages pymupdf`.
+
+Linters whose "Needs" column below is empty read PDFs with `pdftotext`
+(poppler: `brew install poppler` / `apt install poppler-utils`) or PyMuPDF,
+whichever is available; the ones marked **PyMuPDF** need that package —
+most exit with status 2 and an install hint without it.
+
+The `*_llm` linters call the
 **[Aalto AI API](https://www.aalto.fi/en/services/ai-services)** by
 default (`$AALTO_API_KEY` — sign up for a key on the
 [Aalto API developer portal](https://ai-apidev.aalto.fi/); Aalto
 network/VPN only — see `aalto_llm.py`; `--base-url` switches to the
 Aalto LLM Gateway or any OpenAI-style endpoint such as OpenRouter).
+
+## Basic usage
+
+Run one linter on a compiled thesis PDF (or run everything at once, below):
+
+```sh
+python3 acronym_lint.py thesis.pdf
+```
+
+```
+== Acronym lint report
+File: thesis.pdf
+
+[WARN] NEVER-EXPANDED     p12    'INT4' used 11 time(s) but never expanded (first use at p12).
+[WARN] USED-BEFORE-EXPANSION p9  'CNN' used on p9 but expanded only on p17.
+```
+
+Each finding line has four parts: a **severity** (`[ERROR]` almost
+certainly a defect, fix it; `[WARN]` worth reviewing, occasionally a
+false positive; `[INFO]` informational, no action required), a stable
+**finding code** (the codes are listed per linter in the tables below),
+the **location** (page `pNN` for PDF input, `file:line` for LaTeX
+input), and the **evidence** — what was found and why it is flagged. A
+clean run prints no finding lines and exits `0`; findings exit `1`;
+missing input or dependencies exit `2`.
 
 Run everything at once:
 
@@ -21,6 +66,9 @@ Run everything at once:
 python3 run_all_linters.py thesis.pdf              # fast heuristic suite
 python3 run_all_linters.py thesis.pdf --llm --bib  # + LLM + bibliography
 ```
+
+`run_all_linters.py` prints each linter's report followed by a one-line
+per-linter summary (`clean` / `findings` / `error`).
 
 ## Coverage: ml-theses.org instruction → linter
 
@@ -89,7 +137,7 @@ them. The closest proxy: run the suite before every revision round.
 | `unreferenced_entity_linter.py` | numbered equations/tables/figures never referenced | `.tex`, `.pdf` | — |
 | `crossref_forward_lint.py` | references to floats defined much later | `.pdf` | PyMuPDF |
 | `forward_ref_lint.py` | concepts used before defined (regex) | `.pdf` | PyMuPDF |
-| `forward_ref_lint_llm.py` | concepts used before defined (LLM) | `.pdf` | Aalto AI API |
+| `forward_ref_lint_llm.py` | concepts used before defined (LLM) | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | `acronym_lint.py` | acronym expanded at first use, no re-expansion | `.tex`, `.pdf` | — |
 | `prose_lint.py` | vague quantifiers, dangling refs, forward cues | `.tex`, `.pdf` | — |
 | `terminology_lint.py` | synonym mixing vs Aalto Dictionary terms | `.tex`, `.pdf` | — |
@@ -109,10 +157,9 @@ them. The closest proxy: run the suite before every revision round.
 Shared modules: `lintutil.py` (text extraction, report format),
 `aalto_llm.py` (Aalto AI API client; also used by the `*_llm` linters).
 
-Maintainer note: the suite is mirrored to the ml-theses.org repo
-(`assets/linters/`); after editing, run `./sync_to_site.sh` from the
-source directory (`--check` reports drift without writing), then commit
-and push the site repo to deploy.
+Maintainer note: this directory (`assets/linters/` in the masterthesis
+repo) is the single source of truth for the linter suite; edit here,
+then commit and push this repo to deploy to ml-theses.org.
 
 ### Notes on individual linters
 
