@@ -34,6 +34,10 @@ default (`$AALTO_API_KEY` — sign up for a key on the
 [Aalto API developer portal](https://ai-apidev.aalto.fi/); Aalto
 network/VPN only — see `aalto_llm.py`; `--base-url` switches to the
 Aalto LLM Gateway or any OpenAI-style endpoint such as OpenRouter).
+The exact model names on offer (GPT-5 family, e.g.
+`gpt-5-mini-2025-08-07`) are listed on the
+[AI APIs in Aalto](https://www.aalto.fi/en/services/ai-apis-in-aalto)
+page (Aalto login required).
 
 ## Basic usage
 
@@ -245,8 +249,9 @@ from the heading).
 
 **`rq_quality_lint_llm.py`** — judges how well-posed the research
 questions and scope are, against criteria compiled from authoritative
-university guidance (the Monash University Library research-question
-checklist — focused, researchable, feasible, specific, complex, relevant;
+university guidance (the [Monash University Library research-question
+checklist](https://www.monash.edu/library/help/assignments-research/developing-research-questions)
+— focused, researchable, feasible, specific, complex, relevant;
 the George Mason University Writing Center criteria — clear, focused,
 concise, complex, arguable; and the FINER framework). Per question:
 STRONG/ADEQUATE/WEAK with the violated criteria named and a concrete
