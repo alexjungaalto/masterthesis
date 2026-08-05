@@ -23,6 +23,7 @@ HERE = Path(__file__).parent
 
 # (script, pdf-mode, tex-mode)
 FAST = [
+    ("structure_lint.py", True, True),
     ("unreferenced_entity_linter.py", True, True),
     ("crossref_forward_lint.py", True, False),
     ("forward_ref_lint.py", True, False),

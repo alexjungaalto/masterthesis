@@ -19,6 +19,12 @@ Screens the thesis in chunks and reports, per finding category:
                       (e.g. "data point" vs "sample" vs "instance")
   unmotivated-section a chapter/section opening without a sentence stating
                       what it covers and why it belongs here
+  broken-idiom        a mangled or non-standard rendering of an English
+                      idiom or collocation ("corner cuttings on safety"
+                      for "cutting corners on safety")
+  informal-register   colloquial or conversational phrasing out of place
+                      in academic prose ("a bunch of", "way better",
+                      contractions like "don't")
 
 Findings are heuristic LLM judgements — review them; they are reported as
 WARN and the exit status is 1 when any are found.
@@ -46,7 +52,7 @@ from lintutil import Report, is_toc_line, load_lines, paragraphs_from_lines
 
 CHECKS = ["uncited-claim", "tense-drift", "dangling-reference",
           "vague-quantifier", "jargon", "synonym-switch",
-          "unmotivated-section"]
+          "unmotivated-section", "broken-idiom", "informal-register"]
 
 SYSTEM_PROMPT = (
     "You are a meticulous copy-editor doing the 'self-editing pass' of the "
@@ -79,7 +85,19 @@ SYSTEM_PROMPT = (
     "'target', 'loss' vs 'cost').\n"
     "  unmotivated-section: a chapter/section heading in this chunk whose "
     "following text dives into content without a sentence stating what "
-    "the section covers and why.\n\n"
+    "the section covers and why.\n"
+    "  broken-idiom: a mangled, garbled, or non-standard rendering of an "
+    "English idiom or fixed collocation, where the intended standard form "
+    "is recognizable — e.g. 'corner cuttings on safety' (for 'cutting "
+    "corners on safety'), 'in a daily basis' (for 'on a daily basis'), "
+    "'on the contrary to' (for 'in contrast to'), 'make research' (for "
+    "'do/conduct research'). Do NOT flag correct idioms merely for being "
+    "idiomatic, and do not flag domain terms of art.\n"
+    "  informal-register: colloquial or conversational phrasing out of "
+    "place in a thesis — e.g. 'a bunch of', 'way better', 'stuff', "
+    "'pretty good', 'huge', contractions ('don't', \"it's\"). Do not "
+    "double-report phrases already flagged as vague-quantifier or "
+    "jargon.\n\n"
     "Be precise and conservative: only report defects a human editor "
     "would definitely mark. Each finding needs an exact short quote "
     "(<=25 words) from the text. Respond with STRICT JSON:\n"

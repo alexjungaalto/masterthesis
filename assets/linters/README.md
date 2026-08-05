@@ -90,6 +90,7 @@ per-linter summary (`clean` / `findings` / `error`).
 | Figures clear, labelled,<br>informative captions | `figure_lint_llm.py`<br>`caption_lint.py`<br>`thesis_checklist_llm.py` | rendered figures: fonts, whitespace,<br>contrast, axes (pixels + vision LLM)<br>`SHORT-CAPTION`, `NO-CAPTION`<br>verdict `captions-informative` |
 | References formatted per IEEE guidelines | `citation_style_lint.py` | style/entry/citation checks (LaTeX + PDF) |
 | Terms from the Aalto<br>Dictionary of ML | `terminology_lint.py` | `NON-DICTIONARY`, `TERM-MIX`<br>(dictionary term first per cluster) |
+| Every chapter/section has zero<br>or >= 2 subdivisions | `structure_lint.py` | `LONE-CHILD` (LaTeX + PDF) |
 
 ### Typesetting mathematical texts
 
@@ -111,6 +112,8 @@ per-linter summary (`clean` / `findings` / `error`).
 | Dangling references<br>("this shows" without antecedent) | `prose_lint.py`<br>`prose_lint_llm.py` | `DANGLING-REFERENCE`<br>`dangling-reference` |
 | Unmotivated sections | `prose_lint_llm.py`<br>`thesis_checklist_llm.py` | `unmotivated-section`<br>verdict `section-intros` |
 | Tense drift | `prose_lint_llm.py` (`tense-drift`) | LLM |
+| Broken idioms ("corner cuttings<br>on safety") | `prose_lint_llm.py` (`broken-idiom`) | LLM |
+| Informal register ("a bunch of",<br>contractions) | `prose_lint_llm.py` (`informal-register`) | LLM |
 | Section openers stand alone;<br>no narrative jumps between paragraphs | `flow_lint_llm.py` | `OPAQUE-OPENER` (judged without<br>the preceding text), `FLOW-BREAK` |
 
 ### Responsible use of AI, references quality
@@ -134,6 +137,7 @@ them. The closest proxy: run the suite before every revision round.
 | Script | Checks | Input | Needs |
 |---|---|---|---|
 | `bibliography_linter.py` | cited references exist; author/title/<br>venue/year match Crossref/arXiv/DBLP | `.bib`, `.pdf` | network |
+| `structure_lint.py` | sectioning units with exactly one subdivision | `.tex`, `.pdf` | — |
 | `unreferenced_entity_linter.py` | numbered equations/tables/figures never referenced | `.tex`, `.pdf` | — |
 | `crossref_forward_lint.py` | references to floats defined much later | `.pdf` | PyMuPDF |
 | `forward_ref_lint.py` | concepts used before defined (regex) | `.pdf` | PyMuPDF |
@@ -172,6 +176,13 @@ match a real record. Findings include `NOT-FOUND` (possibly hallucinated),
 `\ref`/`\eqref`/`\cref` points to, numbered math without `\label`, captioned
 floats without `\label`; PDF mode works from captions and right-aligned
 equation numbers.
+
+**`structure_lint.py`** — a lone subdivision cannot articulate a division:
+`LONE-CHILD` flags a chapter with a single section, a section with a single
+subsection, etc. PDF mode prefers the embedded bookmark outline (PyMuPDF)
+and falls back to scanning extracted text for numbered headings; LaTeX mode
+parses the sectioning commands (starred variants are unnumbered and
+skipped).
 
 **`crossref_forward_lint.py`** — flags "as depicted in Figure 7" on page 3
 when Figure 7 appears on page 21 (threshold: > 1 page forward by default).
