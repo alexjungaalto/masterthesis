@@ -157,7 +157,7 @@ them. The closest proxy: run the suite before every revision round.
 | `thesis_checklist_llm.py` | 9-item manuscript checklist,<br>PASS/FAIL + evidence | `.pdf` | Aalto AI API |
 | `research_questions_lint_llm.py` | each stated research question:<br>answered? where? on what evidence? | `.pdf` | Aalto AI API |
 | `rq_quality_lint_llm.py` | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
-| `figure_lint_llm.py` | figure quality: fonts vs body text,<br>whitespace, contrast, axes, resolution | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
+| `figure_lint_llm.py` | figure quality: fonts vs body text,<br>whitespace, contrast, axes, resolution,<br>raw screenshots as figures | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
 | `section_intro_lint_llm.py` | does each chapter/section intro map<br>its subsections and tie them together? | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | `flow_lint_llm.py` | narrative flow: section openers that<br>stand alone, no paragraph-to-paragraph<br>discontinuities | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | `prose_lint_llm.py` | LLM self-editing pass (uncited<br>claims, tense drift, jargon, …) | `.tex`, `.pdf` | Aalto AI API |
@@ -226,7 +226,8 @@ above `--max-white`) and `LOW-RESOLUTION` (embedded raster below
 `--min-dpi` at printed size). Vision LLM judgement (the rendered figure is
 sent with the body-text font size as yardstick): `FONT-TOO-SMALL`,
 `AXES-UNLABELED`, `OVERLAPPING-TEXT`, `LOW-CONTRAST`, `EXCESS-WHITESPACE`,
-`ILLEGIBLE`. `--save-crops DIR` writes the judged renderings for
+`SCREENSHOT` (raw IDE/terminal/application capture in place of a prepared
+figure or table, noting non-English interface text), `ILLEGIBLE`. `--save-crops DIR` writes the judged renderings for
 inspection; `--figures 3,7` restricts the run. On the Aalto LLM Gateway the
 Qwen3-VL vision model is used automatically.
 

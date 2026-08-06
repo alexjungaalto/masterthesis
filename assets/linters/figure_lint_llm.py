@@ -20,6 +20,12 @@ Categories reported (all [WARN]):
   OVERLAPPING-TEXT   colliding/clipped labels
   LOW-CONTRAST       elements hard to distinguish (also in grayscale print)
   EXCESS-WHITESPACE  large empty areas inside the plot
+  SCREENSHOT         raw screen capture of an IDE, terminal, spreadsheet,
+                     or application window used in place of a prepared
+                     figure or table (also flags non-English interface
+                     text); NOT flagged when the interface itself is the
+                     subject (UI of a system built/evaluated, study
+                     stimulus)
   ILLEGIBLE          anything else that makes the figure hard to read
 
 Gateway: the Aalto AI API by default (GPT-5 family is multimodal); on the
@@ -173,6 +179,18 @@ SYSTEM_PROMPT = (
     "lines, similar colors that also collapse in grayscale print).\n"
     "  EXCESS-WHITESPACE: large empty areas inside the figure (data "
     "squeezed into a corner, huge empty margins between panels).\n"
+    "  SCREENSHOT: the figure is a raw screen capture of an IDE, "
+    "terminal, notebook, spreadsheet, or application window (telltales: "
+    "window chrome, menu/tool bars, editor syntax colors, line numbers, "
+    "scroll bars, mouse cursor) used in place of a prepared table or "
+    "plot — results belong in typeset tables/figures. Mention in the "
+    "comment if visible interface text is not in English. A deliberately "
+    "cropped, clean code listing presented AS a listing is fine. A "
+    "screenshot is ADEQUATE — do not flag — when the interface itself is "
+    "the subject of the figure (the UI of a system the thesis built or "
+    "evaluates, or what study participants saw); flag only when the "
+    "interface is incidental and the actual content (numbers, tables, "
+    "code output, data) should have been extracted and typeset.\n"
     "  ILLEGIBLE: anything else making the figure hard to read "
     "(pixelation, tiny markers, dense clutter).\n\n"
     "Diagrams/architecture sketches have no axes — do not demand axes "
