@@ -91,7 +91,7 @@ per-linter summary (`clean` / `findings` / `error`).
 | All numbered equations, tables,<br>figures referenced in the text | `unreferenced_entity_linter.py` | `UNREFERENCED`, `UNLABELED-EQ`,<br>`UNLABELED-FLOAT` (LaTeX + PDF) |
 | Present new methods as pseudocode | `thesis_checklist_llm.py` | verdict `pseudocode` |
 | Model diagnosis via numerical experiments and mathematical analysis | `thesis_checklist_llm.py` | verdict `model-diagnosis` |
-| Figures clear, labelled,<br>informative captions | `figure_lint_llm.py`<br>`caption_lint.py`<br>`thesis_checklist_llm.py` | rendered figures: fonts, whitespace,<br>contrast, axes (pixels + vision LLM)<br>`SHORT-CAPTION`, `NO-CAPTION`<br>verdict `captions-informative` |
+| Figures clear, labelled,<br>informative captions | `figure_lint_llm.py`<br>`caption_lint.py`<br>`caption_lint_llm.py`<br>`thesis_checklist_llm.py` | rendered figures: fonts, whitespace,<br>contrast, axes (pixels + vision LLM)<br>`SHORT-CAPTION`, `NO-CAPTION`<br>`WEAK-CAPTION` (per-caption LLM)<br>verdict `captions-informative` |
 | References formatted per IEEE guidelines | `citation_style_lint.py` | style/entry/citation checks (LaTeX + PDF) |
 | Terms from the Aalto<br>Dictionary of ML | `terminology_lint.py` | `NON-DICTIONARY`, `TERM-MIX`<br>(dictionary term first per cluster) |
 | Every chapter/section has zero<br>or >= 2 subdivisions | `structure_lint.py` | `LONE-CHILD` (LaTeX + PDF) |
@@ -152,6 +152,7 @@ them. The closest proxy: run the suite before every revision round.
 | `math_typeset_lint.py` | display-math punctuation, `\eqref`, long inline math | `.tex` | — |
 | `citation_style_lint.py` | IEEE reference/citation format | `.tex`, `.pdf` | — |
 | `caption_lint.py` | missing/too-short figure & table captions | `.tex`, `.pdf` | — |
+| `caption_lint_llm.py` | per-caption quality: states what's shown,<br>defines quantities, self-contained,<br>sentence form | `.tex`, `.pdf` | Aalto AI API |
 | `ai_disclosure_lint.py` | dedicated AI-use statement with tool + version | `.tex`, `.pdf` | — |
 | `thesis_checklist_llm.py` | 9-item manuscript checklist,<br>PASS/FAIL + evidence | `.pdf` | Aalto AI API |
 | `research_questions_lint_llm.py` | each stated research question:<br>answered? where? on what evidence? | `.pdf` | Aalto AI API |
@@ -207,6 +208,16 @@ quoted, page-referenced evidence snippet and a concrete fix for each FAIL.
 **`prose_lint_llm.py`** — chunked LLM pass (`--chunk-chars`,
 `--concurrency`, `--checks` to select categories, `--pages` for a partial
 run).
+
+**`caption_lint_llm.py`** — judges every figure/table caption against
+Rule 4 ("Captions Are Not Optional") of the PLOS ["Ten Simple Rules for
+Better Figures"](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003833):
+states what's shown, defines the quantities/symbols it mentions,
+self-contained for a figure-skimming reader, proper sentence form
+(a caption like "wibson protocol visualized" fails on all four). One
+`WEAK-CAPTION` per deficient caption with the violated criteria and a
+suggested rewrite. Uses the full GPT-5 model by default; `--match 4`
+restricts to one figure, `--per-batch`/`--concurrency` tune the calls.
 
 **`figure_lint_llm.py`** — locates every figure via its caption, renders
 the figure region at 144 dpi, and checks it two ways. Pixel heuristics

@@ -10,8 +10,9 @@ Findings:
   [INFO] CAPTION         caption inventory line (--list only)
 
 Whether a caption is truly *informative* (states what to see, defines
-symbols/axes) is judged by thesis_checklist_llm.py; this linter catches the
-mechanical failures. Axis labelling cannot be checked from extracted text.
+symbols/axes) is judged per caption by caption_lint_llm.py (and globally
+by thesis_checklist_llm.py); this linter catches the mechanical failures.
+Axis labelling cannot be checked from extracted text.
 
 Input: thesis PDF or LaTeX sources.
 Usage:
