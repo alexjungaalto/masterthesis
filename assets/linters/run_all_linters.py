@@ -37,6 +37,7 @@ FAST = [
 ]
 LLM = [
     ("thesis_checklist_llm.py", True, False),
+    ("data_split_lint_llm.py", True, False),
     ("research_questions_lint_llm.py", True, False),
     ("rq_quality_lint_llm.py", True, False),
     ("figure_lint_llm.py", True, False),

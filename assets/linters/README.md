@@ -84,6 +84,7 @@ per-linter summary (`clean` / `findings` / `error`).
 | Research scope/questions well-posed<br>(clear, focused, specific, complex,<br>feasible, relevant) | `rq_quality_lint_llm.py` | per-question criteria verdicts<br>+ scope checks (gap,<br>delimitations, alignment) |
 | Identify data sources and evaluation criteria | `thesis_checklist_llm.py` | verdict `data-sources-eval` |
 | Training loss and validation/test<br>loss explicitly stated | `thesis_checklist_llm.py` | verdict `loss-functions` |
+| Per studied method: training,<br>validation and test set construction<br>described, and the method diagnosed<br>on that split | `data_split_lint_llm.py` | enumerates the trained methods,<br>then per method: `train-set`,<br>`validation-set`, `test-set`,<br>`diagnosis-on-split` verdicts |
 | Numerical results answer the<br>research questions | `research_questions_lint_llm.py`<br>`thesis_checklist_llm.py` | per-question tracing<br>global verdict `results-discussed` |
 | Use appropriate baselines or benchmarks | `thesis_checklist_llm.py` | verdict `baselines` |
 | Chapter/section introductions | `section_intro_lint_llm.py`<br>`thesis_checklist_llm.py`<br>`prose_lint_llm.py` | intro maps its subsections<br>verdict `section-intros`<br>`unmotivated-section` |
@@ -118,6 +119,8 @@ per-linter summary (`clean` / `findings` / `error`).
 | Tense drift | `prose_lint_llm.py` (`tense-drift`) | LLM |
 | Broken idioms ("corner cuttings<br>on safety") | `prose_lint_llm.py` (`broken-idiom`) | LLM |
 | Informal register ("a bunch of",<br>contractions) | `prose_lint_llm.py` (`informal-register`) | LLM |
+| Category errors (an algorithm named<br>where a metric is meant) | `prose_lint_llm.py` (`category-error`) | LLM |
+| Empty buzzwords ("framework",<br>"leverage", unearned "robust") | `prose_lint_llm.py` (`empty-buzzword`) | LLM |
 | Section openers stand alone;<br>no narrative jumps between paragraphs | `flow_lint_llm.py` | `OPAQUE-OPENER` (judged without<br>the preceding text), `FLOW-BREAK` |
 
 ### Responsible use of AI, references quality
@@ -155,6 +158,7 @@ them. The closest proxy: run the suite before every revision round.
 | `caption_lint_llm.py` | per-caption quality: states what's shown,<br>defines quantities, self-contained,<br>sentence form | `.tex`, `.pdf` | Aalto AI API |
 | `ai_disclosure_lint.py` | dedicated AI-use statement with tool + version | `.tex`, `.pdf` | — |
 | `thesis_checklist_llm.py` | 9-item manuscript checklist,<br>PASS/FAIL + evidence | `.pdf` | Aalto AI API |
+| `data_split_lint_llm.py` | per studied ML method:<br>train/validation/test set construction<br>and diagnosis on that split | `.pdf` | Aalto AI API |
 | `research_questions_lint_llm.py` | each stated research question:<br>answered? where? on what evidence? | `.pdf` | Aalto AI API |
 | `rq_quality_lint_llm.py` | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
 | `figure_lint_llm.py` | figure quality: fonts vs body text,<br>whitespace, contrast, axes, resolution,<br>raw screenshots as figures | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
@@ -204,6 +208,16 @@ of ML term first; `TERM-MIX` fires only when two or more variants each occur
 **`thesis_checklist_llm.py`** — one LLM call over the full extracted text
 (page markers included) returns PASS/FAIL/UNCLEAR per checklist item with a
 quoted, page-referenced evidence snippet and a concrete fix for each FAIL.
+
+**`data_split_lint_llm.py`** — where `thesis_checklist_llm.py` judges the
+manuscript globally (one `loss-functions` / `model-diagnosis` verdict for
+the whole thesis), this linter works per studied ML method. One LLM call
+first enumerates the methods the thesis actually *trains* (methods only
+named in related work are excluded), then for each emits `train-set`,
+`validation-set`, `test-set`, and `diagnosis-on-split` verdicts
+(PASS/FAIL/UNCLEAR) with page-referenced evidence and a fix for each FAIL.
+`validation-set` also passes when a method legitimately needs no held-out
+validation set and the thesis says so.
 
 **`prose_lint_llm.py`** — chunked LLM pass (`--chunk-chars`,
 `--concurrency`, `--checks` to select categories, `--pages` for a partial
@@ -284,6 +298,7 @@ the conclusions chapter revisits it. Warns on `NO-RQS` (none stated) and
 ```sh
 python3 run_all_linters.py thesis.pdf              # fast pass, fix mechanics
 python3 thesis_checklist_llm.py thesis.pdf         # content checklist
+python3 data_split_lint_llm.py thesis.pdf          # per-method train/val/test + diagnosis
 python3 research_questions_lint_llm.py thesis.pdf  # RQs answered?
 python3 prose_lint_llm.py thesis.pdf               # deep prose pass
 python3 bibliography_linter.py thesis.pdf          # verify references
