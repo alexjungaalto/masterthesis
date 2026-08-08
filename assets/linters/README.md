@@ -186,6 +186,7 @@ them. The closest proxy: run the suite before every revision round.
 | `rq_quality_lint_llm.py` | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
 | `figure_lint_llm.py` | figure quality: fonts vs body text,<br>whitespace, contrast, axes, resolution,<br>raw screenshots as figures | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
 | `section_intro_lint_llm.py` | does each chapter/section intro map<br>its subsections and tie them together? | `.pdf` | PyMuPDF +<br>Aalto AI API |
+| `type_consistency_lint_llm.py` | formal claims well-typed: relations over<br>same-type operands, values in range,<br>dimensionless quantities unit-free<br>(`TYPE-MISMATCH`, `RANGE`, `DIMENSION`,<br>`BRIDGE-LOOSE`) | `.pdf` | Aalto AI API |
 | `flow_lint_llm.py` | narrative flow: section openers that<br>stand alone, no paragraph-to-paragraph<br>discontinuities | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | `prose_lint_llm.py` | LLM self-editing pass (uncited<br>claims, tense drift, jargon, …) | `.tex`, `.pdf` | Aalto AI API |
 | `run_all_linters.py` | runs everything above | either | — |
@@ -324,5 +325,6 @@ python3 thesis_checklist_llm.py thesis.pdf         # content checklist
 python3 data_split_lint_llm.py thesis.pdf          # per-method train/val/test + diagnosis
 python3 research_questions_lint_llm.py thesis.pdf  # RQs answered?
 python3 prose_lint_llm.py thesis.pdf               # deep prose pass
+python3 type_consistency_lint_llm.py thesis.pdf    # type/range/dimension of formal claims
 python3 bibliography_linter.py thesis.pdf          # verify references
 ```

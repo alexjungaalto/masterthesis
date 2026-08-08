@@ -46,6 +46,7 @@ LLM = [
     ("prose_lint_llm.py", True, True),
     ("caption_lint_llm.py", True, True),
     ("forward_ref_lint_llm.py", True, False),
+    ("type_consistency_lint_llm.py", True, False),
 ]
 BIB = [("bibliography_linter.py", True, False)]
 
