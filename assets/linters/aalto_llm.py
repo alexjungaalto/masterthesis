@@ -40,6 +40,14 @@ def is_responses_api(base_url: str) -> bool:
             or base_url.rstrip("/").endswith("/responses"))
 
 
+def is_aalto_endpoint(base_url: str) -> bool:
+    """True for Aalto-hosted gateways that keep thesis text within Aalto's
+    tenant (the Aalto AI API and the Aalto LLM Gateway). These are the only
+    endpoints suitable for unpublished manuscripts; anything else is a
+    public third-party service."""
+    return "aalto-openai-apigw" in base_url or "llm-gateway.k8s.aalto.fi" in base_url
+
+
 def default_model(base_url: str = BASE_URL) -> str:
     if os.environ.get("LLM_MODEL"):
         return os.environ["LLM_MODEL"]
@@ -217,6 +225,14 @@ def make_client(base_url: str = BASE_URL,
             "No API key — set AALTO_API_KEY (Aalto AI API, the default "
             "gateway) or AALTO_LLM_KEY / OPENROUTER_API_KEY (with "
             "--base-url), or pass --api-key.")
+    if not is_aalto_endpoint(base_url):
+        print(
+            f"[llm] WARNING: {base_url} is not an Aalto-hosted endpoint. "
+            "A thesis draft is unpublished material — Aalto policy says not "
+            "to send unpublished, confidential, or personal data to public "
+            "AI services. Use the Aalto AI API (default) or the Aalto LLM "
+            "Gateway instead.",
+            file=sys.stderr)
     return LLMClient(base_url, key)
 
 

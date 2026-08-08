@@ -39,6 +39,29 @@ The exact model names on offer (GPT-5 family, e.g.
 [AI APIs in Aalto](https://www.aalto.fi/en/services/ai-apis-in-aalto)
 page (Aalto login required).
 
+### Data handling
+
+The `*_llm` linters send the **manuscript text (and, for the figure and
+caption linters, figure images)** to the configured endpoint. A thesis
+draft is *unpublished material*, so keep it on an Aalto-hosted gateway:
+
+- **Default is compliant.** The Aalto AI API and the Aalto LLM Gateway
+  run within Aalto's tenant; inputs are not shared with OpenAI and are
+  not used to train models. This is the GDPR-compliant path Aalto policy
+  requires for unpublished, confidential, or personal material — unlike
+  public services such as ChatGPT.
+- **Do not point `--base-url` at a public endpoint** (e.g. OpenRouter)
+  for a real draft — that would send unpublished material to a public AI
+  service, contrary to
+  [Aalto's guidance](https://www.aalto.fi/en/services/responsible-use-of-artificial-intelligence-in-the-research-process).
+  The client prints a warning when the endpoint is not Aalto-hosted.
+- **Special-category personal data** (e.g. interview transcripts,
+  human-subjects data embedded in the draft) needs a data-classification
+  check before linting, even on the Aalto gateway.
+- When running these on a student's draft, tell the student that
+  supervisor feedback may be produced by routing their manuscript through
+  this suite — the mirror image of the AI-use disclosure asked of them.
+
 ## Basic usage
 
 Run one linter on a compiled thesis PDF (or run everything at once, below):
