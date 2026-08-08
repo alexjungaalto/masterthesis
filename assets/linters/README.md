@@ -145,6 +145,12 @@ per-linter summary (`clean` / `findings` / `error`).
 | Category errors (an algorithm named<br>where a metric is meant) | `prose_lint_llm.py` (`category-error`) | LLM |
 | Empty buzzwords ("framework",<br>"leverage", unearned "robust") | `prose_lint_llm.py` (`empty-buzzword`) | LLM |
 | Section openers stand alone;<br>no narrative jumps between paragraphs | `flow_lint_llm.py` | `OPAQUE-OPENER` (judged without<br>the preceding text), `FLOW-BREAK` |
+| Type / range / dimension mismatches<br>in formal claims | `type_consistency_lint_llm.py` | `TYPE-MISMATCH`, `RANGE`,<br>`DIMENSION`, `BRIDGE-LOOSE` |
+
+For general writing craft beyond these ML-specific checks, the [George Mason
+University Writing Center writing guides](https://writingcenter.gmu.edu/writing-resources)
+give concise, well-tested criteria on concision, cohesion and coherence,
+revision, and editing.
 
 ### Responsible use of AI, references quality
 
