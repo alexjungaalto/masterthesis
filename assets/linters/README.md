@@ -147,11 +147,6 @@ per-linter summary (`clean` / `findings` / `error`).
 | Section openers stand alone;<br>no narrative jumps between paragraphs | `flow_lint_llm.py` | `OPAQUE-OPENER` (judged without<br>the preceding text), `FLOW-BREAK` |
 | Type / range / dimension mismatches<br>in formal claims | `type_consistency_lint_llm.py` | `TYPE-MISMATCH`, `RANGE`,<br>`DIMENSION`, `BRIDGE-LOOSE` |
 
-For general writing craft beyond these ML-specific checks, the [George Mason
-University Writing Center writing guides](https://writingcenter.gmu.edu/writing-resources)
-give concise, well-tested criteria on concision, cohesion and coherence,
-revision, and editing.
-
 ### Responsible use of AI, references quality
 
 | Instruction | Linter | How |
@@ -308,8 +303,9 @@ questions and scope are, against criteria compiled from authoritative
 university guidance (the [Monash University Library research-question
 checklist](https://www.monash.edu/library/help/assignments-research/developing-research-questions)
 — focused, researchable, feasible, specific, complex, relevant;
-the George Mason University Writing Center criteria — clear, focused,
-concise, complex, arguable; and the FINER framework). Per question:
+the [George Mason University Writing Center research-question
+criteria](https://writingcenter.gmu.edu/writing-resources/research-based-writing/how-to-write-a-research-question)
+— clear, focused, concise, complex, arguable; and the FINER framework). Per question:
 STRONG/ADEQUATE/WEAK with the violated criteria named and a concrete
 reformulation (a yes/no-formed engineering question with obvious
 quantitative intent is treated as a minor form issue, not a defect).
