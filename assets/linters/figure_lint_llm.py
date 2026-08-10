@@ -27,6 +27,13 @@ Categories reported (all [WARN]):
                      subject (UI of a system built/evaluated, study
                      stimulus)
   ILLEGIBLE          anything else that makes the figure hard to read
+  MESSAGE            the figure has no single clear takeaway a reader can
+                     extract from the visual, or the visual does not
+                     support the specific point its caption claims (e.g.
+                     the caption says "X outperforms Y" but the chart makes
+                     that comparison impossible to see). Structural diagrams
+                     whose job is to show an architecture are exempt --
+                     their structure IS the message.
 
 Gateway: the Aalto AI API by default (GPT-5 family is multimodal); on the
 Aalto LLM Gateway the vision model Qwen3-VL is used (see aalto_llm.py).
@@ -54,8 +61,13 @@ from aalto_llm import (API_KEY_HELP, BASE_URL, BASE_URL_HELP,
                        default_vision_model, extract_json, make_client)
 from lintutil import Report
 
-CAPTION_RE = re.compile(r"^(Figure|Fig\.)\s+(\d+(?:\.\d+)*)\s*[:.]\s*(.*)",
-                        re.S)
+# Require a real caption separator: a colon, or a period FOLLOWED BY
+# whitespace. Plain "[:.]" let the period inside a figure number act as the
+# separator, so an in-text cross-reference ("Figure 6.6 shows ...") matched
+# with number "6" -- fabricating phantom "Figure 6" entries from running prose
+# and rendering blank space above the sentence as a bogus (illegible) figure.
+CAPTION_RE = re.compile(
+    r"^(Figure|Fig\.)\s+(\d+(?:\.\d+)*)\s*(?::|\.\s)\s*(.*)", re.S)
 ZOOM = 2.0  # render at 144 dpi
 
 
@@ -192,7 +204,21 @@ SYSTEM_PROMPT = (
     "interface is incidental and the actual content (numbers, tables, "
     "code output, data) should have been extracted and typeset.\n"
     "  ILLEGIBLE: anything else making the figure hard to read "
-    "(pixelation, tiny markers, dense clutter).\n\n"
+    "(pixelation, tiny markers, dense clutter).\n"
+    "  MESSAGE: silently infer, from the VISUAL alone, the single main "
+    "takeaway the figure conveys, then EMIT this finding ONLY when that "
+    "reading is defective in one of these ways: (a) there is no "
+    "discernible point — the figure shows data with nothing foregrounded, "
+    "no comparison or trend a reader can name; or (b) the visual "
+    "contradicts or fails to support the specific claim its caption makes "
+    "(caption asserts a difference/ranking/effect the chart does not let "
+    "the eye see); or (c) two or more unrelated messages compete with no "
+    "focus. When you do emit it, state in the comment BOTH the takeaway "
+    "the visual actually conveys ('reads as: ...') AND why that is a "
+    "problem. If the figure conveys one clear point, emit NOTHING for this "
+    "category. Never demand an argumentative takeaway from a structural/"
+    "architecture diagram, a schematic, or an illustrative example — for "
+    "those the structure or example IS the message; judge only clarity.\n\n"
     "Diagrams/architecture sketches have no axes — do not demand axes "
     "for them. Be conservative: no nitpicks about style or aesthetics. "
     "Respond with STRICT JSON:\n"
@@ -265,6 +291,17 @@ def main(argv: List[str] = None) -> int:
             pix.save(crops_dir / f"figure_{fig.number}.png")
 
         wr = white_ratio(pix)
+        if wr >= 0.985:
+            # A near-empty crop almost always means the region heuristic missed
+            # the figure (a full-page float, content above the previous text
+            # block, etc.), NOT that the figure is blank in the thesis. Report
+            # an advisory rather than a confident defect, and skip the vision
+            # call -- it would only see white and "confirm" a missing graphic.
+            rep.add("INFO", "LIKELY-MISLOCATED", where,
+                    f"{label}: rendered region is {wr:.0%} blank -- the figure "
+                    f"content was probably not located; inspect with "
+                    f"--save-crops before trusting this entry.")
+            continue
         if wr > args.max_white:
             rep.add("WARN", "EXCESS-WHITESPACE", where,
                     f"{label}: {wr:.0%} of the figure region is blank "
