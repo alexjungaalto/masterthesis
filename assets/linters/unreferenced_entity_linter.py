@@ -29,7 +29,8 @@ back to PyMuPDF):
 
 PDF-mode limitations: heuristic text extraction; equation numbers only found
 when right-aligned with >=2 spaces before "(N)"; mentions split across a page
-break in mid-phrase may be missed (adjacent-line joins are handled).
+break in mid-phrase may be missed (adjacent-line joins, including a hyphenated
+word break such as "Ta-\nble 2.2", are handled).
 
 Usage:
   python3 unreferenced_entity_linter.py thesis.pdf
@@ -178,8 +179,13 @@ FLOAT_WORDS = {
     "listing": "listing", "listings": "listing",
 }
 NUM = r"[A-Z]?\d+(?:\.\d+)?"
+# Separator after the number must be a colon, or a period FOLLOWED by
+# whitespace/end -- never the period inside the number itself. Plain "[:.]"
+# let the regex backtrack "2.4" to "2" and match the internal dot, recording a
+# phantom "Figure 2" definition from a body line like "Figure 2.4 summarises
+# these layers:" and then reporting that non-existent float as unreferenced.
 CAPTION_DEF_RE = re.compile(
-    rf"^\s*(Figure|Fig\.|Table|Algorithm|Listing)\s+({NUM})\s*[:.]")
+    rf"^\s*(Figure|Fig\.|Table|Algorithm|Listing)\s+({NUM})\s*(?::|\.(?=\s|$))")
 EQ_DEF_RE = re.compile(rf"(?:\s{{2,}}|^\s*)\(({NUM})\)\s*$")
 FLOAT_MENTION_RE = re.compile(
     rf"\b(Figures?|Figs?\.|Tables?|Algorithms?|Listings?)\s+"
@@ -262,14 +268,23 @@ def scan_pdf(path: Path, bare_eq_refs=True):
                 for m in bares:
                     mentions.add(("equation", m.group(1)))
 
-            # mention split across a line break: "... Table\n21 shows ..."
+            # A mention split across a line break, including a HYPHENATED
+            # word break: "... Table\n2.2 ..." or "... Ta-\nble 2.2 ...".
+            # Heal the seam (join the hyphenated word, else glue the last word
+            # to the next line) and re-scan it, so the reference is still seen.
+            # Additive: this can only add mentions, never suppress a finding.
             if i + 1 < len(lines):
-                tail = line.rstrip().rsplit(" ", 1)[-1].lower()
-                if tail in FLOAT_WORDS:
-                    nxt = lines[i + 1].lstrip()
-                    m = re.match(NUM, nxt)
-                    if m:
-                        mentions.add((FLOAT_WORDS[tail], m.group(0)))
+                cur = line.rstrip()
+                nxt = lines[i + 1].lstrip()
+                seam = (cur[:-1].rsplit(" ", 1)[-1] + nxt) if cur.endswith("-") \
+                    else (cur.rsplit(" ", 1)[-1] + " " + nxt)
+                for m in FLOAT_MENTION_RE.finditer(seam):
+                    kind = FLOAT_WORDS[m.group(1).lower()]
+                    for n in expand_number_list(m.group(2)):
+                        mentions.add((kind, n))
+                for m in EQ_WORD_MENTION_RE.finditer(seam):
+                    for n in expand_number_list(m.group(1)):
+                        mentions.add(("equation", n))
 
     findings = 0
     for (kind, num), page in sorted(defs.items(), key=lambda kv: sort_key(kv[0])):
