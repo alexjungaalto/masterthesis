@@ -71,6 +71,16 @@ RELATION_RULES = [
      "SCALAR objective/criterion, not a set or a vector."),
     ("is distributed as, ~, is drawn from",
      "the subject is a random variable; the object is a DISTRIBUTION."),
+    ("serves as / is used as / plays the role of / acts as / is the",
+     "the object names a ROLE (metric, objective/criterion, loss, prior, "
+     "dataset, estimator, feature, label, ...) that itself carries a type: a "
+     "metric/objective/loss is a SCALAR criterion, a prior/likelihood is a "
+     "DISTRIBUTION, a dataset is a SET, an estimator is a FUNCTION/MAP. The "
+     "subject's declared type must be compatible with that role's type. An "
+     "algorithm/procedure named where a metric, loss, or objective is meant "
+     "(e.g. 'we use expectation-maximization as the accuracy metric', 'the "
+     "loss is gradient descent') is a type mismatch, as is a distribution "
+     "used as a dataset or a set used as a scalar objective."),
 ]
 
 # Type classes the ledger uses.
