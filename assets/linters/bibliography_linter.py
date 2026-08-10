@@ -16,8 +16,9 @@ Input formats:
            section is located and split automatically.
 
 Findings (severity in brackets):
-  [ERROR] NOT-FOUND         no plausible match in any database -- entry may be
-                            hallucinated, garbled, or too incomplete to verify
+  [WARN]  NOT-FOUND         no plausible match in any database -- entry may be
+                            garbled or too new to be indexed; verify by hand
+                            (absence of a match is not proof of fabrication)
   [ERROR] AUTHOR-MISMATCH   matched record's authors differ from the citation
   [WARN]  TITLE-DRIFT       best match found but title similarity is imperfect
   [WARN]  VENUE-MISMATCH    cited venue disagrees with the matched record
@@ -51,8 +52,14 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 UA = {"User-Agent": "bibliography-linter/1.0 (thesis supervision; mailto:alex.jung@aalto.fi)"}
-ARXIV_ID_RE = re.compile(r"(?:ar[xX]iv[:\s]*|abs/)(\d{4}\.\d{4,5}|[a-z\-]+/\d{7})",
-                         re.IGNORECASE)
+# Accept the inline forms ("arXiv:2308.03688", "abs/2308.03688") AND the DOI
+# form used by recent entries ("doi: 10.48550/arXiv.2604.16338", where a dot,
+# not a colon, follows "arxiv"). Missing the DOI form meant the arXiv id was
+# never extracted, the authoritative arXiv lookup was skipped, and the entry
+# fell back to a fuzzy title search that mismatched brand-new papers.
+ARXIV_ID_RE = re.compile(
+    r"(?:ar[xX]iv[:\s.]*|abs/|10\.48550/ar[xX]iv\.)(\d{4}\.\d{4,5}|[a-z\-]+/\d{7})",
+    re.IGNORECASE)
 URL_RE = re.compile(r"https?://\S+|www\.\S+|doi\.org/\S+", re.IGNORECASE)
 YEAR_RE = re.compile(r"\b(19|20)\d{2}\b")
 WEB_HOST_RE = re.compile(
@@ -149,6 +156,10 @@ def _parse_ieee_entry(num, body):
     title_m = re.search(r"[\"“]\s*(.+?)[,.]?\s*[\"”]", body)
     title = title_m.group(1).strip() if title_m else ""
     authors_part = body[:title_m.start()].strip(" ,") if title_m else ""
+    # Strip "et al." wherever it appears: otherwise "Cheng Qian et al." survives
+    # as a single author token whose last name parses to "al", producing spurious
+    # AUTHOR-MISMATCH findings against the record's real author list.
+    authors_part = re.sub(r"\bet\s+al\.?", "", authors_part, flags=re.IGNORECASE)
     rest = body[title_m.end():].strip(" ,") if title_m else body
     authors = [a.strip() for a in
                re.split(r",\s*(?:and\s+)?|\s+and\s+", authors_part)
@@ -300,7 +311,7 @@ def last_names(authors):
         parts = [p for p in a.split() if len(p) > 1 or not p.isupper()]
         if parts:
             out.append(norm(parts[-1]))
-    return [x for x in out if x]
+    return [x for x in out if x and x not in {"al", "et"}]
 
 
 def check_entry(entry, cache, delay, log):
@@ -335,13 +346,24 @@ def check_entry(entry, cache, delay, log):
         if errors:
             return [("INFO", "UNVERIFIED",
                      f"all database queries failed ({'; '.join(errors)[:120]})")]
-        return [("ERROR", "NOT-FOUND",
+        return [("WARN", "NOT-FOUND",
                  f"no database match for title '{title[:70]}'")]
 
-    best = max(candidates, key=lambda c: sim(title, c["title"]))
+    # A cited identifier is authoritative: if arXiv resolved this entry's id to a
+    # record, trust that record as the match rather than a fuzzy title search
+    # (which mismatches papers too new to be indexed by Crossref/DBLP).
+    arxiv_hit = next((c for c in candidates if c["source"] == "arxiv"), None)
+    if entry["arxiv"] and arxiv_hit:
+        best = arxiv_hit
+    else:
+        best = max(candidates, key=lambda c: sim(title, c["title"]))
     best_sim = sim(title, best["title"])
     if best_sim < 0.55:
-        return [("ERROR", "NOT-FOUND",
+        # Absence of a database match is not evidence of fabrication -- recent
+        # papers routinely lag the indexes. Flag as a WARN to check, not an
+        # ERROR. (A cited id that resolves to a genuinely different title still
+        # surfaces here, via the low similarity against that resolved record.)
+        return [("WARN", "NOT-FOUND",
                  f"no plausible match for title '{title[:70]}' "
                  f"(closest: '{best['title'][:70]}' [{best['source']}], "
                  f"similarity {best_sim:.2f})")]
