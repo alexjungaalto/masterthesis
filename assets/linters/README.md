@@ -115,7 +115,7 @@ per-linter summary (`clean` / `findings` / `error`).
 | All numbered equations, tables,<br>figures referenced in the text | `unreferenced_entity_linter.py` | `UNREFERENCED`, `UNLABELED-EQ`,<br>`UNLABELED-FLOAT` (LaTeX + PDF) |
 | Present new methods as pseudocode | `thesis_checklist_llm.py` | verdict `pseudocode` |
 | Model diagnosis via numerical experiments and mathematical analysis | `thesis_checklist_llm.py` | verdict `model-diagnosis` |
-| Figures clear, labelled,<br>informative captions | `figure_lint_llm.py`<br>`caption_lint.py`<br>`caption_lint_llm.py`<br>`thesis_checklist_llm.py` | rendered figures: fonts, whitespace,<br>contrast, axes, `MESSAGE` takeaway<br>(pixels + vision LLM)<br>`SHORT-CAPTION`, `NO-CAPTION`<br>`WEAK-CAPTION` (per-caption LLM)<br>verdict `captions-informative` |
+| Figures clear, labelled,<br>informative captions | `figure_lint_llm.py`<br>`caption_lint.py`<br>`caption_lint_llm.py`<br>`thesis_checklist_llm.py` | rendered figures scored against the<br>PLOS Ten Simple Rules (figures × rules<br>matrix; pixels + vision LLM)<br>`SHORT-CAPTION`, `NO-CAPTION`<br>`WEAK-CAPTION` (per-caption LLM)<br>verdict `captions-informative` |
 | References formatted per IEEE guidelines | `citation_style_lint.py` | style/entry/citation checks (LaTeX + PDF) |
 | Terms from the Aalto<br>Dictionary of ML | `terminology_lint.py` | `NON-DICTIONARY`, `TERM-MIX`<br>(dictionary term first per cluster) |
 | Every chapter/section has zero<br>or >= 2 subdivisions | `structure_lint.py` | `LONE-CHILD` (LaTeX + PDF) |
@@ -185,7 +185,7 @@ them. The closest proxy: run the suite before every revision round.
 | `data_split_lint_llm.py` | per studied ML method:<br>train/validation/test set construction<br>and diagnosis on that split | `.pdf` | Aalto AI API |
 | `research_questions_lint_llm.py` | each stated research question:<br>answered? where? on what evidence? | `.pdf` | Aalto AI API |
 | `rq_quality_lint_llm.py` | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
-| `figure_lint_llm.py` | figure quality: fonts vs body text,<br>whitespace, contrast, axes, resolution,<br>raw screenshots as figures,<br>message/takeaway conveyed | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
+| `figure_lint_llm.py` | figures scored against the PLOS<br>Ten Simple Rules for Better Figures<br>(figures × ten-rules matrix) | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
 | `section_intro_lint_llm.py` | does each chapter/section intro map<br>its subsections and tie them together? | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | `type_consistency_lint_llm.py` | formal claims well-typed: relations over<br>same-type operands, values in range,<br>dimensionless quantities unit-free<br>(`TYPE-MISMATCH`, `RANGE`, `DIMENSION`,<br>`BRIDGE-LOOSE`) | `.pdf` | Aalto AI API |
 | `flow_lint_llm.py` | narrative flow: section openers that<br>stand alone, no paragraph-to-paragraph<br>discontinuities | `.pdf` | PyMuPDF +<br>Aalto AI API |
@@ -259,19 +259,25 @@ suggested rewrite. Uses the full GPT-5 model by default; `--match 4`
 restricts to one figure, `--per-batch`/`--concurrency` tune the calls.
 
 **`figure_lint_llm.py`** — locates every figure via its caption, renders
-the figure region at 144 dpi, and checks it two ways. Pixel heuristics
-(work offline, `--no-llm`): `EXCESS-WHITESPACE` (blank-background fraction
-above `--max-white`) and `LOW-RESOLUTION` (embedded raster below
-`--min-dpi` at printed size). Vision LLM judgement (the rendered figure is
-sent with the body-text font size as yardstick): `FONT-TOO-SMALL`,
-`AXES-UNLABELED`, `OVERLAPPING-TEXT`, `LOW-CONTRAST`, `EXCESS-WHITESPACE`,
-`SCREENSHOT` (raw IDE/terminal/application capture in place of a prepared
-figure or table, noting non-English interface text), `ILLEGIBLE`, and
-`MESSAGE` (the figure has no single clear takeaway, or the visual does not
-support the point its caption claims; structural/architecture diagrams are
-exempt). `--save-crops DIR` writes the judged renderings for
-inspection; `--figures 3,7` restricts the run. On the Aalto LLM Gateway the
-Qwen3-VL vision model is used automatically.
+the figure region at 144 dpi, and scores it against the ten rules of
+Rougier, Droettboom & Bourne, ["Ten Simple Rules for Better
+Figures"](https://doi.org/10.1371/journal.pcbi.1003833) (PLOS Comput Biol
+2014). The output is a **matrix**: one row per figure, one column per rule
+(R1 know your audience, R2 identify your message, R3 adapt to the medium,
+R4 captions are not optional, R5 do not trust the defaults, R6 use color
+effectively, R7 do not mislead the reader, R8 avoid chartjunk, R9 message
+trumps beauty, R10 get the right tool). A vision model gives each cell a
+verdict — `✓` pass, `~` minor issue, `✗` clear violation, `·` not
+applicable — with the body-text font size as the legibility yardstick, and
+a per-figure notes section explains every flagged cell. Pixel heuristics
+(computed offline with PyMuPDF) feed the relevant rules as measurements:
+the blank-background fraction above `--max-white` informs R8, and an
+embedded raster below `--min-dpi` at printed size informs R3; with
+`--no-llm` only these heuristic cells are filled and the rest are left
+unassessed (`?`). A near-empty rendered region (≥98.5% blank) is reported
+as a mislocated figure, not scored as blank. `--save-crops DIR` writes the
+judged renderings for inspection; `--figures 3,7` restricts the run. On the
+Aalto LLM Gateway the Qwen3-VL vision model is used automatically.
 
 **`section_intro_lint_llm.py`** — for every chapter/section that has
 subsections (outline from the PDF's embedded TOC), extracts the text
