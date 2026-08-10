@@ -97,6 +97,17 @@ python3 run_all_linters.py thesis.pdf --llm --bib  # + LLM + bibliography
 `run_all_linters.py` prints each linter's report followed by a one-line
 per-linter summary (`clean` / `findings` / `error`).
 
+For a **dashboard** instead of console text, pipe a run through
+`dashboard.py`, which renders it as one self-contained HTML page — a summary
+band, an expandable card per linter grouped by theme, and the figure linter's
+figures × ten-rules matrix as a colour-coded table (works offline, light or
+dark):
+
+```bash
+python3 dashboard.py thesis.pdf --llm --bib --out dashboard.html
+python3 dashboard.py --from-run saved_run.txt --title "..." --out dash.html
+```
+
 ## Coverage: ml-theses.org instruction → linter
 
 ### Manuscript preparation
@@ -191,6 +202,7 @@ them. The closest proxy: run the suite before every revision round.
 | `flow_lint_llm.py` | narrative flow: section openers that<br>stand alone, no paragraph-to-paragraph<br>discontinuities | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | `prose_lint_llm.py` | LLM self-editing pass (uncited<br>claims, tense drift, jargon, …) | `.tex`, `.pdf` | Aalto AI API |
 | `run_all_linters.py` | runs everything above | either | — |
+| `dashboard.py` | renders a run as a self-contained HTML dashboard | either | — |
 
 Shared modules: `lintutil.py` (text extraction, report format),
 `aalto_llm.py` (Aalto AI API client; also used by the `*_llm` linters).
