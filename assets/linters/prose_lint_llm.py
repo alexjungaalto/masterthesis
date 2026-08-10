@@ -25,6 +25,16 @@ Screens the thesis in chunks and reports, per finding category:
   informal-register   colloquial or conversational phrasing out of place
                       in academic prose ("a bunch of", "way better",
                       contractions like "don't")
+  category-error      a technically precise term used in a conceptually
+                      wrong role -- an algorithm/model named where a
+                      metric or quantity is meant ("the accuracy metric
+                      was expectation maximization"), a loss called a
+                      dataset, units that do not match the quantity
+  empty-buzzword      an inflated/hype word carrying no specific meaning
+                      in context ("framework" with no clear referent,
+                      "leverage"/"utilize" for "use", unearned "robust"/
+                      "novel"/"seamless"); NOT flagged when it names a
+                      real, defined thing (the FACT framework)
 
 Findings are heuristic LLM judgements — review them; they are reported as
 WARN and the exit status is 1 when any are found.
@@ -52,7 +62,8 @@ from lintutil import Report, is_toc_line, load_lines, paragraphs_from_lines
 
 CHECKS = ["uncited-claim", "tense-drift", "dangling-reference",
           "vague-quantifier", "jargon", "synonym-switch",
-          "unmotivated-section", "broken-idiom", "informal-register"]
+          "unmotivated-section", "broken-idiom", "informal-register",
+          "category-error", "empty-buzzword"]
 
 SYSTEM_PROMPT = (
     "You are a meticulous copy-editor doing the 'self-editing pass' of the "
@@ -97,7 +108,31 @@ SYSTEM_PROMPT = (
     "place in a thesis — e.g. 'a bunch of', 'way better', 'stuff', "
     "'pretty good', 'huge', contractions ('don't', \"it's\"). Do not "
     "double-report phrases already flagged as vague-quantifier or "
-    "jargon.\n\n"
+    "jargon.\n"
+    "  category-error: a technically precise, correctly-spelled term "
+    "placed in a conceptually wrong ROLE — a type mismatch a domain "
+    "expert would call simply wrong, not merely unconventional. Examples: "
+    "an algorithm or model named where a metric/quantity is meant ('the "
+    "accuracy metric was expectation maximization' — EM is an algorithm, "
+    "not a metric; 'we minimized the accuracy' where a loss is meant), a "
+    "loss function called a dataset, an optimizer called a loss, a "
+    "probability given as a count, or units that cannot match the "
+    "quantity ('a latency of 5 GB'). Flag ONLY clear conceptual "
+    "mismatches; do NOT flag correct-but-unusual usage, informal "
+    "shorthand, or anything you are not confident is a genuine error. "
+    "State the expected category vs. the one used in the explanation.\n"
+    "  empty-buzzword: an inflated or hype word used where it carries no "
+    "specific meaning a reader can pin down — 'framework', 'solution', "
+    "'ecosystem', 'landscape', 'paradigm', 'synergy' with no clear "
+    "referent; 'leverage'/'utilize' in place of plain 'use'; "
+    "'robust'/'novel'/'seamless'/'holistic'/'cutting-edge'/'state-of-the-art' "
+    "as unearned praise not backed by a definition or result. Flag ONLY "
+    "when removing or replacing the word would lose no information. Do "
+    "NOT flag it when the word names a real, defined thing in the text "
+    "(the FACT framework, a theoretical framework, an optimization "
+    "problem's 'solution', a proven 'robust' estimator) or is an "
+    "established term of art. Quote the phrase and name a plainer "
+    "replacement in the explanation.\n\n"
     "Be precise and conservative: only report defects a human editor "
     "would definitely mark. Each finding needs an exact short quote "
     "(<=25 words) from the text. Respond with STRICT JSON:\n"
