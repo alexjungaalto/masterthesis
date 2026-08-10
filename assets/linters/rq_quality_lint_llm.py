@@ -17,6 +17,10 @@ follow authoritative university guidance:
     'yes' or 'no'"), and arguable ("potential answers are open to debate").
   * The FINER criteria (Hulley et al., Designing Clinical Research):
     Feasible, Interesting, Novel, Ethical, Relevant.
+  * Self-containment (an ml-theses.org addition): every technical term or
+    acronym the question uses is introduced at or before the point where
+    the question is stated, so the question is understandable where it
+    appears -- not only after later chapters define its terms.
 
 Per research question: verdict STRONG / ADEQUATE / WEAK with per-criterion
 flags and a suggested reformulation for anything less than STRONG.
@@ -72,6 +76,21 @@ SYSTEM_PROMPT = (
     "substantive defect.\n"
     "  specific: key concepts are precise and measurable, not vague "
     "('effective', 'good performance') without stated metrics.\n"
+    "  self-contained: every non-generic technical term, acronym, or "
+    "named entity IN THE QUESTION is introduced or defined at or BEFORE "
+    "the page where the question is stated -- use the '[[page N]]' markers "
+    "to check. A term the reader first meets only in a LATER section makes "
+    "the question un-understandable where it appears; flag it and name "
+    "both the term and the page it is actually introduced (e.g. \"'agent "
+    "harness' is used in the RQ on p2 but first defined in 2.6 on p14\"). "
+    "A term defined in the question's own sentence/paragraph, in an "
+    "earlier section, or drawn from common ML background counts as "
+    "introduced. This is reader-POSITION self-containment -- distinct from "
+    "'clear' (which judges rubric well-posedness in isolation): a question "
+    "can be perfectly clear to an expert yet not self-contained for a "
+    "reader at that point. A term introduced only a page or two later is a "
+    "minor issue; one that depends on a whole later chapter is "
+    "substantive.\n"
     "  researchable-feasible: answerable with the data, methods, and "
     "time an MSc allows; not requiring inaccessible populations or "
     "unbounded experiments.\n"
