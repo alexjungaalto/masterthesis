@@ -104,7 +104,7 @@ per-linter summary (`clean` / `findings` / `error`).
 | Instruction | Linter | How |
 |---|---|---|
 | Problem formulation: data points,<br>features, labels defined | `thesis_checklist_llm.py` | verdict `problem-formulation`<br>with quoted evidence |
-| Research scope/questions well-posed<br>(clear, focused, specific, complex,<br>feasible, relevant) | `rq_quality_lint_llm.py` | per-question criteria verdicts<br>+ scope checks (gap,<br>delimitations, alignment) |
+| Research scope/questions well-posed<br>(clear, focused, specific, complex,<br>feasible, relevant, self-contained) | `rq_quality_lint_llm.py` | per-question criteria verdicts<br>+ scope checks (gap,<br>delimitations, alignment) |
 | Identify data sources and evaluation criteria | `thesis_checklist_llm.py` | verdict `data-sources-eval` |
 | Training loss and validation/test<br>loss explicitly stated | `thesis_checklist_llm.py` | verdict `loss-functions` |
 | Per studied method: training,<br>validation and test set construction<br>described, and the method diagnosed<br>on that split | `data_split_lint_llm.py` | enumerates the trained methods,<br>then per method: `train-set`,<br>`validation-set`, `test-set`,<br>`diagnosis-on-split` verdicts |
@@ -115,7 +115,7 @@ per-linter summary (`clean` / `findings` / `error`).
 | All numbered equations, tables,<br>figures referenced in the text | `unreferenced_entity_linter.py` | `UNREFERENCED`, `UNLABELED-EQ`,<br>`UNLABELED-FLOAT` (LaTeX + PDF) |
 | Present new methods as pseudocode | `thesis_checklist_llm.py` | verdict `pseudocode` |
 | Model diagnosis via numerical experiments and mathematical analysis | `thesis_checklist_llm.py` | verdict `model-diagnosis` |
-| Figures clear, labelled,<br>informative captions | `figure_lint_llm.py`<br>`caption_lint.py`<br>`caption_lint_llm.py`<br>`thesis_checklist_llm.py` | rendered figures: fonts, whitespace,<br>contrast, axes (pixels + vision LLM)<br>`SHORT-CAPTION`, `NO-CAPTION`<br>`WEAK-CAPTION` (per-caption LLM)<br>verdict `captions-informative` |
+| Figures clear, labelled,<br>informative captions | `figure_lint_llm.py`<br>`caption_lint.py`<br>`caption_lint_llm.py`<br>`thesis_checklist_llm.py` | rendered figures: fonts, whitespace,<br>contrast, axes, `MESSAGE` takeaway<br>(pixels + vision LLM)<br>`SHORT-CAPTION`, `NO-CAPTION`<br>`WEAK-CAPTION` (per-caption LLM)<br>verdict `captions-informative` |
 | References formatted per IEEE guidelines | `citation_style_lint.py` | style/entry/citation checks (LaTeX + PDF) |
 | Terms from the Aalto<br>Dictionary of ML | `terminology_lint.py` | `NON-DICTIONARY`, `TERM-MIX`<br>(dictionary term first per cluster) |
 | Every chapter/section has zero<br>or >= 2 subdivisions | `structure_lint.py` | `LONE-CHILD` (LaTeX + PDF) |
@@ -185,7 +185,7 @@ them. The closest proxy: run the suite before every revision round.
 | `data_split_lint_llm.py` | per studied ML method:<br>train/validation/test set construction<br>and diagnosis on that split | `.pdf` | Aalto AI API |
 | `research_questions_lint_llm.py` | each stated research question:<br>answered? where? on what evidence? | `.pdf` | Aalto AI API |
 | `rq_quality_lint_llm.py` | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
-| `figure_lint_llm.py` | figure quality: fonts vs body text,<br>whitespace, contrast, axes, resolution,<br>raw screenshots as figures | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
+| `figure_lint_llm.py` | figure quality: fonts vs body text,<br>whitespace, contrast, axes, resolution,<br>raw screenshots as figures,<br>message/takeaway conveyed | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
 | `section_intro_lint_llm.py` | does each chapter/section intro map<br>its subsections and tie them together? | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | `type_consistency_lint_llm.py` | formal claims well-typed: relations over<br>same-type operands, values in range,<br>dimensionless quantities unit-free<br>(`TYPE-MISMATCH`, `RANGE`, `DIMENSION`,<br>`BRIDGE-LOOSE`) | `.pdf` | Aalto AI API |
 | `flow_lint_llm.py` | narrative flow: section openers that<br>stand alone, no paragraph-to-paragraph<br>discontinuities | `.pdf` | PyMuPDF +<br>Aalto AI API |
@@ -266,7 +266,10 @@ above `--max-white`) and `LOW-RESOLUTION` (embedded raster below
 sent with the body-text font size as yardstick): `FONT-TOO-SMALL`,
 `AXES-UNLABELED`, `OVERLAPPING-TEXT`, `LOW-CONTRAST`, `EXCESS-WHITESPACE`,
 `SCREENSHOT` (raw IDE/terminal/application capture in place of a prepared
-figure or table, noting non-English interface text), `ILLEGIBLE`. `--save-crops DIR` writes the judged renderings for
+figure or table, noting non-English interface text), `ILLEGIBLE`, and
+`MESSAGE` (the figure has no single clear takeaway, or the visual does not
+support the point its caption claims; structural/architecture diagrams are
+exempt). `--save-crops DIR` writes the judged renderings for
 inspection; `--figures 3,7` restricts the run. On the Aalto LLM Gateway the
 Qwen3-VL vision model is used automatically.
 
@@ -305,7 +308,10 @@ checklist](https://www.monash.edu/library/help/assignments-research/developing-r
 — focused, researchable, feasible, specific, complex, relevant;
 the [George Mason University Writing Center research-question
 criteria](https://writingcenter.gmu.edu/writing-resources/research-based-writing/how-to-write-a-research-question)
-— clear, focused, concise, complex, arguable; and the FINER framework). Per question:
+— clear, focused, concise, complex, arguable; and the FINER framework), plus a
+self-containment check (every technical term in the question is actually
+defined — not merely mentioned — at or before the page where the question is
+stated). Per question:
 STRONG/ADEQUATE/WEAK with the violated criteria named and a concrete
 reformulation (a yes/no-formed engineering question with obvious
 quantitative intent is treated as a minor form issue, not a defect).
