@@ -18,9 +18,10 @@ follow authoritative university guidance:
   * The FINER criteria (Hulley et al., Designing Clinical Research):
     Feasible, Interesting, Novel, Ethical, Relevant.
   * Self-containment (an ml-theses.org addition): every technical term or
-    acronym the question uses is introduced at or before the point where
-    the question is stated, so the question is understandable where it
-    appears -- not only after later chapters define its terms.
+    acronym the question uses is actually DEFINED -- glossed, expanded, or
+    given a "let X denote ..." -- not merely mentioned, at or before the
+    point where the question is stated, so the question is understandable
+    where it appears rather than only after later chapters define its terms.
 
 Per research question: verdict STRONG / ADEQUATE / WEAK with per-criterion
 flags and a suggested reformulation for anything less than STRONG.
@@ -77,20 +78,30 @@ SYSTEM_PROMPT = (
     "  specific: key concepts are precise and measurable, not vague "
     "('effective', 'good performance') without stated metrics.\n"
     "  self-contained: every non-generic technical term, acronym, or "
-    "named entity IN THE QUESTION is introduced or defined at or BEFORE "
-    "the page where the question is stated -- use the '[[page N]]' markers "
-    "to check. A term the reader first meets only in a LATER section makes "
-    "the question un-understandable where it appears; flag it and name "
-    "both the term and the page it is actually introduced (e.g. \"'agent "
-    "harness' is used in the RQ on p2 but first defined in 2.6 on p14\"). "
-    "A term defined in the question's own sentence/paragraph, in an "
-    "earlier section, or drawn from common ML background counts as "
-    "introduced. This is reader-POSITION self-containment -- distinct from "
-    "'clear' (which judges rubric well-posedness in isolation): a question "
-    "can be perfectly clear to an expert yet not self-contained for a "
-    "reader at that point. A term introduced only a page or two later is a "
-    "minor issue; one that depends on a whole later chapter is "
-    "substantive.\n"
+    "named entity IN THE QUESTION must be actually DEFINED -- not merely "
+    "mentioned -- at or BEFORE the page where the question is stated. A "
+    "DEFINITION is a parenthetical gloss ('the agent harness (the "
+    "non-model infrastructure between the LLM and the target system)'), a "
+    "'let X denote ...' / 'X is defined as ...' / 'we call X ...' "
+    "sentence, an acronym expansion, a Definition environment, or a "
+    "notation/glossary entry. A bare earlier OCCURRENCE of the term with "
+    "no explanation is 'mentioned, NOT defined' and does NOT satisfy this "
+    "criterion. Check strictly by page order using the '[[page N]]' "
+    "markers: the defining page must be <= the question's page; a "
+    "definition that appears only in a LATER section (even one page later) "
+    "does NOT count -- never justify self-containment by citing a section "
+    "after the question. When you flag it, say whether the term is "
+    "undefined entirely or only mentioned-not-defined before the RQ, and "
+    "name the term, the RQ page, and the page where it is actually first "
+    "defined (e.g. \"'agent harness' appears in the RQ on p10 but is only "
+    "mentioned before then; first defined in 2.6 on p14\"). A term defined "
+    "in the question's own sentence, or a genuinely common-ML term "
+    "(accuracy, dataset, neural network), counts as satisfied. This is "
+    "reader-POSITION self-containment -- distinct from 'clear' (rubric "
+    "well-posedness in isolation): a question can be clear to an expert "
+    "yet not self-contained. Mentioned-but-not-defined, or defined just a "
+    "page or two later, is a minor issue; a term whose definition depends "
+    "on a whole later chapter is substantive.\n"
     "  researchable-feasible: answerable with the data, methods, and "
     "time an MSc allows; not requiring inaccessible populations or "
     "unbounded experiments.\n"
