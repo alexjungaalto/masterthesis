@@ -33,7 +33,8 @@ The `*_llm` linters call the
 default (`$AALTO_API_KEY` — sign up for a key on the
 [Aalto API developer portal](https://ai-apidev.aalto.fi/); Aalto
 network/VPN only — see `aalto_llm.py`; `--base-url` switches to the
-Aalto LLM Gateway or any OpenAI-style endpoint such as OpenRouter).
+Aalto LLM Gateway, a local on-device server, or any OpenAI-style
+endpoint such as OpenRouter).
 The exact model names on offer (GPT-5 family, e.g.
 `gpt-5-mini-2025-08-07`) are listed on the
 [AI APIs in Aalto](https://www.aalto.fi/en/services/ai-apis-in-aalto)
@@ -50,6 +51,26 @@ draft is *unpublished material*, so keep it on an Aalto-hosted gateway:
   not used to train models. This is the GDPR-compliant path Aalto policy
   requires for unpublished, confidential, or personal material — unlike
   public services such as ChatGPT.
+- **A local on-device model is also compliant — and the most private.**
+  Point `--base-url` at a server running on your own machine (e.g.
+  `mlx_lm.server` on Apple Silicon, or Ollama — both expose an
+  OpenAI-style `/v1/chat/completions` API); the manuscript never leaves
+  the device, so no network, VPN, or key is needed. The client
+  recognises `localhost` / `127.0.0.1` as a trusted endpoint and prints
+  no warning. Use a capable model for quality on par with the gateway —
+  a ~14B model such as `Qwen3-14B` handles the chunked linters (prose,
+  flow, section-intro, caption) well; the whole-thesis linters
+  (`thesis_checklist_llm`, `research_questions_lint_llm`,
+  `rq_quality_lint_llm`, `type_consistency_lint_llm`) need more context
+  and memory, and `figure_lint_llm` needs a vision model (Qwen3-VL).
+  Very small models (≤2B) miss real defects — validate before relying on
+  them. Example:
+  ```sh
+  mlx_lm.server --model mlx-community/Qwen3-14B-4bit --port 8080 &
+  export LLM_BASE_URL=http://localhost:8080/v1
+  export LLM_MODEL=mlx-community/Qwen3-14B-4bit
+  python3 prose_lint_llm.py thesis.pdf
+  ```
 - **Do not point `--base-url` at a public endpoint** (e.g. OpenRouter)
   for a real draft — that would send unpublished material to a public AI
   service, contrary to

@@ -19,6 +19,7 @@ import re
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from typing import Dict, Optional, Tuple
 
@@ -40,12 +41,24 @@ def is_responses_api(base_url: str) -> bool:
             or base_url.rstrip("/").endswith("/responses"))
 
 
+def is_local_endpoint(base_url: str) -> bool:
+    """True for a server running on this machine (e.g. `mlx_lm.server`, an
+    Ollama/llama.cpp OpenAI shim). Thesis text never leaves the device, so
+    it is at least as safe as an Aalto tenant."""
+    host = urllib.parse.urlparse(base_url).hostname or ""
+    return host in ("localhost", "127.0.0.1", "::1", "0.0.0.0")
+
+
 def is_aalto_endpoint(base_url: str) -> bool:
-    """True for Aalto-hosted gateways that keep thesis text within Aalto's
-    tenant (the Aalto AI API and the Aalto LLM Gateway). These are the only
-    endpoints suitable for unpublished manuscripts; anything else is a
-    public third-party service."""
-    return "aalto-openai-apigw" in base_url or "llm-gateway.k8s.aalto.fi" in base_url
+    """True for endpoints that keep thesis text off public third-party
+    services: the Aalto-hosted gateways that keep it within Aalto's tenant
+    (the Aalto AI API and the Aalto LLM Gateway), plus a local on-device
+    server (see is_local_endpoint). These are the only endpoints suitable
+    for unpublished manuscripts; anything else is a public third-party
+    service."""
+    return ("aalto-openai-apigw" in base_url
+            or "llm-gateway.k8s.aalto.fi" in base_url
+            or is_local_endpoint(base_url))
 
 
 def default_model(base_url: str = BASE_URL) -> str:
