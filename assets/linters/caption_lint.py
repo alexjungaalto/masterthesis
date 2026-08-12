@@ -111,7 +111,9 @@ def main(argv: List[str] = None) -> int:
                     help="Also list every caption found (inventory).")
     args = ap.parse_args(argv)
 
-    rep = Report("Caption lint report", " ".join(args.inputs))
+    rep = Report("Caption lint report", " ".join(args.inputs),
+                 about="Checks that every figure and table has a caption that "
+                       "is present and long enough to be informative.")
     if len(args.inputs) == 1 and args.inputs[0].lower().endswith(".pdf"):
         lint_pdf(args.inputs[0], rep, args.min_words, args.list_all)
     else:

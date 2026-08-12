@@ -261,6 +261,28 @@ STOPWORDS = {
     "note", "example", "see", "cf", "etc", "versus", "vs",
 }
 
+# Ordinary English words that are never a thesis "concept", even when a
+# definition-cue pattern happens to capture them (e.g. "... denotes multiple
+# years"). These are the main source of noise Salma flagged; deliberately
+# excludes genuine ML terms (feature, label, model, method, loss, ...).
+ORDINARY_WORDS = {
+    # quantities / amounts
+    "multiple", "single", "several", "various", "numerous", "number",
+    "numbers", "amount", "amounts", "total", "totals", "majority", "minority",
+    "count", "counts", "half", "quarter", "percentage", "percentages",
+    # time
+    "year", "years", "month", "months", "week", "weeks", "day", "days",
+    "hour", "hours", "minute", "minutes", "second", "seconds", "time",
+    "times", "decade", "decades", "period", "periods", "moment", "moments",
+    # generic filler nouns
+    "thing", "things", "way", "ways", "lot", "kind", "kinds", "sort", "sorts",
+    "part", "parts", "piece", "pieces", "area", "areas", "aspect", "aspects",
+    "item", "items", "order", "place", "places", "point", "points", "side",
+    "sides", "end", "ends", "range", "ranges", "matter", "issue", "issues",
+    "fact", "facts", "reason", "reasons", "detail", "details", "step", "steps",
+}
+STOPWORDS |= ORDINARY_WORDS
+
 
 def _normalise_term(term: str) -> str:
     t = term.strip().strip(".,;:()\"'").strip()
@@ -419,12 +441,22 @@ def render_report(
 
     lines.append(f"{h} Forward-reference lint report")
     lines.append(f"File: {path}")
+    lines.append(
+        "What this checks: a passage that uses a term whose definition appears "
+        "only on a LATER page — a \"forward reference\" the reader meets before "
+        "it is introduced.")
+    lines.append(
+        "Heuristic, so expect false positives: an ordinary word can be "
+        "mistaken for a defined term. For fewer, more reliable hits re-run "
+        "with --min-term-words 2; add --list-concepts to see what was treated "
+        "as a term.")
+    lines.append("")
     lines.append(f"Paragraphs scanned: {len(paragraphs)}")
     lines.append(f"Concepts registered: {len(registry)}")
     lines.append(f"Forward references found: {len(findings)}")
     lines.append("")
 
-    # Group findings by paragraph.
+    # Group findings by paragraph (kept internal; the listing is by page).
     by_para: Dict[int, List[Finding]] = {}
     for f in findings:
         by_para.setdefault(f.para_index, []).append(f)
@@ -434,20 +466,16 @@ def render_report(
                      "(Remember: detection is heuristic; this is not a guarantee.)")
         return "\n".join(lines)
 
+    lines.append("Each finding — the page where the term is used, the term, "
+                 "and the page where it is first defined:")
+    lines.append("")
     for pidx in sorted(by_para):
-        para = paragraphs[pidx]
-        lines.append(f"{h} Paragraph {pidx} (page {para.page})")
-        preview = para.text[:160].replace("\n", " ")
-        if len(para.text) > 160:
-            preview += "…"
-        lines.append(f"{bullet}text: {preview}")
         for f in by_para[pidx]:
             lines.append(
-                f"{bullet}concept '{f.concept}' — "
-                f"first introduced in paragraph {f.introduced_at_para} "
-                f"(page {f.introduced_at_page})"
+                f"{bullet}page {f.page}: uses '{f.concept}' — "
+                f"first defined on page {f.introduced_at_page}"
             )
-            lines.append(f"    snippet: {f.snippet}")
+            lines.append(f"    context: {f.snippet}")
         lines.append("")
 
     return "\n".join(lines)

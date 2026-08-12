@@ -329,6 +329,10 @@ def main(argv=None):
     if not tex_files and not pdf_files:
         sys.exit("error: no .tex or .pdf files found")
 
+    print("Checks that every numbered equation, table, and figure is "
+          "referred to at least once in the text (and, in LaTeX mode, that "
+          "each has a \\label). Each line below is one unreferenced entity.\n")
+
     findings = 0
     if tex_files:
         findings += run_tex_mode(tex_files, args.all_labels)

@@ -203,7 +203,10 @@ def main(argv: List[str] = None) -> int:
         return batch, items if isinstance(items, list) else [], usage
 
     rep = Report(f"Caption quality report (LLM, Rule 4; {model})",
-                 " ".join(args.inputs))
+                 " ".join(args.inputs),
+                 about="LLM check: does each figure/table caption state what "
+                       "is shown, define its symbols, and stand alone for a "
+                       "figure-skimming reader?")
     total_tokens = 0
     with concurrent.futures.ThreadPoolExecutor(
             max_workers=max(1, args.concurrency)) as ex:

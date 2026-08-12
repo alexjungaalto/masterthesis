@@ -431,6 +431,11 @@ def render_report(
 
     lines.append(f"{h} Cross-reference forward-reference lint report")
     lines.append(f"File: {path}")
+    lines.append(
+        'What this checks: a reference to a float (a figure, table, or '
+        'algorithm — LaTeX floats them to wherever they fit) that sits many '
+        'pages before the float itself, e.g. "as in Figure 7" on page 3 when '
+        'Figure 7 is on page 21.')
     lines.append(f"Lines scanned: {n_lines}")
     lines.append(f"Floats defined: {len(defs)}")
     lines.append(f"Threshold: {'any forward' if any_forward else f'>{threshold:.2f} pages ahead'}")

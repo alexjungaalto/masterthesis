@@ -96,7 +96,10 @@ def main(argv: List[str] = None) -> int:
         return "-"
 
     rep = Report("Terminology lint report (Aalto Dictionary of ML)",
-                 " ".join(args.inputs))
+                 " ".join(args.inputs),
+                 about="Flags synonym switching between equivalent terms; each "
+                       "cluster lists the Aalto Dictionary of ML term to "
+                       "standardise on first.")
 
     for preferred, variants in SYNONYM_CLUSTERS:
         counts: Dict[str, int] = {v: count_variants(full_text, v)

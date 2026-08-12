@@ -150,7 +150,9 @@ def main(argv: List[str] = None) -> int:
     ap.add_argument("inputs", nargs="+", help="thesis.pdf or .tex files/dirs")
     args = ap.parse_args(argv)
 
-    rep = Report("Citation style lint report (IEEE)", " ".join(args.inputs))
+    rep = Report("Citation style lint report (IEEE)", " ".join(args.inputs),
+                 about="Checks that the reference list and in-text citations "
+                       "follow the IEEE style used in the thesis guide.")
     if len(args.inputs) == 1 and args.inputs[0].lower().endswith(".pdf"):
         lint_pdf(args.inputs[0], rep)
     else:

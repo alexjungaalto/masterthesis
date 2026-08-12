@@ -146,19 +146,34 @@ class Report:
 
     SEV_ORDER = {"ERROR": 0, "WARN": 1, "INFO": 2}
 
-    def __init__(self, title: str, source: str):
+    #: One-line legend explaining the severity tags, printed above the
+    #: findings so a reader knows how to act on each without the README.
+    SEVERITY_LEGEND = (
+        "How to read: [ERROR] almost certainly a defect, fix it · "
+        "[WARN] worth reviewing, sometimes a false positive · "
+        "[INFO] optional check, usually fine.")
+
+    def __init__(self, title: str, source: str, about: str = ""):
         self.title = title
         self.source = source
+        #: One or two sentences on what this linter checks; printed under the
+        #: header on every run so the output is self-explanatory.
+        self.about = about
         self.findings: List[Tuple[str, str, str, str]] = []
 
     def add(self, severity: str, code: str, where: str, message: str) -> None:
         self.findings.append((severity, code, where, message))
 
     def render(self) -> str:
-        out = [f"== {self.title}", f"File: {self.source}", ""]
+        out = [f"== {self.title}", f"File: {self.source}"]
+        if self.about:
+            out.append(self.about)
+        out.append("")
         if not self.findings:
             out.append("No findings.")
             return "\n".join(out)
+        out.append(self.SEVERITY_LEGEND)
+        out.append("")
         for sev, code, where, msg in sorted(
                 self.findings, key=lambda f: (self.SEV_ORDER.get(f[0], 3), f[2])):
             out.append(f"[{sev}] {code:<18} {where:<12} {msg}")

@@ -68,7 +68,10 @@ def main(argv: List[str] = None) -> int:
 
     lines, mode = load_lines(args.inputs)
     lines = [(w, t) for (w, t) in lines if not is_toc_line(t)]
-    rep = Report("AI disclosure lint report", " ".join(args.inputs))
+    rep = Report("AI disclosure lint report", " ".join(args.inputs),
+                 about="Checks for a dedicated AI-use statement naming the "
+                       "tool and version, and that it is not placed inside "
+                       "the Methods chapter.")
 
     if mode == "tex":
         # surface \section{...} arguments as heading lines

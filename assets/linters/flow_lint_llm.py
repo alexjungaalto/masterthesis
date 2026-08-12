@@ -340,7 +340,10 @@ def main(argv: List[str] = None) -> int:
 
     print(f"[info] gateway={args.base_url}", file=sys.stderr)
     rep = Report("Narrative flow lint report (LLM)",
-                 " ".join(args.inputs))
+                 " ".join(args.inputs),
+                 about="LLM check: do section openers stand alone (read at the "
+                       "heading), and do consecutive paragraphs follow without "
+                       "narrative jumps?")
     n_openers = n_pairs = total_tokens = 0
     if "opener" in checks:
         n_openers, tok = run_opener_check(args, rep)

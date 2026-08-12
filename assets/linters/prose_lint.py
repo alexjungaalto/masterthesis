@@ -112,7 +112,10 @@ def main(argv: List[str] = None) -> int:
     lines, mode = load_lines(args.inputs)
     lines = [(w, t) for (w, t) in lines if not is_toc_line(t)]
     rep = Report("Prose lint report (self-editing pass)",
-                 " ".join(args.inputs))
+                 " ".join(args.inputs),
+                 about="Flags self-editing prose issues: vague quantifiers "
+                       "without a number, colloquial/undefined claims, "
+                       "forward-looking cue phrases, and dangling references.")
 
     vague = args.strict and VAGUE_WORDS or DEFAULT_VAGUE
     vague_re = re.compile(

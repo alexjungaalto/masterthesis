@@ -9,6 +9,29 @@ All scripts are run with `python3 <script> ...` and print a findings
 report; exit status is `0` when clean, `1` when findings exist, and `2` on
 usage errors, so they can be scripted.
 
+## Getting the scripts
+
+All linters live in one directory —
+[`assets/linters/`](https://github.com/alexjungaalto/masterthesis/tree/main/assets/linters)
+in the masterthesis repo. Two ways to get them:
+
+- **The whole suite (recommended)** — clone or download the repo and work
+  inside `assets/linters/`:
+  ```sh
+  git clone https://github.com/alexjungaalto/masterthesis.git
+  cd masterthesis/assets/linters
+  ```
+- **A single script** — each one is served on the website at its own URL,
+  e.g. <https://ml-theses.org/assets/linters/prose_lint.py>. Download it (and
+  the shared helper) with `curl`:
+  ```sh
+  curl -O https://ml-theses.org/assets/linters/prose_lint.py
+  curl -O https://ml-theses.org/assets/linters/lintutil.py   # always needed
+  ```
+
+Every linter imports `lintutil.py`, and the `*_llm` ones also import
+`aalto_llm.py`, so keep those two alongside the scripts.
+
 ## Setup
 
 ```sh
@@ -38,7 +61,7 @@ Aalto LLM Gateway, a local on-device server, or any OpenAI-style
 endpoint such as OpenRouter).
 The exact model names on offer (GPT-5 family, e.g.
 `gpt-5-mini-2025-08-07`) are listed on the
-[AI APIs in Aalto](https://www.aalto.fi/en/services/ai-apis-in-aalto)
+[Aalto AI APIs | Aalto University](https://www.aalto.fi/en/services/ai-apis-in-aalto)
 page (Aalto login required).
 
 ### Data handling
@@ -177,7 +200,7 @@ python3 bibliography_linter.py thesis.pdf          # verify references
 
 | Instruction | Linter | How |
 |---|---|---|
-| Excessive forward referencing | `prose_lint.py`<br>`crossref_forward_lint.py`<br>`forward_ref_lint.py`<br>`forward_ref_lint_llm.py` | `FORWARD-CUE` phrases<br>floats defined pages later<br>concepts used before defined<br>(regex and LLM variants) |
+| Excessive forward referencing | `prose_lint.py`<br>`crossref_forward_lint.py`<br>`forward_ref_lint.py`<br>`forward_ref_lint_llm.py` | `FORWARD-CUE` phrases<br>floats (figures/tables) defined pages later<br>concepts used before defined<br>(regex and LLM variants) |
 | Undefined or re-defined acronyms | `acronym_lint.py` | `USED-BEFORE-EXPANSION`, `NEVER-EXPANDED`, `RE-EXPANDED` |
 | Inconsistent terminology /<br>synonym switching | `terminology_lint.py`<br>`prose_lint_llm.py` | `TERM-MIX`<br>`synonym-switch` |
 | Vague quantifiers without a number | `prose_lint.py`<br>`prose_lint_llm.py` | `VAGUE-QUANTIFIER`<br>`vague-quantifier` |
@@ -219,31 +242,31 @@ The closest proxy: run the suite before every revision round.
 
 | Script | Checks | Input | Needs |
 |---|---|---|---|
-| `bibliography_linter.py` | cited references exist; author/title/<br>venue/year match Crossref/arXiv/DBLP | `.bib`, `.pdf` | network |
-| `structure_lint.py` | sectioning units with exactly one subdivision | `.tex`, `.pdf` | — |
-| `unreferenced_entity_linter.py` | numbered equations/tables/figures never referenced | `.tex`, `.pdf` | — |
-| `crossref_forward_lint.py` | references to floats defined much later | `.pdf` | PyMuPDF |
-| `forward_ref_lint.py` | concepts used before defined (regex) | `.pdf` | PyMuPDF |
-| `forward_ref_lint_llm.py` | concepts used before defined (LLM) | `.pdf` | PyMuPDF +<br>Aalto AI API |
-| `acronym_lint.py` | acronym expanded at first use, no re-expansion | `.tex`, `.pdf` | — |
-| `prose_lint.py` | vague quantifiers, dangling refs, forward cues | `.tex`, `.pdf` | — |
-| `terminology_lint.py` | synonym mixing vs Aalto Dictionary terms | `.tex`, `.pdf` | — |
-| `math_typeset_lint.py` | display-math punctuation, `\eqref`, long inline math | `.tex` | — |
-| `citation_style_lint.py` | IEEE reference/citation format | `.tex`, `.pdf` | — |
-| `caption_lint.py` | missing/too-short figure & table captions | `.tex`, `.pdf` | — |
-| `caption_lint_llm.py` | per-caption quality: states what's shown,<br>defines quantities, self-contained,<br>sentence form | `.tex`, `.pdf` | Aalto AI API |
-| `ai_disclosure_lint.py` | dedicated AI-use statement with tool + version | `.tex`, `.pdf` | — |
-| `thesis_checklist_llm.py` | 9-item manuscript checklist,<br>PASS/FAIL + evidence | `.pdf` | Aalto AI API |
-| `data_split_lint_llm.py` | per studied ML method:<br>train/validation/test set construction<br>and diagnosis on that split | `.pdf` | Aalto AI API |
-| `research_questions_lint_llm.py` | each stated research question:<br>answered? where? on what evidence? | `.pdf` | Aalto AI API |
-| `rq_quality_lint_llm.py` | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
-| `figure_lint_llm.py` | figures scored against the PLOS<br>Ten Simple Rules for Better Figures<br>(figures × ten-rules matrix) | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
-| `section_intro_lint_llm.py` | does each chapter/section intro map<br>its subsections and tie them together? | `.pdf` | PyMuPDF +<br>Aalto AI API |
-| `type_consistency_lint_llm.py` | formal claims well-typed: relations over<br>same-type operands, values in range,<br>dimensionless quantities unit-free<br>(`TYPE-MISMATCH`, `RANGE`, `DIMENSION`,<br>`BRIDGE-LOOSE`) | `.pdf` | Aalto AI API |
-| `flow_lint_llm.py` | narrative flow: section openers that<br>stand alone, no paragraph-to-paragraph<br>discontinuities | `.pdf` | PyMuPDF +<br>Aalto AI API |
-| `prose_lint_llm.py` | LLM self-editing pass (uncited<br>claims, tense drift, jargon, …) | `.tex`, `.pdf` | Aalto AI API |
-| `run_all_linters.py` | runs everything above | either | — |
-| `dashboard.py` | renders a run as a self-contained HTML dashboard | either | — |
+| [`bibliography_linter.py`](bibliography_linter.py) | cited references exist; author/title/<br>venue/year match Crossref/arXiv/DBLP | `.bib`, `.pdf` | network |
+| [`structure_lint.py`](structure_lint.py) | sectioning units with exactly one subdivision | `.tex`, `.pdf` | — |
+| [`unreferenced_entity_linter.py`](unreferenced_entity_linter.py) | numbered equations/tables/figures never referenced | `.tex`, `.pdf` | — |
+| [`crossref_forward_lint.py`](crossref_forward_lint.py) | references to floats (figures, tables,<br>algorithms) defined many pages later | `.pdf` | PyMuPDF |
+| [`forward_ref_lint.py`](forward_ref_lint.py) | concepts used before defined (regex) | `.pdf` | PyMuPDF |
+| [`forward_ref_lint_llm.py`](forward_ref_lint_llm.py) | concepts used before defined (LLM) | `.pdf` | PyMuPDF +<br>Aalto AI API |
+| [`acronym_lint.py`](acronym_lint.py) | acronym expanded at first use, no re-expansion | `.tex`, `.pdf` | — |
+| [`prose_lint.py`](prose_lint.py) | vague quantifiers, dangling refs, forward cues | `.tex`, `.pdf` | — |
+| [`terminology_lint.py`](terminology_lint.py) | synonym mixing vs Aalto Dictionary terms | `.tex`, `.pdf` | — |
+| [`math_typeset_lint.py`](math_typeset_lint.py) | display-math punctuation, `\eqref`, long inline math | `.tex` | — |
+| [`citation_style_lint.py`](citation_style_lint.py) | IEEE reference/citation format | `.tex`, `.pdf` | — |
+| [`caption_lint.py`](caption_lint.py) | missing/too-short figure & table captions | `.tex`, `.pdf` | — |
+| [`caption_lint_llm.py`](caption_lint_llm.py) | per-caption quality: states what's shown,<br>defines quantities, self-contained,<br>sentence form | `.tex`, `.pdf` | Aalto AI API |
+| [`ai_disclosure_lint.py`](ai_disclosure_lint.py) | dedicated AI-use statement with tool + version | `.tex`, `.pdf` | — |
+| [`thesis_checklist_llm.py`](thesis_checklist_llm.py) | 9-item manuscript checklist,<br>PASS/FAIL + evidence | `.pdf` | Aalto AI API |
+| [`data_split_lint_llm.py`](data_split_lint_llm.py) | per studied ML method:<br>train/validation/test set construction<br>and diagnosis on that split | `.pdf` | Aalto AI API |
+| [`research_questions_lint_llm.py`](research_questions_lint_llm.py) | each stated research question:<br>answered? where? on what evidence? | `.pdf` | Aalto AI API |
+| [`rq_quality_lint_llm.py`](rq_quality_lint_llm.py) | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
+| [`figure_lint_llm.py`](figure_lint_llm.py) | figures scored against the PLOS<br>Ten Simple Rules for Better Figures<br>(figures × ten-rules matrix) | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
+| [`section_intro_lint_llm.py`](section_intro_lint_llm.py) | does each chapter/section intro map<br>its subsections and tie them together? | `.pdf` | PyMuPDF +<br>Aalto AI API |
+| [`type_consistency_lint_llm.py`](type_consistency_lint_llm.py) | formal claims well-typed: relations over<br>same-type operands, values in range,<br>dimensionless quantities unit-free<br>(`TYPE-MISMATCH`, `RANGE`, `DIMENSION`,<br>`BRIDGE-LOOSE`) | `.pdf` | Aalto AI API |
+| [`flow_lint_llm.py`](flow_lint_llm.py) | narrative flow: section openers that<br>stand alone, no paragraph-to-paragraph<br>discontinuities | `.pdf` | PyMuPDF +<br>Aalto AI API |
+| [`prose_lint_llm.py`](prose_lint_llm.py) | LLM self-editing pass (uncited<br>claims, tense drift, jargon, …) | `.tex`, `.pdf` | Aalto AI API |
+| [`run_all_linters.py`](run_all_linters.py) | runs everything above | either | — |
+| [`dashboard.py`](dashboard.py) | renders a run as a self-contained HTML dashboard | either | — |
 
 Shared modules: `lintutil.py` (text extraction, report format),
 `aalto_llm.py` (Aalto AI API client; also used by the `*_llm` linters).
@@ -271,8 +294,10 @@ and falls back to scanning extracted text for numbered headings; LaTeX mode
 parses the sectioning commands (starred variants are unnumbered and
 skipped).
 
-**`crossref_forward_lint.py`** — flags "as depicted in Figure 7" on page 3
-when Figure 7 appears on page 21 (threshold: > 1 page forward by default).
+**`crossref_forward_lint.py`** — a *float* is a figure, table, or algorithm,
+which LaTeX positions ("floats") wherever it fits rather than exactly where
+you place it. This linter flags "as depicted in Figure 7" on page 3 when
+Figure 7 appears on page 21 (threshold: > 1 page forward by default).
 
 **`forward_ref_lint.py` / `forward_ref_lint_llm.py`** — paragraph-level
 conceptual forward references; the LLM version maintains a running

@@ -240,7 +240,10 @@ def main(argv: List[str] = None) -> int:
         return where, finds if isinstance(finds, list) else [], usage
 
     rep = Report(f"Prose lint report (LLM self-editing pass, {model})",
-                 " ".join(args.inputs))
+                 " ".join(args.inputs),
+                 about="LLM self-editing pass: uncited claims, tense drift, "
+                       "jargon, informal register, category errors, empty "
+                       "buzzwords, and more.")
     total_tokens = 0
     with concurrent.futures.ThreadPoolExecutor(
             max_workers=max(1, args.concurrency)) as ex:

@@ -89,7 +89,10 @@ def main(argv: List[str] = None) -> int:
         lines = [(w, t) for (w, t) in lines
                  if int(w[1:]) > args.skip_pages]
 
-    rep = Report("Acronym lint report", " ".join(args.inputs))
+    rep = Report("Acronym lint report", " ".join(args.inputs),
+                 about="Checks that every acronym is expanded at its first "
+                       "use and not re-expanded later. The location points at "
+                       "the first offending use.")
 
     # Pass 1: collect, in reading order, every acronym use and expansion.
     uses: Dict[str, List[Tuple[int, str]]] = {}        # acro -> [(seq, where)]

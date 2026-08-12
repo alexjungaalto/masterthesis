@@ -78,7 +78,10 @@ def main(argv: List[str] = None) -> int:
     args = ap.parse_args(argv)
 
     lines = read_sources(args.inputs)
-    rep = Report("Math typesetting lint report", " ".join(args.inputs))
+    rep = Report("Math typesetting lint report", " ".join(args.inputs),
+                 about="Checks displayed-equation punctuation, that numbered "
+                       "equations are referenced with \\eqref, and flags "
+                       "over-long inline math (LaTeX input).")
 
     # --- inline math length + eqnarray ------------------------------------
     for fname, lno, text in lines:

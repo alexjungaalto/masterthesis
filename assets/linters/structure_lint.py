@@ -155,7 +155,10 @@ def main(argv: List[str] = None) -> int:
         units = tex_units(args.inputs)
         via = "LaTeX sources"
 
-    rep = Report("Structure lint report", " ".join(args.inputs))
+    rep = Report("Structure lint report", " ".join(args.inputs),
+                 about="Flags sectioning units with exactly one subdivision "
+                       "(a lone subsection cannot articulate its parent "
+                       "heading).")
     if not units:
         print(rep.render())
         print("\nNo sectioning units found — nothing to check.",
