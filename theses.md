@@ -21,10 +21,10 @@
 |---|--------|-------|------|----------|-----------|
 | 1 | G. Argyrou | Byzantine-Robust and Communication-Efficient Federated Fire Detection on Edge Cameras | Aug. 2026 | Kudelski IoT |  |
 | 2 | J. Haapanen | Anomaly Detection in Phase-Level Maritime Operational Data — A Comparative Study of Detection Methods | Aug. 2026 | Napa Oy | [video](https://youtu.be/9K9sDFP4VDQ) |
-| 3 | B. Prágai | Merkle Tree-based framework for verifiable, incentivized and privacy-preserving data contribution systems: A Proof-of-concept | Aug. 2026 | Fixmeapp AB |  |
-| 4 | A. Päkkilä | Active Constraint Set Learning for Constrained Optimization | Aug. 2026 | Relex Solutions |  |
-| 5 | I. Zalesskii | Privacy-Friendly Click-Through Rate Prediction in Programmatic Display Advertising | Aug. 2026 | C Wire AG |  |
-| 6 | A. Nygård | Agent-System Interface Designs for Enterprise Platforms: A Comparative Empirical Study | June 2026 | Ardoq |  |
+| 3 | B. Prágai | Merkle Tree-based framework for verifiable, incentivized and privacy-preserving data contribution systems: A Proof-of-concept | Aug. 2026 | Fixmeapp AB | [video](https://youtu.be/3VDUt9yOLxc) |
+| 4 | A. Päkkilä | Active Constraint Set Learning for Constrained Optimization | Aug. 2026 | Relex Solutions | [video](https://youtu.be/mFspgU3ZW0Q) |
+| 5 | I. Zalesskii | Privacy-Friendly Click-Through Rate Prediction in Programmatic Display Advertising | Aug. 2026 | C Wire AG | [video](https://youtu.be/N5JnnBT47uo) |
+| 6 | A. Nygård | Agent-System Interface Designs for Enterprise Platforms: A Comparative Empirical Study | June 2026 | Ardoq | [video](https://youtu.be/KCXASVoyq78) |
 | 7 | A. von Hertzen | [Interpretability-Driven Regularization for Station-Level Weather Forecasting](https://urn.fi/URN:NBN:fi:aalto-202606175301) | May 2026 |  | [video](https://youtu.be/2ySKxhEJjGw) |
 | 8 | I. Viita | [Structuring Legacy Data: Classification Pipeline for Construction Industry Archives](https://urn.fi/URN:NBN:fi:aalto-202606175243) | May 2026 |  | [video](https://youtu.be/gxk9WxDpx_Y) |
 | 9 | B. Zheng | [Exploring the structure in deep networks: Group, manifold and category theory](https://urn.fi/URN:NBN:fi:aalto-202601221854) | Dec. 2025 |  |  |
