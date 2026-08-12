@@ -20,8 +20,9 @@ export AALTO_API_KEY=...     # *_llm linters only
 ```
 
 If you skip the venv and plain `pip install pymupdf` is refused with an
-"externally managed environment" error, use
-`pip3 install --user --break-system-packages pymupdf`.
+"externally managed environment" error (PEP 668), use
+`pip3 install --user --break-system-packages pymupdf` instead — this works
+on e.g. Aalto's JupyterHub.
 
 Linters whose "Needs" column below is empty read PDFs with `pdftotext`
 (poppler: `brew install poppler` / `apt install poppler-utils`) or PyMuPDF,
@@ -101,7 +102,8 @@ File: thesis.pdf
 
 Each finding line has four parts: a **severity** (`[ERROR]` almost
 certainly a defect, fix it; `[WARN]` worth reviewing, occasionally a
-false positive; `[INFO]` informational, no action required), a stable
+false positive; `[INFO]` a low-priority heads-up — usually fine, but may
+ask you to eyeball something, e.g. confirm a pronoun's antecedent), a stable
 **finding code** (the codes are listed per linter in the tables below),
 the **location** (page `pNN` for PDF input, `file:line` for LaTeX
 input), and the **evidence** — what was found and why it is flagged. A
@@ -127,6 +129,18 @@ dark):
 ```bash
 python3 dashboard.py thesis.pdf --llm --bib --out dashboard.html
 python3 dashboard.py --from-run saved_run.txt --title "..." --out dash.html
+```
+
+## Typical workflow for a new thesis PDF
+
+```sh
+python3 run_all_linters.py thesis.pdf              # fast pass, fix mechanics
+python3 thesis_checklist_llm.py thesis.pdf         # content checklist
+python3 data_split_lint_llm.py thesis.pdf          # per-method train/val/test + diagnosis
+python3 research_questions_lint_llm.py thesis.pdf  # RQs answered?
+python3 prose_lint_llm.py thesis.pdf               # deep prose pass
+python3 type_consistency_lint_llm.py thesis.pdf    # type/range/dimension of formal claims
+python3 bibliography_linter.py thesis.pdf          # verify references
 ```
 
 ## Coverage: ml-theses.org instruction → linter
@@ -189,11 +203,17 @@ python3 dashboard.py --from-run saved_run.txt --title "..." --out dash.html
 
 ### Not machine-checkable (process instructions)
 
-Write literature review/methodology first, defer results chapters, write the
-abstract last, keep a lab notebook, budget revision rounds, don't upload
-confidential data to public AI services, accountability for content — these
-concern *how you work*, not the manuscript text, so no linter can check
-them. The closest proxy: run the suite before every revision round.
+Some instructions concern *how you work*, not the finished manuscript, so no
+linter can check them:
+
+- **The writing process itself** — a linter only sees the compiled PDF, so it
+  cannot tell whether an expected section is missing, nor in what order the
+  chapters were written.
+- **Keeping a lab notebook** and **budgeting enough revision rounds**.
+- **Not uploading confidential data to public AI services.**
+- **Accountability for the content** — the text and its claims remain yours.
+
+The closest proxy: run the suite before every revision round.
 
 ## The linters
 
@@ -363,15 +383,3 @@ each one: ANSWERED / PARTIALLY-ANSWERED / UNANSWERED, where the answer is
 developed, whether the presented results actually support it, and whether
 the conclusions chapter revisits it. Warns on `NO-RQS` (none stated) and
 `NOT-REVISITED`. Exit 1 unless every question is answered and revisited.
-
-## Typical workflow for a new thesis PDF
-
-```sh
-python3 run_all_linters.py thesis.pdf              # fast pass, fix mechanics
-python3 thesis_checklist_llm.py thesis.pdf         # content checklist
-python3 data_split_lint_llm.py thesis.pdf          # per-method train/val/test + diagnosis
-python3 research_questions_lint_llm.py thesis.pdf  # RQs answered?
-python3 prose_lint_llm.py thesis.pdf               # deep prose pass
-python3 type_consistency_lint_llm.py thesis.pdf    # type/range/dimension of formal claims
-python3 bibliography_linter.py thesis.pdf          # verify references
-```

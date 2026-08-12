@@ -527,7 +527,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(f"Report written to {args.out}", file=sys.stderr)
     else:
         print(report)
-    return 0
+    # 0 clean, 1 when forward references were found — so the suite runner and
+    # dashboard report "findings" rather than "clean" when the report is
+    # non-empty (consistent with the other linters).
+    return 1 if findings else 0
 
 
 if __name__ == "__main__":

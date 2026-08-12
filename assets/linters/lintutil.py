@@ -26,9 +26,16 @@ def pdf_lines(path: str) -> List[Line]:
         pass
     if text is not None:
         pages = text.split("\f")
-        return [(f"p{pno}", ln)
-                for pno, page in enumerate(pages, start=1)
-                for ln in page.splitlines()]
+        out: List[Line] = []
+        for pno, page in enumerate(pages, start=1):
+            for ln in page.splitlines():
+                out.append((f"p{pno}", ln))
+            # Emit a blank line at every page break so paragraph grouping does
+            # not merge the last paragraph of one page with the first of the
+            # next (pdftotext's \f carries no blank line of its own). Without
+            # this, a finding on page N+1 is reported at page N.
+            out.append((f"p{pno}", ""))
+        return out
     try:
         import fitz
     except ImportError:
@@ -38,6 +45,7 @@ def pdf_lines(path: str) -> List[Line]:
     for pno in range(len(doc)):
         for ln in doc[pno].get_text().splitlines():
             lines.append((f"p{pno + 1}", ln))
+        lines.append((f"p{pno + 1}", ""))   # page-break separator (see above)
     doc.close()
     return lines
 
