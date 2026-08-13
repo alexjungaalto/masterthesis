@@ -1,19 +1,20 @@
 # Supervised Master Theses
 
-## Aalto (134 total)
+## Aalto (135 total)
 
-### Ongoing (8)
+### Ongoing (9)
 
 | # | Author | Title | Industry | Recording |
 |---|--------|-------|----------|-----------|
-| 1 | H. Do | TBA |  |  |
-| 2 | Y. He | TBA |  |  |
-| 3 | M. Holmström | Diagnostics, debugging and analysis tools for ML enabled 5G telecommunication systems |  |  |
-| 4 | M. Malkki | Vehicle value modelling |  |  |
-| 5 | S. Mättö | Forecasting seasonality in financial data with machine learning methods |  |  |
-| 6 | V. Ruuskanen | TBA |  |  |
-| 7 | A. Tolvanen | TBA |  |  |
-| 8 | H. Välimäki | Generating synthetic 3D food objects for the development of automatic dietary assessment |  |  |
+| 1 | K. Aalto-Setälä | TBA |  |  |
+| 2 | V. Ruuskanen | TBA |  |  |
+| 3 | A. Tolvanen | TBA |  |  |
+| 4 | H. Do | TBA |  |  |
+| 5 | Y. He | TBA |  |  |
+| 6 | H. Välimäki | Generating synthetic 3D food objects for the development of automatic dietary assessment |  |  |
+| 7 | M. Malkki | Vehicle value modelling |  |  |
+| 8 | M. Holmström | Diagnostics, debugging and analysis tools for ML enabled 5G telecommunication systems |  |  |
+| 9 | P. Gynther | TBA |  |  |
 
 ### Completed (126)
 
