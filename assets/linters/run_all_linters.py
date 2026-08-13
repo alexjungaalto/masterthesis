@@ -35,6 +35,7 @@ FAST = [
     ("forward_ref_lint.py", True, False, BOTH, False),
     ("acronym_lint.py", True, True, BOTH, False),
     ("prose_lint.py", True, True, BOTH, False),
+    ("unresolved_reference_lint.py", True, True, BOTH, False),
     ("terminology_lint.py", True, True, BOTH, False),
     ("math_typeset_lint.py", False, True, BOTH, False),
     ("citation_style_lint.py", True, True, BOTH, True),

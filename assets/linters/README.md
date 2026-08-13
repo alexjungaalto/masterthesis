@@ -288,6 +288,7 @@ The closest proxy: run the suite before every revision round.
 | [`forward_ref_lint_llm.py`](forward_ref_lint_llm.py) | concepts used before defined (LLM) | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | [`acronym_lint.py`](acronym_lint.py) | acronym expanded at first use, no re-expansion | `.tex`, `.pdf` | — |
 | [`prose_lint.py`](prose_lint.py) | vague quantifiers, dangling refs, forward cues | `.tex`, `.pdf` | — |
+| [`unresolved_reference_lint.py`](unresolved_reference_lint.py) | uncited appeals to companion/forthcoming<br>studies; label-code schemes (R1, T6, …)<br>used without a definition in the text | `.tex`, `.pdf` | — |
 | [`terminology_lint.py`](terminology_lint.py) | synonym mixing vs Aalto Dictionary terms | `.tex`, `.pdf` | — |
 | [`math_typeset_lint.py`](math_typeset_lint.py) | display-math punctuation, `\eqref`, long inline math | `.tex` | — |
 | [`citation_style_lint.py`](citation_style_lint.py) | IEEE reference/citation format | `.tex`, `.pdf` | — |
@@ -351,6 +352,23 @@ of ML term first; `TERM-MIX` fires only when two or more variants each occur
 **`thesis_checklist_llm.py`** — one LLM call over the full extracted text
 (page markers included) returns PASS/FAIL/UNCLEAR per checklist item with a
 quoted, page-referenced evidence snippet and a concrete fix for each FAIL.
+
+**`unresolved_reference_lint.py`** — catches two pointers that send the reader
+to something they cannot inspect, and that slip past the other linters.
+`COMPANION-REF`: an uncited appeal to a *companion / separate / forthcoming /
+related* study that carries part of the argument (e.g. "the remaining nine are
+evaluated in companion studies") — cited sentences ([n] / `\cite`) are not
+flagged, since the reader can then find the work. `UNDEFINED-CODE`: a scheme of
+short label codes (R1, T6, RQ2, …) used as load-bearing shorthand but never
+defined; a code counts as defined when it appears with a gloss ("R1 (Fault
+Containment)", "R1: …", "R1 — …") or a defining keyword, while a bare range
+"(R1–R5)" does not define its members. To stay precise the code check requires
+a prefix to have ≥ 2 distinct small-numbered members and to sit near a scheme
+keyword (criteria/requirement/research question/…) or have ≥ `--min-members`
+members, so the "L1"/"L2" norms, an "R2" (R-squared) or "F1" score, an "S3"
+bucket, or a "CO2" reading are not mistaken for a scheme. The forward-reference
+linters model concepts defined LATER IN THE SAME document, not appeals to
+external papers, so this check is complementary.
 
 **`related_work_faithfulness_llm.py`** — goes beyond checking that a related
 work is *cited* (`bibliography_linter.py`) or that novelty is *asserted*
