@@ -91,6 +91,10 @@ def main(argv: List[str] = None) -> int:
                          "characters (default 400000).")
     ap.add_argument("--out", help="Write report to this file.")
     ap.add_argument("--format", choices=["text", "markdown"], default="text")
+    ap.add_argument("--profile", choices=["thesis", "paper"], default="thesis",
+                    help="'paper' accepts a contributions list as the unit "
+                         "and drops the thesis-only 'revisited in "
+                         "conclusions' penalty.")
     args = ap.parse_args(argv)
 
     lines, mode = load_lines([args.pdf])
@@ -115,9 +119,18 @@ def main(argv: List[str] = None) -> int:
     print(f"[info] gateway={args.base_url}\n[info] model={model}  "
           f"chars={len(text)}", file=sys.stderr)
 
+    paper_note = ""
+    if args.profile == "paper":
+        paper_note = (
+            "NOTE: this is a conference/journal paper, not a thesis. If it "
+            "states no explicit research questions, treat its enumerated "
+            "CONTRIBUTIONS or CLAIMS as the units to evaluate. A paper has no "
+            "thesis-style conclusions chapter, so do NOT penalise a question/"
+            "claim for not being 'revisited in conclusions'; judge only "
+            "whether the results substantiate it.\n\n")
     raw, usage = client.complete(
         model=model, system=SYSTEM_PROMPT,
-        user=f'thesis text:\n"""\n{text}\n"""',
+        user=f'{paper_note}paper text:\n"""\n{text}\n"""',
         timeout=600, max_tokens=12000)
     parsed = extract_json(raw) or {}
     rqs = [r for r in parsed.get("research_questions", [])
@@ -183,7 +196,7 @@ def main(argv: List[str] = None) -> int:
             if fix:
                 out.append(f"        fix:       {fix}")
             out.append("")
-        if verdict == "ANSWERED" and not revisited:
+        if verdict == "ANSWERED" and not revisited and args.profile != "paper":
             n_bad += 1
             line = (f"[WARN] NOT-REVISITED       {rid}: answered, but the "
                     f"conclusions never explicitly return to it.")

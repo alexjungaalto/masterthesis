@@ -3,7 +3,9 @@
 Command-line linters that check MSc thesis manuscripts (PDF or LaTeX
 sources) against the writing instructions of
 [ml-theses.org](https://ml-theses.org) — the thesis guide for students
-supervised by Alex Jung at Aalto University.
+supervised by Alex Jung at Aalto University. Pass `--profile paper` to lint
+an IEEE/ACM-style conference or journal draft instead of a thesis (see
+[Profiles](#profiles-thesis-vs-research-paper) below).
 
 All scripts are run with `python3 <script> ...` and print a findings
 report; exit status is `0` when clean, `1` when findings exist, and `2` on
@@ -143,6 +145,42 @@ python3 run_all_linters.py thesis.pdf --llm --bib  # + LLM + bibliography
 `run_all_linters.py` prints each linter's report followed by a one-line
 per-linter summary (`clean` / `findings` / `error`).
 
+## Profiles: thesis vs. research paper
+
+The suite targets MSc theses by default, but a thesis and a conference/
+journal paper are the same object — an ML manuscript — and ~14 of the
+linters (prose, acronym, terminology, math, captions, figures, flow,
+forward-references, citations, unreferenced entities, type-consistency)
+apply verbatim to either. Pass `--profile paper` to lint an IEEE/ACM-style
+paper draft instead:
+
+```sh
+python3 run_all_linters.py paper.pdf --profile paper --llm
+```
+
+`--profile thesis` is the default and changes nothing. `--profile paper`
+adapts the suite in three ways:
+
+- **Skipped** (thesis-only): `ai_disclosure_lint.py` (IEEE/ACM do not mandate
+  a disclosure statement) and `thesis_checklist_llm.py`.
+- **Swapped in**: `paper_checklist_llm.py` — the reviewer-facing content
+  checklist (contributions, novelty positioning, claims-supported,
+  reproducibility, limitations, venue-gated ethics; see below).
+- **Adapted in place** (these five take a `--profile` flag of their own, so
+  they behave the same run standalone):
+
+  | Linter | `--profile paper` change |
+  |---|---|
+  | `structure_lint.py` | `LONE-CHILD` downgraded to `INFO` (a two-column paper legitimately has single-subsection sections) |
+  | `citation_style_lint.py` | takes `--venue` (default `ieee`); non-IEEE venues skip the IEEE-specific checks rather than misflag them |
+  | `data_split_lint_llm.py` | counts only methods the authors themselves train; pretrained/off-the-shelf models used as-is are out of scope |
+  | `research_questions_lint_llm.py` | accepts an enumerated contributions list as the unit; drops the thesis-only "revisited in conclusions" penalty |
+  | `rq_quality_lint_llm.py` | judges the problem statement + contributions by the same criteria when no explicit research questions are stated |
+
+Venue defaults to IEEE. The paper checklist takes `--venue neurips|acl|…` to
+require a broader-impact/ethics statement; for `ieee`/`acm` that item passes
+by default.
+
 For a **dashboard** instead of console text, pipe a run through
 `dashboard.py`, which renders it as one self-contained HTML page — a summary
 band, an expandable card per linter grouped by theme, and the figure linter's
@@ -256,7 +294,9 @@ The closest proxy: run the suite before every revision round.
 | [`caption_lint.py`](caption_lint.py) | missing/too-short figure & table captions | `.tex`, `.pdf` | — |
 | [`caption_lint_llm.py`](caption_lint_llm.py) | per-caption quality: states what's shown,<br>defines quantities, self-contained,<br>sentence form | `.tex`, `.pdf` | Aalto AI API |
 | [`ai_disclosure_lint.py`](ai_disclosure_lint.py) | dedicated AI-use statement with tool + version | `.tex`, `.pdf` | — |
-| [`thesis_checklist_llm.py`](thesis_checklist_llm.py) | 9-item manuscript checklist,<br>PASS/FAIL + evidence | `.pdf` | Aalto AI API |
+| [`thesis_checklist_llm.py`](thesis_checklist_llm.py) | 9-item manuscript checklist,<br>PASS/FAIL + evidence (thesis profile) | `.pdf` | Aalto AI API |
+| [`paper_checklist_llm.py`](paper_checklist_llm.py) | reviewer content checklist for a<br>research paper, PASS/FAIL + evidence<br>(paper profile; venue-gated ethics item) | `.pdf` | Aalto AI API |
+| [`related_work_faithfulness_llm.py`](related_work_faithfulness_llm.py) | finds the <=3 most-related works and<br>checks the draft represents them<br>faithfully against their real abstracts | `.pdf` | Aalto AI API<br>+ OpenAlex |
 | [`data_split_lint_llm.py`](data_split_lint_llm.py) | per studied ML method:<br>train/validation/test set construction<br>and diagnosis on that split | `.pdf` | Aalto AI API |
 | [`research_questions_lint_llm.py`](research_questions_lint_llm.py) | each stated research question:<br>answered? where? on what evidence? | `.pdf` | Aalto AI API |
 | [`rq_quality_lint_llm.py`](rq_quality_lint_llm.py) | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
@@ -311,6 +351,34 @@ of ML term first; `TERM-MIX` fires only when two or more variants each occur
 **`thesis_checklist_llm.py`** — one LLM call over the full extracted text
 (page markers included) returns PASS/FAIL/UNCLEAR per checklist item with a
 quoted, page-referenced evidence snippet and a concrete fix for each FAIL.
+
+**`related_work_faithfulness_llm.py`** — goes beyond checking that a related
+work is *cited* (`bibliography_linter.py`) or that novelty is *asserted*
+(`paper_checklist_llm.py`'s `novelty-positioned`) to check whether the draft
+represents its prior work *faithfully*. Three stages: (1) an LLM reads the
+draft and picks the ≤3 cited works it treats as most related, extracting how
+the draft positions each and the delta it claims; (2) each work's real
+abstract is fetched from **OpenAlex by title** (only the reference title
+leaves the machine — the same class of query the bibliography linter makes);
+(3) an LLM compares the draft's stated relation to what the abstract actually
+shows. Findings: `RELATION-MISSTATED`, `NOVELTY-OVERSTATED`,
+`SHALLOW-POSITIONING`, `UNVERIFIABLE`, and (info) `FAITHFUL`. `--discover
+external` additionally queries OpenAlex with the draft's own title (still
+title-only) to flag a clearly related work that is not cited
+(`RELATED-WORK-OMITTED`). Manuscript text goes only to the LLM endpoint
+(Aalto by default); only titles reach OpenAlex.
+
+**`paper_checklist_llm.py`** — the `--profile paper` analogue of
+`thesis_checklist_llm.py`, same one-call PASS/FAIL/UNCLEAR machinery but a
+reviewer-facing rubric: `contribution-stated`, `problem-formulation`,
+`novelty-positioned`, `claims-supported`, `baselines`,
+`results-answer-claims`, `reproducibility`, `limitations`, and a
+venue-conditional `ethics-impact`. `--venue` (default `ieee`) governs the
+ethics item: it is only required for `neurips`/`acl`/`emnlp`/`iclr` and
+passes by default otherwise. The prompt tells the model to judge by
+conference-reviewer standards (sections not chapters, contributions not
+research-question chapters, page-limited exposition), so a terse but
+complete treatment passes.
 
 **`data_split_lint_llm.py`** — where `thesis_checklist_llm.py` judges the
 manuscript globally (one `loss-functions` / `model-diagnosis` verdict for

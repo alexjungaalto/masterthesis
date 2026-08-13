@@ -143,6 +143,9 @@ def main(argv: List[str] = None) -> int:
     ap.add_argument("--out", help="Write report to this file.")
     ap.add_argument("--format", choices=["text", "markdown"],
                     default="text")
+    ap.add_argument("--profile", choices=["thesis", "paper"], default="thesis",
+                    help="'paper' judges the problem statement + contributions "
+                         "when no explicit research questions are stated.")
     args = ap.parse_args(argv)
 
     lines, mode = load_lines([args.pdf])
@@ -164,9 +167,18 @@ def main(argv: List[str] = None) -> int:
     print(f"[info] gateway={args.base_url}\n[info] model={model}  "
           f"chars={len(text)}", file=sys.stderr)
 
+    paper_note = ""
+    if args.profile == "paper":
+        paper_note = (
+            "NOTE: this is a conference/journal paper, not a thesis. If it "
+            "states no explicit research questions, judge the PROBLEM "
+            "STATEMENT and enumerated CONTRIBUTIONS by the same criteria "
+            "(focused, specific, feasible, complex, relevant, self-"
+            "contained). Do not emit NO-RQS when contributions play that "
+            "role.\n\n")
     raw, usage = client.complete(
         model=model, system=SYSTEM_PROMPT,
-        user=f'thesis text:\n"""\n{text}\n"""',
+        user=f'{paper_note}paper text:\n"""\n{text}\n"""',
         timeout=600, max_tokens=10000)
     parsed = extract_json(raw) or {}
     questions = [q for q in parsed.get("questions", [])

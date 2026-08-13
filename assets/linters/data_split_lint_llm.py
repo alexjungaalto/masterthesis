@@ -115,6 +115,9 @@ def main(argv: List[str] = None) -> int:
                          "characters (default 400000).")
     ap.add_argument("--out", help="Write report to this file.")
     ap.add_argument("--format", choices=["text", "markdown"], default="text")
+    ap.add_argument("--profile", choices=["thesis", "paper"], default="thesis",
+                    help="'paper' excludes off-the-shelf/pretrained models the "
+                         "authors do not themselves train from the check.")
     args = ap.parse_args(argv)
 
     lines, mode = load_lines([args.pdf])
@@ -143,8 +146,18 @@ def main(argv: List[str] = None) -> int:
 
     checks_json = json.dumps(
         [{"id": i, "requirement": r} for i, r in CHECKS], indent=1)
-    user = (f"checks (apply each to every studied method):\n{checks_json}\n\n"
-            f"thesis text{' (TRUNCATED)' if truncated else ''}:\n"
+    paper_note = ""
+    if args.profile == "paper":
+        paper_note = (
+            "NOTE: this is a conference/journal paper. Count ONLY methods the "
+            "authors themselves train or fine-tune. Pretrained or off-the-"
+            "shelf models used as-is (e.g. a stock detector for inference) are "
+            "OUT OF SCOPE for train/validation/test checks — do not list them. "
+            "If the paper trains no method (e.g. an infrastructure or "
+            "measurement study), return an empty method list.\n\n")
+    user = (f"{paper_note}"
+            f"checks (apply each to every studied method):\n{checks_json}\n\n"
+            f"paper text{' (TRUNCATED)' if truncated else ''}:\n"
             f'"""\n{text}\n"""')
     raw, usage = client.complete(model=model, system=SYSTEM_PROMPT,
                                  user=user, timeout=600, max_tokens=12000)

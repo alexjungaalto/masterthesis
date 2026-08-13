@@ -148,11 +148,25 @@ def main(argv: List[str] = None) -> int:
     ap = argparse.ArgumentParser(
         description="IEEE reference-format linter.")
     ap.add_argument("inputs", nargs="+", help="thesis.pdf or .tex files/dirs")
+    ap.add_argument("--profile", choices=["thesis", "paper"], default="thesis",
+                    help="Manuscript type; 'paper' defaults --venue to ieee.")
+    ap.add_argument("--venue", default=None,
+                    help="Citation venue style (default: ieee). Non-ieee "
+                         "venues (acm|neurips|...) skip the IEEE-specific "
+                         "checks, which would otherwise mis-flag them.")
     args = ap.parse_args(argv)
 
-    rep = Report("Citation style lint report (IEEE)", " ".join(args.inputs),
+    venue = (args.venue or "ieee").lower()
+    rep = Report(f"Citation style lint report ({venue.upper()})",
+                 " ".join(args.inputs),
                  about="Checks that the reference list and in-text citations "
                        "follow the IEEE style used in the thesis guide.")
+    if venue != "ieee":
+        rep.add("INFO", "VENUE-SKIP", "-",
+                f"venue={venue}: IEEE-specific citation checks skipped "
+                f"(this linter only encodes the IEEE style).")
+        print(rep.render())
+        return rep.exit_code()
     if len(args.inputs) == 1 and args.inputs[0].lower().endswith(".pdf"):
         lint_pdf(args.inputs[0], rep)
     else:

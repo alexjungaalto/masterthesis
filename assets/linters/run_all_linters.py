@@ -11,6 +11,7 @@ Usage:
   python3 run_all_linters.py thesis.pdf --llm            # + LLM linters
   python3 run_all_linters.py thesis.pdf --bib            # + bibliography
   python3 run_all_linters.py main.tex chapters/          # LaTeX sources
+  python3 run_all_linters.py paper.pdf --profile paper --llm   # conf/journal paper
 Exit status: 0 if every linter passed, 1 otherwise.
 """
 
@@ -21,39 +22,50 @@ from pathlib import Path
 
 HERE = Path(__file__).parent
 
-# (script, pdf-mode, tex-mode)
+THESIS, PAPER = "thesis", "paper"
+BOTH = (THESIS, PAPER)
+
+# (script, pdf-mode, tex-mode, profiles, passes_profile)
+#   profiles       -- manuscript types this linter runs for
+#   passes_profile -- forward --profile=<p> to the linter (it adapts itself)
 FAST = [
-    ("structure_lint.py", True, True),
-    ("unreferenced_entity_linter.py", True, True),
-    ("crossref_forward_lint.py", True, False),
-    ("forward_ref_lint.py", True, False),
-    ("acronym_lint.py", True, True),
-    ("prose_lint.py", True, True),
-    ("terminology_lint.py", True, True),
-    ("math_typeset_lint.py", False, True),
-    ("citation_style_lint.py", True, True),
-    ("caption_lint.py", True, True),
-    ("ai_disclosure_lint.py", True, True),
+    ("structure_lint.py", True, True, BOTH, True),
+    ("unreferenced_entity_linter.py", True, True, BOTH, False),
+    ("crossref_forward_lint.py", True, False, BOTH, False),
+    ("forward_ref_lint.py", True, False, BOTH, False),
+    ("acronym_lint.py", True, True, BOTH, False),
+    ("prose_lint.py", True, True, BOTH, False),
+    ("terminology_lint.py", True, True, BOTH, False),
+    ("math_typeset_lint.py", False, True, BOTH, False),
+    ("citation_style_lint.py", True, True, BOTH, True),
+    ("caption_lint.py", True, True, BOTH, False),
+    ("ai_disclosure_lint.py", True, True, (THESIS,), False),
 ]
 LLM = [
-    ("thesis_checklist_llm.py", True, False),
-    ("data_split_lint_llm.py", True, False),
-    ("research_questions_lint_llm.py", True, False),
-    ("rq_quality_lint_llm.py", True, False),
-    ("figure_lint_llm.py", True, False),
-    ("section_intro_lint_llm.py", True, False),
-    ("flow_lint_llm.py", True, False),
-    ("prose_lint_llm.py", True, True),
-    ("caption_lint_llm.py", True, True),
-    ("forward_ref_lint_llm.py", True, False),
-    ("type_consistency_lint_llm.py", True, False),
+    ("thesis_checklist_llm.py", True, False, (THESIS,), False),
+    ("paper_checklist_llm.py", True, False, (PAPER,), False),
+    ("data_split_lint_llm.py", True, False, BOTH, True),
+    ("research_questions_lint_llm.py", True, False, BOTH, True),
+    ("rq_quality_lint_llm.py", True, False, BOTH, True),
+    ("related_work_faithfulness_llm.py", True, False, BOTH, True),
+    ("figure_lint_llm.py", True, False, BOTH, False),
+    ("section_intro_lint_llm.py", True, False, BOTH, False),
+    ("flow_lint_llm.py", True, False, BOTH, False),
+    ("prose_lint_llm.py", True, True, BOTH, False),
+    ("caption_lint_llm.py", True, True, BOTH, False),
+    ("forward_ref_lint_llm.py", True, False, BOTH, False),
+    ("type_consistency_lint_llm.py", True, False, BOTH, False),
 ]
-BIB = [("bibliography_linter.py", True, False)]
+BIB = [("bibliography_linter.py", True, False, BOTH, False)]
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Run the full linter suite.")
     ap.add_argument("inputs", nargs="+", help="thesis.pdf or .tex files/dirs")
+    ap.add_argument("--profile", choices=[THESIS, PAPER], default=THESIS,
+                    help="Manuscript type: 'thesis' (default, ml-theses.org "
+                         "rubric) or 'paper' (IEEE/ACM conference/journal "
+                         "draft; skips thesis-only checks, adapts the rest).")
     ap.add_argument("--llm", action="store_true",
                     help="Also run the LLM linters (Aalto AI API).")
     ap.add_argument("--bib", action="store_true",
@@ -64,12 +76,16 @@ def main(argv=None) -> int:
     pdf_mode = args.inputs[0].lower().endswith(".pdf")
     todo = FAST + (LLM if args.llm else []) + (BIB if args.bib else [])
     results = []
-    for script, pdf_ok, tex_ok in todo:
+    for script, pdf_ok, tex_ok, profiles, passes in todo:
+        if args.profile not in profiles:
+            continue
         if (pdf_mode and not pdf_ok) or (not pdf_mode and not tex_ok):
             continue
+        extra = [f"--profile={args.profile}"] if passes else []
         print(f"\n{'=' * 74}\n>>> {script}\n{'=' * 74}", flush=True)
         rc = subprocess.run(
-            [sys.executable, str(HERE / script), *args.inputs]).returncode
+            [sys.executable, str(HERE / script), *args.inputs,
+             *extra]).returncode
         results.append((script, rc))
 
     print(f"\n{'=' * 74}\nSummary\n{'=' * 74}")

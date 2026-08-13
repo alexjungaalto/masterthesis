@@ -140,6 +140,9 @@ def main(argv: List[str] = None) -> int:
     ap = argparse.ArgumentParser(
         description="Structure linter: units with exactly one subdivision.")
     ap.add_argument("inputs", nargs="+", help="thesis.pdf or .tex files/dirs")
+    ap.add_argument("--profile", choices=["thesis", "paper"], default="thesis",
+                    help="'paper' downgrades LONE-CHILD to INFO (a two-column "
+                         "paper legitimately has single-subsection sections).")
     args = ap.parse_args(argv)
 
     pdf_mode = (len(args.inputs) == 1
@@ -165,8 +168,9 @@ def main(argv: List[str] = None) -> int:
               file=sys.stderr)
         return 0
 
+    severity = "INFO" if args.profile == "paper" else "WARN"
     for parent, child in lone_children(units):
-        rep.add("WARN", "LONE-CHILD", parent[3],
+        rep.add(severity, "LONE-CHILD", parent[3],
                 f"'{label(parent)}' has exactly one subdivision "
                 f"('{label(child)}') — fold it into the parent or add a "
                 f"sibling; every unit needs zero or >= 2 subdivisions")
