@@ -11,6 +11,30 @@ All scripts are run with `python3 <script> ...` and print a findings
 report; exit status is `0` when clean, `1` when findings exist, and `2` on
 usage errors, so they can be scripted.
 
+## Quick start
+
+```sh
+# 1. get the suite
+git clone https://github.com/alexjungaalto/masterthesis.git
+cd masterthesis/assets/linters
+
+# 2. one-time setup
+python3 -m venv .venv && source .venv/bin/activate
+pip install pymupdf                       # some PDF linters need it
+
+# 3. fast heuristic pass (no LLM, no network) over a compiled PDF
+python3 run_all_linters.py thesis.pdf
+
+# 4. optional: add the LLM + bibliography linters
+export AALTO_API_KEY=...                   # key from the Aalto API dev portal
+python3 run_all_linters.py thesis.pdf --llm --bib
+```
+
+Linting a conference/journal draft instead of a thesis? Add
+`--profile paper` (see [Profiles](#profiles-thesis-vs-research-paper)).
+The rest of this page documents each linter, the data-handling rules for
+the LLM linters, and how every ml-theses.org instruction maps to a check.
+
 ## Getting the scripts
 
 All linters live in one directory —
@@ -28,11 +52,15 @@ in the masterthesis repo. Two ways to get them:
   the shared helper) with `curl`:
   ```sh
   curl -O https://ml-theses.org/assets/linters/prose_lint.py
-  curl -O https://ml-theses.org/assets/linters/lintutil.py   # always needed
+  curl -O https://ml-theses.org/assets/linters/lintutil.py   # shared helper
+  curl -O https://ml-theses.org/assets/linters/aalto_llm.py  # for *_llm scripts
   ```
 
-Every linter imports `lintutil.py`, and the `*_llm` ones also import
-`aalto_llm.py`, so keep those two alongside the scripts.
+Most linters import `lintutil.py`, and the `*_llm` ones import
+`aalto_llm.py` (a few linters use only one of the two — e.g.
+`figure_lint_llm.py` and `section_intro_lint_llm.py` need `aalto_llm.py`
+but not `lintutil.py`). Keeping both helpers alongside the scripts covers
+every linter, so grab both when you download a single script.
 
 ## Setup
 
@@ -72,11 +100,16 @@ The `*_llm` linters send the **manuscript text (and, for the figure and
 caption linters, figure images)** to the configured endpoint. A thesis
 draft is *unpublished material*, so keep it on an Aalto-hosted gateway:
 
-- **Default is compliant.** The Aalto AI API and the Aalto LLM Gateway
-  run within Aalto's tenant; inputs are not shared with OpenAI and are
-  not used to train models. This is the GDPR-compliant path Aalto policy
-  requires for unpublished, confidential, or personal material — unlike
-  public services such as ChatGPT.
+- **Default keeps the draft on Aalto infrastructure.** The Aalto AI API
+  and the Aalto LLM Gateway run within Aalto's tenant. Per Aalto's own
+  description of these services, inputs are processed under Aalto's
+  agreement and are not used to train the provider's models; this is the
+  route Aalto recommends for unpublished, confidential, or personal
+  material, unlike public services such as ChatGPT. For the authoritative
+  terms, data classification, and GDPR position, check the
+  [Aalto AI services](https://www.aalto.fi/en/services/ai-services) and
+  [responsible use of AI in research](https://www.aalto.fi/en/services/responsible-use-of-artificial-intelligence-in-the-research-process)
+  pages — they, not this README, are the source of truth.
 - **A local on-device model is also compliant — and the most private.**
   Point `--base-url` at a server running on your own machine (e.g.
   `mlx_lm.server` on Apple Silicon, or Ollama — both expose an
