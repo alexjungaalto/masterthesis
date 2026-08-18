@@ -11,6 +11,12 @@ All scripts are run with `python3 <script> ...` and print a findings
 report; exit status is `0` when clean, `1` when findings exist, and `2` on
 usage errors, so they can be scripted.
 
+> **Prefer a visual report?** Add `--dashboard` to the runner —
+> `python3 run_all_linters.py thesis.pdf --dashboard` runs the whole suite
+> and opens a self-contained HTML dashboard in your browser (summary band,
+> one card per linter, the figure × ten-rules matrix). See
+> [Basic usage](#basic-usage).
+
 ## Quick start
 
 ```sh
@@ -28,6 +34,9 @@ python3 run_all_linters.py thesis.pdf
 # 4. optional: add the LLM + bibliography linters
 export AALTO_API_KEY=...                   # key from the Aalto API dev portal
 python3 run_all_linters.py thesis.pdf --llm --bib
+
+# 5. optional: get an HTML dashboard, opened in your browser
+python3 run_all_linters.py thesis.pdf --dashboard
 ```
 
 Linting a conference/journal draft instead of a thesis? Add
@@ -178,6 +187,24 @@ python3 run_all_linters.py thesis.pdf --llm --bib  # + LLM + bibliography
 `run_all_linters.py` prints each linter's report followed by a one-line
 per-linter summary (`clean` / `findings` / `error`).
 
+For a visual report instead of scrolling console text, add `--dashboard`:
+
+```sh
+python3 run_all_linters.py thesis.pdf --dashboard          # fast suite
+python3 run_all_linters.py thesis.pdf --llm --bib --dashboard
+```
+
+This runs the suite once and, when it finishes, writes a self-contained HTML
+page — a summary band, one expandable card per linter grouped by theme, and
+the figure linter's figures × ten-rules matrix as a colour-coded table — then
+**opens it in your default browser**. The page is written to
+`<thesis>_lint_dashboard.html` in the current directory (override with
+`--dashboard-out FILE`); it needs no network and works offline, in light or
+dark mode. Add `--no-open` to write the file without launching a browser
+(headless boxes, CI), or set `$BROWSER` to choose which browser opens. The
+console report still streams live while the suite runs, so `--dashboard` only
+adds the report — it takes nothing away.
+
 ## Profiles: thesis vs. research paper
 
 The suite targets MSc theses by default, but a thesis and a conference/
@@ -214,16 +241,22 @@ Venue defaults to IEEE. The paper checklist takes `--venue neurips|acl|…` to
 require a broader-impact/ethics statement; for `ieee`/`acm` that item passes
 by default.
 
-For a **dashboard** instead of console text, pipe a run through
-`dashboard.py`, which renders it as one self-contained HTML page — a summary
-band, an expandable card per linter grouped by theme, and the figure linter's
-figures × ten-rules matrix as a colour-coded table (works offline, light or
-dark):
+This applies to the **dashboard** too: `--profile paper --dashboard` renders
+the same HTML report for a paper draft. The HTML is produced by
+`dashboard.py`; `run_all_linters.py --dashboard` calls it for you (see
+[Basic usage](#basic-usage)). Call `dashboard.py` directly when you want to
+render a **saved** run or embed the page in another document:
 
 ```bash
-python3 dashboard.py thesis.pdf --llm --bib --out dashboard.html
+python3 dashboard.py thesis.pdf --llm --bib --open        # run, render, open
 python3 dashboard.py --from-run saved_run.txt --title "..." --out dash.html
+python3 dashboard.py --from-run saved_run.txt --body-only --out body.html
 ```
+
+`--from-run` renders a previously saved `run_all_linters.py` transcript
+without re-running anything; `--body-only` emits just the page markup (a
+`<style>` block plus the cards) for embedding in a host that supplies the
+document shell; `--open` launches the result in your default browser.
 
 ## Typical workflow for a new thesis PDF
 
@@ -232,6 +265,7 @@ python3 run_all_linters.py thesis.pdf              # fast pass, fix mechanics
 python3 thesis_checklist_llm.py thesis.pdf         # content checklist
 python3 data_split_lint_llm.py thesis.pdf          # per-method train/val/test + diagnosis
 python3 research_questions_lint_llm.py thesis.pdf  # RQs answered?
+python3 contribution_support_lint_llm.py thesis.pdf # claims backed by evidence?
 python3 prose_lint_llm.py thesis.pdf               # deep prose pass
 python3 type_consistency_lint_llm.py thesis.pdf    # type/range/dimension of formal claims
 python3 bibliography_linter.py thesis.pdf          # verify references
@@ -249,6 +283,7 @@ python3 bibliography_linter.py thesis.pdf          # verify references
 | Training loss and validation/test<br>loss explicitly stated | `thesis_checklist_llm.py` | verdict `loss-functions` |
 | Per studied method: training,<br>validation and test set construction<br>described, and the method diagnosed<br>on that split | `data_split_lint_llm.py` | enumerates the trained methods,<br>then per method: `train-set`,<br>`validation-set`, `test-set`,<br>`diagnosis-on-split` verdicts |
 | Numerical results answer the<br>research questions | `research_questions_lint_llm.py`<br>`thesis_checklist_llm.py` | per-question tracing<br>global verdict `results-discussed` |
+| Each claimed contribution is backed<br>by a result (theorem, experiment,<br>analysis) that actually supports it | `contribution_support_lint_llm.py` | per claim: `SUPPORTED` / `PARTIAL` /<br>`UNSUPPORTED` / `ASSERTED` with the<br>backing result located and a why/gap |
 | Use appropriate baselines or benchmarks | `thesis_checklist_llm.py` | verdict `baselines` |
 | Chapter/section introductions | `section_intro_lint_llm.py`<br>`thesis_checklist_llm.py`<br>`prose_lint_llm.py` | intro maps its subsections<br>verdict `section-intros`<br>`unmotivated-section` |
 | Reference all numbered equations using `\eqref{}` | `math_typeset_lint.py` | `REF-NOT-EQREF` (LaTeX) |
@@ -334,13 +369,14 @@ The closest proxy: run the suite before every revision round.
 | [`data_split_lint_llm.py`](data_split_lint_llm.py) | per studied ML method:<br>train/validation/test set construction<br>and diagnosis on that split | `.pdf` | Aalto AI API |
 | [`research_questions_lint_llm.py`](research_questions_lint_llm.py) | each stated research question:<br>answered? where? on what evidence? | `.pdf` | Aalto AI API |
 | [`rq_quality_lint_llm.py`](rq_quality_lint_llm.py) | how well-posed are research questions<br>and scope (university criteria)? | `.pdf` | Aalto AI API |
+| [`contribution_support_lint_llm.py`](contribution_support_lint_llm.py) | per claimed contribution: which result<br>(theorem/proof, experiment, analysis)<br>backs it, and does it? | `.pdf` | Aalto AI API |
 | [`figure_lint_llm.py`](figure_lint_llm.py) | figures scored against the PLOS<br>Ten Simple Rules for Better Figures<br>(figures × ten-rules matrix) | `.pdf` | PyMuPDF<br>(+ Aalto AI API<br>unless `--no-llm`) |
 | [`section_intro_lint_llm.py`](section_intro_lint_llm.py) | does each chapter/section intro map<br>its subsections and tie them together? | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | [`type_consistency_lint_llm.py`](type_consistency_lint_llm.py) | formal claims well-typed: relations over<br>same-type operands, values in range,<br>dimensionless quantities unit-free<br>(`TYPE-MISMATCH`, `RANGE`, `DIMENSION`,<br>`BRIDGE-LOOSE`) | `.pdf` | Aalto AI API |
 | [`flow_lint_llm.py`](flow_lint_llm.py) | narrative flow: section openers that<br>stand alone, no paragraph-to-paragraph<br>discontinuities | `.pdf` | PyMuPDF +<br>Aalto AI API |
 | [`prose_lint_llm.py`](prose_lint_llm.py) | LLM self-editing pass (uncited<br>claims, tense drift, jargon, …) | `.tex`, `.pdf` | Aalto AI API |
-| [`run_all_linters.py`](run_all_linters.py) | runs everything above | either | — |
-| [`dashboard.py`](dashboard.py) | renders a run as a self-contained HTML dashboard | either | — |
+| [`run_all_linters.py`](run_all_linters.py) | runs everything above; `--dashboard`<br>renders + opens an HTML report | either | — |
+| [`dashboard.py`](dashboard.py) | renders a run as a self-contained HTML<br>dashboard (`--open` to launch in a browser) | either | — |
 
 Shared modules: `lintutil.py` (text extraction, report format),
 `aalto_llm.py` (Aalto AI API client; also used by the `*_llm` linters).
@@ -527,3 +563,19 @@ each one: ANSWERED / PARTIALLY-ANSWERED / UNANSWERED, where the answer is
 developed, whether the presented results actually support it, and whether
 the conclusions chapter revisits it. Warns on `NO-RQS` (none stated) and
 `NOT-REVISITED`. Exit 1 unless every question is answered and revisited.
+
+**`contribution_support_lint_llm.py`** — one LLM call over the full text
+builds the *support chain* for each claimed contribution: the claim, its
+TYPE (theoretical / empirical / analysis / methodological / dataset), the
+BACKING result the manuscript offers (theorem+proof / experiment / analysis /
+ablation / construction / dataset / none) with its LOCATION (`Theorem 3.2
+(p5)`, `Table 2 (p7)`), and a support level — `SUPPORTED`, `PARTIAL`,
+`UNSUPPORTED`, or `ASSERTED` — with a one-line *why* (how the result entails
+the claim) or *gap* (the exact shortfall). Theorems get special scrutiny: a
+formal claim is `SUPPORTED` only when the theorem's statement and assumptions
+actually entail the prose claim and a proof is given — a theorem narrower or
+weaker than the sentence it backs is a `PARTIAL` "theorem-claim gap", and a
+formal-sounding claim proved only by an informal argument does not pass.
+Where `research_questions_lint_llm.py` traces stated *questions*, this traces
+stated *contributions* to the evidence meant to establish them. Exit 1 unless
+every claim is `SUPPORTED`.
