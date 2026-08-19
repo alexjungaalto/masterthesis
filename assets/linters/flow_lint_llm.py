@@ -218,6 +218,9 @@ def run_opener_check(args, rep: Report) -> Tuple[int, int]:
 # flow check
 # ---------------------------------------------------------------------------
 def trim_para(text: str) -> str:
+    """Middle-truncate a long paragraph to its head and tail (joined by
+    ' […] '), keeping the opening and closing that carry the transition
+    while capping tokens sent to the LLM."""
     if len(text) <= PARA_HEAD + PARA_TAIL + 20:
         return text
     return text[:PARA_HEAD] + " […] " + text[-PARA_TAIL:]

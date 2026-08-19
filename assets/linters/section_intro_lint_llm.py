@@ -99,6 +99,9 @@ def find_pos(doc, cache, title: str, page0: int) -> Tuple[int, int]:
 
 def slice_between(doc, cache, start: Tuple[int, int],
                   end: Optional[Tuple[int, int]], max_chars: int) -> str:
+    """Whitespace-normalized text between two (page, char-offset)
+    positions, capped at `max_chars`. If `end` is None, reads to a
+    couple of pages past `start` as a fallback bound."""
     (sp, so), out = start, []
     ep, eo = end if end else (min(sp + 2, doc.page_count - 1), None)
     for pno in range(sp, ep + 1):

@@ -83,6 +83,8 @@ SUMMARY_STATUS_RE = re.compile(r"^\s{2}(\S+\.py)\s+(clean|findings|error.*)$", r
 
 
 def run_suite(inputs, llm, bib):
+    """Run ``run_all_linters.py`` on ``inputs`` and return its combined
+    stdout (the same text a ``--from-run`` file would hold)."""
     cmd = [sys.executable, str(HERE / "run_all_linters.py"), *inputs]
     if llm:
         cmd.append("--llm")
@@ -139,6 +141,9 @@ GLYPH_CLASS = {"✓": "ok", "~": "weak", "✗": "bad", "·": "na", "?": "unk"}
 
 
 def figure_matrix_html(body):
+    """Return an HTML fragment for the figure x ten-rules matrix parsed from
+    ``body``, or "" if that linter's output holds no matrix rows. Each glyph
+    (checkmark/tilde/cross/dot/question) becomes a colour-coded cell."""
     rows = MATRIX_ROW_RE.findall(body)
     if not rows:
         return ""
@@ -322,6 +327,10 @@ def esc(s):
 
 
 def render_card(script, body, status):
+    """Return the ``<details>`` card fragment for one linter: name, its
+    one-line description, a status pill, and the expandable body (the figure
+    matrix table for the figure linter, otherwise the raw output in a
+    ``<pre>``)."""
     group, desc = LINTERS.get(script, ("Other", ""))
     label = {"clean": "clean", "findings": "findings",
              "error": "errors"}[status]
@@ -338,6 +347,13 @@ def render_card(script, body, status):
 
 
 def render(sections, summary, title, author, meta_line, body_only):
+    """Assemble the whole report and return ``(html, n_flagged)``.
+
+    Builds the summary tiles/bar, the filter controls, and the theme-grouped
+    cards, wrapping them in a full HTML document unless ``body_only`` (then a
+    ``<style>`` block plus markup only). ``n_flagged`` is the count of
+    linters with findings or errors.
+    """
     statuses = {sc: classify(sc, bd, summary) for sc, bd in sections}
     n = len(sections)
     n_clean = sum(1 for v in statuses.values() if v == "clean")

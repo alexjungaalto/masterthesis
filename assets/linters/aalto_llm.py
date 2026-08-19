@@ -10,6 +10,24 @@ Qwen/Qwen3-30B-A3B-Instruct-2507-FP8; models scale to zero and answer 503
 while spinning up) and any OpenAI-style endpoint such as OpenRouter
 ($OPENROUTER_API_KEY). LLMClient picks protocol and key from the URL.
 
+Every ``*_llm`` linter builds its client with ``make_client()`` and picks a
+model with ``default_model()`` / ``default_vision_model()`` from this one
+module, so a user configures the whole suite through a small set of
+environment variables (each can also be overridden by a CLI flag):
+
+  LLM_BASE_URL      which endpoint to talk to; decides everything below.
+                    Unset -> the Aalto AI API (AALTO_AZURE_URL).
+  LLM_MODEL         text model id; unset -> a per-endpoint default.
+  LLM_VISION_MODEL  model id for image requests (figure_lint_llm.py).
+  AALTO_API_KEY     key for the default Aalto AI API (also accepts
+                    AALTO_OPENAI_API_KEY).
+  AALTO_LLM_KEY     key for the Aalto LLM Gateway.
+  OPENROUTER_API_KEY  key for any other OpenAI-style endpoint.
+
+Which KEY is used follows from LLM_BASE_URL, not the other way round: the
+helpers below inspect the URL, then read the matching variable (falling back
+to reading it out of the user's shell profile, see ``_key_from_shell_profile``).
+
 Stdlib urllib only — no SDK needed.
 """
 
@@ -37,6 +55,9 @@ API_KEY_HELP = ("API key (default: $AALTO_API_KEY for the Aalto AI API, "
 
 
 def is_responses_api(base_url: str) -> bool:
+    """True if the URL speaks the OpenAI *Responses* API (the Aalto AI API
+    gateway) rather than OpenAI-style chat completions. This one flag drives
+    the protocol choice throughout the module."""
     return ("aalto-openai-apigw" in base_url
             or base_url.rstrip("/").endswith("/responses"))
 
@@ -62,6 +83,9 @@ def is_aalto_endpoint(base_url: str) -> bool:
 
 
 def default_model(base_url: str = BASE_URL) -> str:
+    """Text model id to use: ``$LLM_MODEL`` if set, otherwise a sensible
+    default for the given endpoint (GPT-5-mini on the Aalto AI API, Qwen3 on
+    the Aalto LLM Gateway, Gemini Flash elsewhere)."""
     if os.environ.get("LLM_MODEL"):
         return os.environ["LLM_MODEL"]
     if is_responses_api(base_url):
@@ -104,6 +128,10 @@ def _key_from_shell_profile(*names: str) -> Optional[str]:
 
 
 def default_api_key(base_url: str = BASE_URL) -> Optional[str]:
+    """Pick the API key that matches the endpoint: AALTO_LLM_KEY for the
+    Aalto LLM Gateway, AALTO_API_KEY (or AALTO_OPENAI_API_KEY) for the Aalto
+    AI API, OPENROUTER_API_KEY otherwise. Each falls back to the user's shell
+    profile; returns None if nothing is found."""
     if "llm-gateway" in base_url:              # Aalto LLM Gateway
         return (os.environ.get("AALTO_LLM_KEY")
                 or _key_from_shell_profile("AALTO_LLM_KEY"))
@@ -232,6 +260,10 @@ class LLMClient:
 
 def make_client(base_url: str = BASE_URL,
                 api_key: Optional[str] = None) -> LLMClient:
+    """Build an LLMClient for the endpoint, resolving the key (explicit arg,
+    else ``default_api_key``) and raising RuntimeError if none is found.
+    Prints a privacy warning to stderr when the endpoint is not Aalto-hosted,
+    since a thesis draft is unpublished material."""
     key = api_key or default_api_key(base_url)
     if not key:
         raise RuntimeError(

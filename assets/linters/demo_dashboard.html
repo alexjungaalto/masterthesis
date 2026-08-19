@@ -1,0 +1,872 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Example linter dashboard &mdash; ml-theses.org</title><style>
+:root{
+  --paper:#F4F6F8; --surface:#FFFFFF; --ink:#1A2230; --muted:#5B6474;
+  --hair:#DDE2EA; --accent:#345BD6; --accent-soft:#E7ECFB;
+  --ok:#2E9E6B; --ok-bg:#E6F4EC; --warn:#C8811C; --warn-bg:#FBF0DD;
+  --err:#D14343; --err-bg:#FBE7E7;
+  --shadow:0 1px 2px rgba(20,30,50,.06),0 4px 16px rgba(20,30,50,.05);
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#12151C; --surface:#1A1F2A; --ink:#E6EAF2; --muted:#9AA4B6;
+  --hair:#2A313E; --accent:#7E9BFF; --accent-soft:#20263A;
+  --ok:#57C793; --ok-bg:#13291F; --warn:#E4A44A;
+  --warn-bg:#2C2413; --err:#F0776F; --err-bg:#2C1717;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}}
+:root[data-theme="light"]{
+  --paper:#F4F6F8; --surface:#FFFFFF; --ink:#1A2230; --muted:#5B6474;
+  --hair:#DDE2EA; --accent:#345BD6; --accent-soft:#E7ECFB;
+  --ok:#2E9E6B; --ok-bg:#E6F4EC; --warn:#C8811C; --warn-bg:#FBF0DD;
+  --err:#D14343; --err-bg:#FBE7E7;
+}
+:root[data-theme="dark"]{
+  --paper:#12151C; --surface:#1A1F2A; --ink:#E6EAF2; --muted:#9AA4B6;
+  --hair:#2A313E; --accent:#7E9BFF; --accent-soft:#20263A;
+  --ok:#57C793; --ok-bg:#13291F; --warn:#E4A44A; --warn-bg:#2C2413;
+  --err:#F0776F; --err-bg:#2C1717;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  line-height:1.5;-webkit-font-smoothing:antialiased}
+.serif{font-family:"Iowan Old Style","Palatino Linotype","Book Antiqua",
+  Palatino,Georgia,serif}
+.mono{font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,monospace}
+.wrap{max-width:1060px;margin:0 auto;padding:2.4rem 1.3rem 4rem}
+header.top{border-bottom:1px solid var(--hair);padding-bottom:1.4rem;
+  margin-bottom:1.8rem}
+.eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin:0 0 .5rem}
+h1{font-size:clamp(1.5rem,3.4vw,2.15rem);line-height:1.15;margin:.1rem 0 .5rem;
+  text-wrap:balance;font-weight:600}
+.byline{color:var(--muted);font-size:.95rem;margin:0}
+.byline b{color:var(--ink);font-weight:600}
+/* summary band */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;
+  margin:1.6rem 0 1rem}
+@media(max-width:620px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{background:var(--surface);border:1px solid var(--hair);border-radius:12px;
+  padding:.9rem 1rem;box-shadow:var(--shadow)}
+.tile .n{font-size:1.9rem;font-weight:700;font-variant-numeric:tabular-nums;
+  line-height:1}
+.tile .l{font-size:.78rem;color:var(--muted);margin-top:.3rem;
+  text-transform:uppercase;letter-spacing:.06em}
+.tile.ok .n{color:var(--ok)} .tile.warn .n{color:var(--warn)}
+.tile.err .n{color:var(--err)}
+.bar{display:flex;height:10px;border-radius:6px;overflow:hidden;
+  margin:.2rem 0 1.7rem;border:1px solid var(--hair)}
+.bar span{display:block}
+.bar .s-ok{background:var(--ok)} .bar .s-warn{background:var(--warn)}
+.bar .s-err{background:var(--err)}
+/* filter */
+.controls{display:flex;gap:.5rem;align-items:center;margin-bottom:1.3rem}
+.controls button{font:inherit;font-size:.85rem;cursor:pointer;
+  background:var(--surface);color:var(--ink);border:1px solid var(--hair);
+  border-radius:999px;padding:.35rem .9rem}
+.controls button[aria-pressed="true"]{background:var(--accent);
+  color:#fff;border-color:var(--accent)}
+/* groups & cards */
+.group{margin:1.6rem 0 .6rem}
+.group h2{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin:0 0 .7rem;
+  border-bottom:1px solid var(--hair);padding-bottom:.4rem}
+.card{background:var(--surface);border:1px solid var(--hair);
+  border-left:4px solid var(--hair);border-radius:10px;margin-bottom:.7rem;
+  box-shadow:var(--shadow);overflow:hidden}
+.card.s-clean{border-left-color:var(--ok)}
+.card.s-findings{border-left-color:var(--warn)}
+.card.s-error{border-left-color:var(--err)}
+.card>summary{list-style:none;cursor:pointer;display:flex;align-items:center;
+  gap:.8rem;padding:.85rem 1rem}
+.card>summary::-webkit-details-marker{display:none}
+.card>summary::after{content:"▸";color:var(--muted);margin-left:auto;
+  transition:transform .15s}
+.card[open]>summary::after{transform:rotate(90deg)}
+.name{font-size:.92rem;font-weight:600}
+.desc{color:var(--muted);font-size:.85rem;flex:1;min-width:0}
+@media(max-width:620px){.desc{display:none}}
+.pill{font-size:.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.04em;padding:.2rem .6rem;border-radius:999px;white-space:nowrap}
+.pill.s-clean{color:var(--ok);background:var(--ok-bg)}
+.pill.s-findings{color:var(--warn);background:var(--warn-bg)}
+.pill.s-error{color:var(--err);background:var(--err-bg)}
+.body{border-top:1px solid var(--hair);padding:.4rem 1rem 1rem}
+pre.out{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.8rem;
+  line-height:1.5;background:var(--paper);border:1px solid var(--hair);
+  border-radius:8px;padding:.8rem .9rem;overflow-x:auto;white-space:pre;
+  max-height:460px;overflow-y:auto;margin:.6rem 0 0}
+/* figure matrix */
+.matrix-wrap{overflow-x:auto;margin:.6rem 0 0}
+table.matrix{border-collapse:collapse;font-family:ui-monospace,Menlo,monospace;
+  font-size:.82rem;min-width:420px}
+table.matrix th,table.matrix td{border:1px solid var(--hair);padding:.32rem .5rem;
+  text-align:center}
+table.matrix th{background:var(--paper);color:var(--muted);font-weight:600}
+table.matrix td.fig{text-align:left;white-space:nowrap;font-weight:600}
+td.cell{font-weight:700}
+td.cell.ok{color:var(--ok);background:var(--ok-bg)}
+td.cell.weak{color:var(--warn);background:var(--warn-bg)}
+td.cell.bad{color:var(--err);background:var(--err-bg)}
+td.cell.na,td.cell.unk{color:var(--muted)}
+.legend{font-size:.76rem;color:var(--muted);margin:.5rem 0 0}
+footer{margin-top:2.4rem;padding-top:1.2rem;border-top:1px solid var(--hair);
+  color:var(--muted);font-size:.82rem}
+footer a{color:var(--accent)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body><div class='wrap'><header class='top'><p class='eyebrow'>Live demo &middot; ml-theses.org linter suite</p><h1 class='serif'>Example thesis linter dashboard</h1><p class='byline'>Every card below is a <b>real check run on a real document</b> &mdash; an MSc thesis topic proposal &mdash; by the ml-theses.org linter suite. Click any card to expand its findings. The figure, caption, and section-intro checks are omitted here because a short proposal has no figures or subsections to analyse; on a full thesis they add cards too.</p></header><div class='tiles'><div class='tile'><div class='n'>22</div><div class='l'>Checks run</div></div><div class='tile ok'><div class='n'>11</div><div class='l'>Clean</div></div><div class='tile warn'><div class='n'>11</div><div class='l'>With findings</div></div><div class='tile err'><div class='n'>0</div><div class='l'>Errors</div></div></div><div class='bar' role='img' aria-label='11 clean, 11 findings, 0 errors'><span class='s-ok' style='width:50.0000%'></span><span class='s-warn' style='width:50.0000%'></span><span class='s-err' style='width:0.0000%'></span></div><div class='controls'><span class='desc'>Show:</span><button data-mode='all' aria-pressed='true'>All checks</button><button data-mode='attn' aria-pressed='false'>Needs attention</button></div><section class='group'><h2>Structure &amp; completeness</h2><details class='card s-clean'><summary><span class='name mono'>structure_lint.py</span><span class='desc'>required chapters present and in a sensible order</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>== Structure lint report
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+Flags sectioning units with exactly one subdivision (a lone subsection cannot articulate its parent heading).
+
+No findings.
+
+12 sectioning unit(s) checked (via PDF outline).
+
+==========================================================================</pre></div></details><details class='card s-clean'><summary><span class='name mono'>unreferenced_entity_linter.py</span><span class='desc'>every numbered figure/table/equation is referenced in the text</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>Checks that every numbered equation, table, and figure is referred to at least once in the text (and, in LaTeX mode, that each has a \label). Each line below is one unreferenced entity.
+
+
+[pdf] proposal.pdf: 0 numbered entit(ies) found (0 equations, 0 floats), 0 finding(s)
+
+==========================================================================</pre></div></details><details class='card s-clean'><summary><span class='name mono'>crossref_forward_lint.py</span><span class='desc'>no cross-reference points far ahead of where the float is defined</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>== Cross-reference forward-reference lint report
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+What this checks: a reference to a float (a figure, table, or algorithm — LaTeX floats them to wherever they fit) that sits many pages before the float itself, e.g. &quot;as in Figure 7&quot; on page 3 when Figure 7 is on page 21.
+Lines scanned: 307
+Floats defined: 0
+Threshold: &gt;1.00 pages ahead
+Forward references flagged: 0
+Unresolved references (no matching float found): 3
+
+No forward cross-references exceeding the threshold were found.
+
+== Unresolved references (could not locate a definition)
+  * section 4  (first seen on page 1)
+  * section 3  (first seen on page 3)
+
+
+==========================================================================</pre></div></details><details class='card s-findings'><summary><span class='name mono'>forward_ref_lint.py</span><span class='desc'>concepts are not used pages before they are introduced (regex)</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== Forward-reference lint report
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+What this checks: a passage that uses a term whose definition appears only on a LATER page — a &quot;forward reference&quot; the reader meets before it is introduced.
+Heuristic, so expect false positives: an ordinary word can be mistaken for a defined term. For fewer, more reliable hits re-run with --min-term-words 2; add --list-concepts to see what was treated as a term.
+
+Paragraphs scanned: 98
+Concepts registered: 15
+Forward references found: 18
+
+Each finding — the page where the term is used, the term, and the page where it is first defined:
+
+  * page 1: uses &#x27;target&#x27; — first defined on page 3
+    context: …e no separate “attacks,” only different targets — the whole function, a restriction, or…
+
+  * page 2: uses &#x27;restricted&#x27; — first defined on page 5
+    context: …ntified by SVD — subspace probing under restricted output access.
+
+  * page 2: uses &#x27;restricted&#x27; — first defined on page 5
+    context: A central practical theme is how these restricted oracles degrade the recovery guarantees…
+
+  * page 2: uses &#x27;restricted&#x27; — first defined on page 5
+    context: 4 Core Theoretical Object: Restricted Isometry over F via Point Evaluation
+
+  * page 2: uses &#x27;empirical&#x27; — first defined on page 4
+    context: contexts c1, . . . , cm ∼D and form the empirical evaluation seminorm d ∥f∥ 2 = 1
+
+  * page 2: uses &#x27;restricted&#x27; — first defined on page 5
+    context: …isely when the evaluation operator is a restricted isometry over the difference set F −F.
+
+  * page 3: uses &#x27;empirical&#x27; — first defined on page 4
+    context: …ric entropy. The uniform isometry is an empirical-process state- ment; the required m is …
+
+  * page 3: uses &#x27;empirical&#x27; — first defined on page 4
+    context: …ometry of Condition 1 still requires an empirical-process argument over F −F.
+
+  * page 3: uses &#x27;target&#x27; — first defined on page 3
+    context: 5 Recoverable Targets
+
+  * page 3: uses &#x27;target&#x27; — first defined on page 3
+    context: …le regime is recovery of low-complexity targets derived from fθ, all under the single e…
+
+  * page 3: uses &#x27;empirical&#x27; — first defined on page 4
+    context: …-coordinate. Carlini et al. [15] is the empirical existence proof and the controlled benc…
+  * page 3: uses &#x27;restricted&#x27; — first defined on page 5
+    context: …) from O(d) full-logit queries; under a restricted top-k/logit-bias API the cost rises to …
+
+  * page 3: uses &#x27;restricted&#x27; — first defined on page 5
+    context: …uch a functional is recoverable under a restricted isometry on the relevant quotient of F,…
+
+  * page 3: uses &#x27;restricted&#x27; — first defined on page 5
+    context: …the point-evaluation operator satisfy a restricted isometry over the transformer- realizab…
+
+  * page 4: uses &#x27;restricted&#x27; — first defined on page 5
+    context: …opy / sampling numbers of the relevant (restricted or quotiented) class, and does it match…
+
+  * page 4: uses &#x27;restricted&#x27; — first defined on page 5
+    context: RQ3. How do the restricted oracles of Section 3 — top-k truncation…
+
+  * page 4: uses &#x27;restricted&#x27; — first defined on page 5
+    context: … matching packing lower bounds; analyse restricted oracles as perturbations of the isometr…
+
+  * page 4: uses &#x27;restricted&#x27; — first defined on page 5
+    context: …oint evaluation, recovery governed by a restricted isometry over the function class.
+
+
+==========================================================================</pre></div></details><details class='card s-findings'><summary><span class='name mono'>unresolved_reference_lint.py</span><span class='desc'>no uncited appeals to companion studies; label-code schemes are defined</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== Unresolved-reference lint report
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+Flags appeals to uncited companion/forthcoming studies and label-code schemes (R1, T6, ...) used without a definition in the text.
+
+How to read: [ERROR] almost certainly a defect, fix it · [WARN] worth reviewing, sometimes a false positive · [INFO] optional check, usually fine.
+
+[WARN] UNDEFINED-CODE     p3           code scheme &#x27;RQ*&#x27; used but not defined in the text: RQ1, RQ2, RQ3 (3 use(s); defined members: none) — define each at first use, e.g. &#x27;RQ1 (…)&#x27;.
+[WARN] UNDEFINED-CODE     p4           code scheme &#x27;T*&#x27; used but not defined in the text: T2, T3 (10 use(s); defined members: T1) — define each at first use, e.g. &#x27;T2 (…)&#x27;.
+
+2 finding(s): 0 error, 2 warning, 0 info.
+
+==========================================================================</pre></div></details><details class='card s-findings'><summary><span class='name mono'>thesis_checklist_llm.py</span><span class='desc'>the thesis meets the ml-theses.org content checklist</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== Thesis checklist report (LLM, gpt-5-mini-2025-08-07)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+
+[PASS] problem-formulation
+        &quot;We model a language model as a single deterministic nonlinear function fθ : V^L → R^V, c ↦ z = fθ(c), mapping a context window c ... to the logit vector z over the next token.&quot; (page 1)
+[PASS] data-sources-eval
+        &quot;On open-weight models where fθ is fully known (Pythia, Qwen, Llama across scales) ...&quot; and &quot;Evaluation: Recovery accuracy... Query efficiency; Isometry diagnostics; Robustness.&quot; (pages 4–5)
+[FAIL] loss-functions
+        Missing training loss specification: the text lists evaluation metrics (&quot;Recovery accuracy: subspace/parameter error (T1), function-approximation error on S (T2), functional error (T3).&quot;) but does not state a training loss. (page 4)
+        fix: Explicitly state the loss used for any training/estimation procedures (e.g. cross-entropy for next-token prediction or least-squares for logit reconstruction) and separately list the validation/test metrics used to evaluate performance.
+[FAIL] results-discussed
+        No numerical results are presented; the manuscript describes an empirical track and deliverables (&quot;empirically estimate the evaluation-isometry... recover targets... empirical query-complexity scaling curves&quot;) but contains no experimental numbers or discussions. (pages 4–5)
+        fix: Include concrete numerical experiments (tables/figures) with quantitative results and a detailed discussion linking those numbers to the research questions, including error bars, comparisons to theory, and interpretation of failure modes.
+[FAIL] baselines
+        Only a single prior is mentioned as a benchmark (&quot;Carlini et al. [15] is the empirical existence proof and the controlled benchmark.&quot;) and a general &quot;benchmark harness&quot; is promised, but no explicit list of baselines or comparative methods is given. (page 3, 5)
+        fix: Specify concrete baselines to compare against (e.g. random probing, Tramèr et al. model-stealing methods, the Carlini coordinate-reconstruction method, simple SVD/low-rank reconstructions) and describe how each baseline will be evaluated.
+[PASS] pseudocode
+        &quot;There are no separate &#x27;attacks,&#x27; only different targets — the whole function, a restriction, or a functional of it — recovered through one evaluation operator.&quot; (page 1) (no new algorithmic method is proposed that would require pseudocode)
+[PASS] model-diagnosis
+        &quot;Empirical track. ... (i) empirically estimate the evaluation-isometry constant for different probe designs; (ii) recover targets T1–T3 and compare achieved query counts against the theory; (iii) stress-test under simulated top-k and sampling oracles.&quot; (pages 4–5)
+[PASS] section-intros
+        Sections begin with intros: e.g. &quot;1 The Abstraction: We model a language model as a single deterministic...&quot; and &quot;2 Why Compressed Sensing Applies: A generic function V^L → R^V is unrecoverable from few samples — ...&quot; (pages 1–2)
+[PASS] captions-informative
+        No figures or tables appear in the provided manuscript text, so no captions are present to evaluate across pages 1–8.
+
+3 FAIL, 0 UNCLEAR, 6 PASS.  (tokens: 9511)
+
+==========================================================================</pre></div></details></section><section class='group'><h2>Contribution &amp; claims</h2><details class='card s-findings'><summary><span class='name mono'>contribution_support_lint_llm.py</span><span class='desc'>each claimed contribution is backed by a theorem/experiment/analysis</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== Contribution-support lint (LLM, gpt-5-mini-2025-08-07)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+
+SUMMARY: 4 claim(s): 1 supported, 1 partial, 0 unsupported, 2 asserted
+
+How to read: for each claimed contribution — the result meant to back it, where it is, and whether it does.
+
+[ASSERTED]  C3  A robustness theory relating realistic API oracles (top‑k truncation, sampling noise, finite precision, rate limits, logit‑bias probes) to the evaluation‑isometry constant, with provable separations between benign defenses and those that destroy recoverability.
+    type:     analysis
+    backing:  none
+    evidence: Measurement model: oracle hierarchy (Section 3, p2); Research question RQ3 and related discussion (p3–4); Methodology: analyse restricted oracles as perturbations of the isometry (p4)
+    gap:      The manuscript identifies the oracle types and frames the question (RQ3) but provides no theorems, analyses, or empirical results that quantify how these oracles change the RIP constant or separate benign vs. recovery‑destroying defenses; the work is proposed but not carried out in the document (pp.2–4).
+
+[ASSERTED]  C4  An open, reproducible empirical harness and empirical scaling laws (query budget vs recoverable structure) validated on open‑weight models.
+    type:     empirical
+    backing:  none
+    evidence: Empirical track and deliverables described (Methodology, p4); Evaluation metrics and planned experiments (Section 8, p4–5); Timeline listing empirical milestones (p5–6)
+    gap:      The proposal spells out an empirical plan, target models, and evaluation criteria but contains no implemented experiments, datasets, code, or empirical results in the manuscript to substantiate the claimed harness or scaling laws (pp.4–6).
+
+[PARTIAL]  C2  Query‑complexity upper bounds (via metric entropy and sampling numbers) and matching packing lower bounds for recovering codomain structure, structured sub‑domain restrictions, and general functionals.
+    type:     theoretical
+    backing:  analysis
+    evidence: Sample complexity via metric entropy (p3); Sampling numbers / point evaluation discussion and citations (p3); Lower bounds via packing (p3); Recoverable targets T1–T3 (p3–4)
+    gap:      The proposal sketches the route (metric‑entropy bounds, sampling‑number results, Fano/packing) and cites the relevant literature, but it contains no specialised theorems, formal statements, or proofs applying these tools to the transformer‑realisable class or proving matching upper/lower bounds for the listed targets; the needed derivations are planned but not given (pp.3–4).
+
+[SUPPORTED]  C1  A single compressed‑sensing formalism for black‑box LLMs: view the model as one nonlinear function, query access as point evaluation, and recovery governed by a restricted isometry (Evaluation‑RIP) over the function class.
+    type:     methodological
+    backing:  construction
+    evidence: Measurement model (Section 3, p2); Core theoretical object: Evaluation‑RIP (Condition 1, p2–3); Discussion assembling the framework (pp.1–4)
+    why:      The manuscript explicitly defines the measurement model and gives Condition 1 (Evaluation‑RIP) and surrounding discussion that formalise the proposed compressed‑sensing viewpoint, so the claimed formalism is actually presented.
+
+Overall: The document is a research proposal that successfully formalises the compressed‑sensing viewpoint for black‑box LLMs (supported by an explicit measurement model and Evaluation‑RIP definition). The principal theoretical and empirical claims (query‑complexity bounds with matching lower bounds; a robustness theory for restricted oracles; and an open empirical harness with scaling laws) are only sketched and supported by citations to prior work, but no new theorems, proofs, or experimental results are presented here; those contributions are therefore partial or asserted pending the planned developments.
+
+4 claim(s): 1 supported, 1 partial, 0 unsupported, 2 asserted.  (tokens: 7730)
+
+==========================================================================</pre></div></details></section><section class='group'><h2>References</h2><details class='card s-findings'><summary><span class='name mono'>citation_style_lint.py</span><span class='desc'>citations follow a consistent IEEE-style format</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== Citation style lint report (IEEE)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+Checks that the reference list and in-text citations follow the IEEE style used in the thesis guide.
+
+How to read: [ERROR] almost certainly a defect, fix it · [WARN] worth reviewing, sometimes a false positive · [INFO] optional check, usually fine.
+
+[WARN] ENTRY-STYLE        p5           [1] title not in quotation marks (&quot;Title,&quot;): &quot;Emmanuel J. Candès and Terence Tao. Decoding by linear programming. IEEE Transactions on I…&quot;
+[WARN] ENTRY-STYLE        p5           [2] title not in quotation marks (&quot;Title,&quot;): &quot;David L. Donoho. Compressed sensing. IEEE Transactions on Information Theory, 52(4): 1289–…&quot;
+[WARN] ENTRY-STYLE        p5           [3] title not in quotation marks (&quot;Title,&quot;): &quot;Emmanuel J. Candès and Terence Tao. Near-optimal signal recovery from random projec- tions…&quot;
+[WARN] ENTRY-STYLE        p5           [4] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Florian Tramèr, Fan Zhang, Ari Juels, Michael K. Reiter, and Thomas Ristenpart. Steal- ing…&quot;
+[WARN] ENTRY-STYLE        p6           [5] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Ł…&quot;
+[WARN] ENTRY-STYLE        p6           [6] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Zhilin Yang, Zihang Dai, Ruslan Salakhutdinov, and William W. Cohen. Breaking the softmax …&quot;
+[WARN] ENTRY-STYLE        p6           [7] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Hyunjik Kim, George Papamakarios, and Andriy Mnih. The Lipschitz constant of self- attenti…&quot;
+[WARN] ENTRY-STYLE        p6           [8] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Valentin Castin, Pierre Ablin, and Gabriel Peyré. How smooth is attention? In Proceedings …&quot;
+[WARN] ENTRY-STYLE        p6           [9] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;James Vuckovic, Aristide Baratin, and Rémi Tachet des Combes. On the regularity of attenti…&quot;
+[WARN] ENTRY-STYLE        p6           [10] title not in quotation marks (&quot;Title,&quot;): &quot;Andrei N. Kolmogorov and Vladimir M. Tikhomirov. ε-entropy and ε-capacity of sets in funct…&quot;
+[WARN] ENTRY-STYLE        p6           [11] authors not in IEEE &#x27;A. B. Surname&#x27; form: &quot;Martin Anthony and Peter L. Bartlett. Neural Network Learning: Theoretical Foundations. Ca…&quot;
+[WARN] ENTRY-STYLE        p6           [12] title not in quotation marks (&quot;Title,&quot;): &quot;Benjamin L. Edelman, Surbhi Goel, Sham Kakade, and Cyril Zhang. Inductive biases and varia…&quot;
+[WARN] ENTRY-STYLE        p6           [13] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Jacob Trauger and Ambuj Tewari. Sequence length independent norm-based generalization boun…&quot;
+[WARN] ENTRY-STYLE        p6           [14] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Dennis Elbrächter, Dmytro Perekrestenko, Philipp Grohs, and Helmut Bölcskei. Deep neural n…&quot;
+[WARN] ENTRY-STYLE        p6           [15] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Nicholas Carlini, Daniel Paleka, Krishnamurthy Dj Dvijotham, Thomas Steinke, Jonathan Haya…&quot;
+[WARN] ENTRY-STYLE        p6           [16] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Clemens Hutter, Recep Gül, and Helmut Bölcskei. Metric entropy limits on recurrent neu- ra…&quot;
+[WARN] ENTRY-STYLE        p6           [17] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;David Krieg and Mario Ullrich. Function values are enough for L2 -approximation. Founda- t…&quot;
+[WARN] ENTRY-STYLE        p6           [18] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;David Krieg and Mario Ullrich. Function values are enough for L2 -approximation: Part II. …&quot;
+[WARN] ENTRY-STYLE        p7           [19] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Erich Novak and Henryk Woźniakowski. Tractability of Multivariate Problems, Volume II: Sta…&quot;
+[WARN] ENTRY-STYLE        p7           [20] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Matthieu Dolbeault, David Krieg, and Mario Ullrich. A sharp upper bound for sampling numbe…&quot;
+[WARN] ENTRY-STYLE        p7           [21] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Yuhong Yang and Andrew Barron. Information-theoretic determination of minimax rates of con…&quot;
+[WARN] ENTRY-STYLE        p7           [22] authors not in IEEE &#x27;A. B. Surname&#x27; form; title not in quotation marks (&quot;Title,&quot;): &quot;Shivam Garg, Dimitris Tsipras, Percy Liang, and Gregory Valiant. What can transformers lea…&quot;
+
+22 finding(s): 0 error, 22 warning, 0 info.
+
+==========================================================================</pre></div></details><details class='card s-clean'><summary><span class='name mono'>related_work_faithfulness_llm.py</span><span class='desc'>each cited related work is described as its own abstract does</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>== Related-work faithfulness report (LLM, gpt-5-mini-2025-08-07; discover=internal)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+
+Draft: Compressed Sensing of LLMs: Query-Efficient Recovery of a Black-Box Next-Token Function
+Contribution: Formulate black-box LLM auditing as a compressed-sensing problem (evaluation-RIP over a transformer-realizable function class), and give query-complexity upper/lower bounds and robustness analyses for recovering codomain subspaces, restricted sub-domains, and general functionals under realistic API oracles.
+
+[INFO] UNVERIFIABLE        p3     Stealing part of a production language model
+        related: An empirical demonstration of logit-reconstruction via adaptive logit-bias queries and a benchmark for subspace/codomain recovery in production LLMs — directly addresses the same practical target (recovering logits/subspace) under restricted APIs.
+        draft says: &quot;Adaptive logit-bias oracle: query-time perturbations (Carlini et al. [15]) act as designed measurement vectors that reconstruct individual logit coordinates through a top-k API...&quot;; and &quot;Carlini et al. [15] is the empirical existence proof and the controlled benchmark.&quot;
+        abstract shows: The provided abstract describes InstructGPT: fine-tuning GPT-3 with human feedback (supervised + RLHF) to improve alignment, truthfulness, and reduce toxicity.
+        Abstract discusses collecting demonstrations and ranked outputs to fine-tune GPT-3 (InstructGPT) and reports improvements in preference, truthfulness, and toxicity.
+        fix: Either replace this citation with Carlini et al.&#x27;s logit-bias/top-k attack paper if you mean adaptive logit-bias attacks, or change the related-work text to reflect that the cited InstructGPT paper is about RLHF and not logit-bias/top-k attack techniques.
+
+[INFO] FAITHFUL            p1     Stealing machine learning models via prediction APIs
+        related: A seminal model-stealing / prediction-API attack paper that originally framed model extraction from query access; provides the classical API-threat baseline the thesis builds on and contrasts with.
+        draft says: &quot;...and that earlier underpinned prediction-API model stealing [4]:&quot; (cited as antecedent motivating compressibility priors and recovery from prediction-API traces).
+        abstract shows: The abstract presents black-box model-extraction attacks on prediction APIs, demonstrating efficient attacks against logistic regression, neural nets, and decision trees and discussing the (in)effectiveness of omitting confidence values.
+        Abstract explains attacks that duplicate model functionality from query access, demonstrations against BigML/Amazon services, and notes confidence-omission still allows extraction.
+
+[INFO] UNVERIFIABLE        p3     Metric entropy limits on recurrent neural network learning of linear d
+        related: Identified by the draft as the closest prior for recovering systems from input–output traces in a metric-entropy-optimal manner; represents closest theoretical antecedent linking metric entropy to IO-based recovery.
+        draft says: &quot;The closest prior on recovering a system from input–output traces in a metric-entropy-optimal manner is Hutter et al. [16].&quot;
+        abstract shows: No abstract was provided, so the content and claims of this work cannot be assessed here.
+        note: no abstract retrieved for this title — verdict is unverified against the real work.
+        The abstract field is missing, preventing verification of what results or settings (metric-entropy, RNNs, LDS) the cited work actually establishes.
+        fix: Include the paper&#x27;s abstract or a concise summary of its main theorems and assumptions; if claiming to extend it, state which specific results or assumptions you generalize and cite exact sections or theorem numbers.
+
+3 related work(s) checked; 0 warning(s).  (tokens: 9965)
+
+==========================================================================</pre></div></details><details class='card s-clean'><summary><span class='name mono'>bibliography_linter.py</span><span class='desc'>cited works exist with the right authors, title, and venue</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>[1] Emmanuel J. Candès and Terence Tao. Decoding by linear programming. IEEE Transactions on I
+../../topics/compressed-sensing-llms/proposal.pdf:[1]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[2] David L. Donoho. Compressed sensing. IEEE Transactions on Information Theory, 52(4): 1289–
+../../topics/compressed-sensing-llms/proposal.pdf:[2]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[3] Emmanuel J. Candès and Terence Tao. Near-optimal signal recovery from random projec- tions
+../../topics/compressed-sensing-llms/proposal.pdf:[3]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[4] Florian Tramèr, Fan Zhang, Ari Juels, Michael K. Reiter, and Thomas Ristenpart. Steal- ing
+../../topics/compressed-sensing-llms/proposal.pdf:[4]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[5] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Ł
+../../topics/compressed-sensing-llms/proposal.pdf:[5]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[6] Zhilin Yang, Zihang Dai, Ruslan Salakhutdinov, and William W. Cohen. Breaking the softmax 
+../../topics/compressed-sensing-llms/proposal.pdf:[6]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[7] Hyunjik Kim, George Papamakarios, and Andriy Mnih. The Lipschitz constant of self- attenti
+../../topics/compressed-sensing-llms/proposal.pdf:[7]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[8] Valentin Castin, Pierre Ablin, and Gabriel Peyré. How smooth is attention? In Proceedings 
+../../topics/compressed-sensing-llms/proposal.pdf:[8]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[9] James Vuckovic, Aristide Baratin, and Rémi Tachet des Combes. On the regularity of attenti
+../../topics/compressed-sensing-llms/proposal.pdf:[9]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[10] Andrei N. Kolmogorov and Vladimir M. Tikhomirov. ε-entropy and ε-capacity of sets in funct
+../../topics/compressed-sensing-llms/proposal.pdf:[10]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[11] Martin Anthony and Peter L. Bartlett. Neural Network Learning: Theoretical Foundations. Ca
+../../topics/compressed-sensing-llms/proposal.pdf:[11]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[12] Benjamin L. Edelman, Surbhi Goel, Sham Kakade, and Cyril Zhang. Inductive biases and varia
+../../topics/compressed-sensing-llms/proposal.pdf:[12]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[13] Jacob Trauger and Ambuj Tewari. Sequence length independent norm-based generalization boun
+../../topics/compressed-sensing-llms/proposal.pdf:[13]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[14] Dennis Elbrächter, Dmytro Perekrestenko, Philipp Grohs, and Helmut Bölcskei. Deep neural n
+../../topics/compressed-sensing-llms/proposal.pdf:[14]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[15] Nicholas Carlini, Daniel Paleka, Krishnamurthy Dj Dvijotham, Thomas Steinke, Jonathan Haya
+../../topics/compressed-sensing-llms/proposal.pdf:[15]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[16] Clemens Hutter, Recep Gül, and Helmut Bölcskei. Metric entropy limits on recurrent neu- ra
+../../topics/compressed-sensing-llms/proposal.pdf:[16]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[17] David Krieg and Mario Ullrich. Function values are enough for L2 -approximation. Founda- t
+../../topics/compressed-sensing-llms/proposal.pdf:[17]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[18] David Krieg and Mario Ullrich. Function values are enough for L2 -approximation: Part II. 
+../../topics/compressed-sensing-llms/proposal.pdf:[18]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[19] Erich Novak and Henryk Woźniakowski. Tractability of Multivariate Problems, Volume II: Sta
+../../topics/compressed-sensing-llms/proposal.pdf:[19]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[20] Matthieu Dolbeault, David Krieg, and Mario Ullrich. A sharp upper bound for sampling numbe
+../../topics/compressed-sensing-llms/proposal.pdf:[20]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[21] Yuhong Yang and Andrew Barron. Information-theoretic determination of minimax rates of con
+../../topics/compressed-sensing-llms/proposal.pdf:[21]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+[22] Shivam Garg, Dimitris Tsipras, Percy Liang, and Gregory Valiant. What can transformers lea
+../../topics/compressed-sensing-llms/proposal.pdf:[22]: [INFO] INCOMPLETE: no title could be parsed; entry cannot be verified (check completeness of the entry)
+
+checked 22 entr(ies): 0 verified, 0 error(s), 0 warning(s), 22 unverifiable/skipped   (cache: ../../topics/compressed-sensing-llms/.bibcheck_cache.json)</pre></div></details></section><section class='group'><h2>Language &amp; prose</h2><details class='card s-findings'><summary><span class='name mono'>acronym_lint.py</span><span class='desc'>every acronym is expanded at first use</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== Acronym lint report
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+Checks that every acronym is expanded at its first use and not re-expanded later. The location points at the first offending use.
+
+How to read: [ERROR] almost certainly a defect, fix it · [WARN] worth reviewing, sometimes a false positive · [INFO] optional check, usually fine.
+
+[WARN] NEVER-EXPANDED     p1           &#x27;LLM&#x27; used 4 time(s) but never expanded (first use at p1).
+[WARN] NEVER-EXPANDED     p1           &#x27;RL&#x27; used 2 time(s) but never expanded (first use at p1).
+[WARN] NEVER-EXPANDED     p1           &#x27;RV&#x27; used 5 time(s) but never expanded (first use at p1).
+[WARN] NEVER-EXPANDED     p1           &#x27;WU&#x27; used 4 time(s) but never expanded (first use at p1).
+[WARN] NEVER-EXPANDED     p2           &#x27;RIP&#x27; used 5 time(s) but never expanded (first use at p2).
+[WARN] NEVER-EXPANDED     p2           &#x27;SVD&#x27; used 2 time(s) but never expanded (first use at p2).
+
+6 finding(s): 0 error, 6 warning, 0 info.
+
+==========================================================================</pre></div></details><details class='card s-clean'><summary><span class='name mono'>prose_lint.py</span><span class='desc'>prose defects: dangling references, vague quantifiers (regex)</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>== Prose lint report (self-editing pass)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+Flags self-editing prose issues: vague quantifiers without a number, colloquial/undefined claims, forward-looking cue phrases, and dangling references.
+
+How to read: [ERROR] almost certainly a defect, fix it · [WARN] worth reviewing, sometimes a false positive · [INFO] optional check, usually fine.
+
+[INFO] DANGLING-REFERENCE p3           sentence opens with bare &#x27;This is&#x27; — check the antecedent: &quot;This is a functional of fθ , recoverable as numerical- rank / subspace recovery (SVD of st…&quot;
+
+1 finding(s): 0 error, 0 warning, 1 info.
+
+==========================================================================</pre></div></details><details class='card s-clean'><summary><span class='name mono'>terminology_lint.py</span><span class='desc'>terminology matches the Aalto ML dictionary</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>== Terminology lint report (Aalto Dictionary of ML)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+Flags synonym switching between equivalent terms; each cluster lists the Aalto Dictionary of ML term to standardise on first.
+
+How to read: [ERROR] almost certainly a defect, fix it · [WARN] worth reviewing, sometimes a false positive · [INFO] optional check, usually fine.
+
+[INFO] NON-DICTIONARY     p1           uses &#x27;sample&#x27; x5 consistently; the Aalto Dictionary term is &#x27;data point&#x27;.
+[INFO] NON-DICTIONARY     p1           uses &#x27;target&#x27; x9 consistently; the Aalto Dictionary term is &#x27;label&#x27;.
+
+2 finding(s): 0 error, 0 warning, 2 info.
+
+==========================================================================</pre></div></details><details class='card s-findings'><summary><span class='name mono'>flow_lint_llm.py</span><span class='desc'>paragraph-to-paragraph flow and leaf-section openers</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== Narrative flow lint report (LLM)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+LLM check: do section openers stand alone (read at the heading), and do consecutive paragraphs follow without narrative jumps?
+
+How to read: [ERROR] almost certainly a defect, fix it · [WARN] worth reviewing, sometimes a false positive · [INFO] optional check, usually fine.
+
+[WARN] OPAQUE-OPENER      p1           Why Compressed Sensing Applies: the Compressibility Priors: opens &quot;A generic function VL →RV is unrecoverable from few samples — the domain has siz&quot; — The sentence &#x27;Recovery is possible only because fθ is not generic.&#x27; uses fθ without introducing what it denotes; the referent is defined earlier, not here. || rewrite: A generic function V^L → R^V is unrecoverable from few samples—the domain has size |V|^L. Recovery is possible only because the specific mapping we study, fθ: V^L → R^V, is not generic and exhibits compressible structure.
+[WARN] OPAQUE-OPENER      p3           Research Questions: opens &quot;RQ1. When does the point-evaluation operator satisfy a restricted isometry over &quot; — Unresolved references to previously defined notation and assumptions: &quot;the transformer-realizable class F&quot; and &quot;the four compressibility priors (P1–P4)&quot; depend on earlier definitions not given here. || rewrite: RQ1. When does the point-evaluation operator satisfy a restricted isometry over the class F of functions realizable by the transformer architectures studied in this thesis, and how do the four compressibility priors examined here influence the isometry constant?
+[WARN] OPAQUE-OPENER      p4           Evaluation: opens &quot;-RIP condition for F; import metric-entropy bounds for transformer-type classes &quot; — Telegraphic list with unresolved references (e.g., undefined F and “the isometry”) and no complete sentence framing the Evaluation; opener depends on prior context. || rewrite: This section evaluates our contributions on both theory and practice. On the theoretical side, we establish a Restricted Isometry Property (RIP) for the feature operator F defined in Section 3.1, import metric-entropy bounds for transformer-type hypothesis classes together with sampling-number results to derive query‑complexity upper bounds, prove matching packing-based lower bounds, and analyze restricted oracles as perturbations of the underlying isometry in the RIP condition; on the empirical side, we present experiments that validate these predictions.
+[WARN] OPAQUE-OPENER      p5           Risks and Contingencies: opens &quot;• The point-evaluation operator may resist a clean RIP for the full class. Mitig&quot; — References to an undefined function class F, unspecified &#x27;full class,&#x27; and prior-defined targets T1–T3 make the opener depend on earlier context. || rewrite: Risk 1: For the function class F considered in this thesis, the point-evaluation operator E_x may fail to satisfy a clean restricted isometry property (RIP) over the entire class. Contingency: Because we assume smoothness of F, we instead work in the sampling-numbers regime; when a global RIP is unavailable, we restrict analysis to the target families T1–T3 introduced earlier, whose quotient classes have small metric entropy and admit (near-)isometries. Risk 2: The restricted oracles defined in our setting may preclude any access to logits.
+[WARN] OPAQUE-OPENER      p5           Indicative Timeline (6 months): opens &quot;Month Milestone 1 Formalise the function/measurement model; consolidate metric-e&quot; — The opener relies on undefined labels and shorthands—particularly T1, T2, T3 (task references) and “def”—which presume prior definitions and make the timeline read like a continuation rather than a self-contained start. || rewrite: This section outlines a six-month plan: Month 1 will formalize the function/measurement model and consolidate metric-entropy and sampling-number tools; Month 2 will develop evaluation-RIP theory and introduce Task T1 (codomain recovery) along with a benchmarking harness; Month 3 will empirically validate T1 and conduct an oracle-robustness study; Month 4 will address Task T2 (sub-domain restriction) and Task T3 (functional estimation) by deriving upper and lower complexity bounds; Month 5 will run T2/T3 experiments to characterize query-complexity scaling laws; Month 6 will synthesize results and complete thesis writing and defense.
+
+5 finding(s): 0 error, 5 warning, 0 info.
+
+11 opener(s) and 43 transition(s) judged.  (tokens: 28299)
+
+==========================================================================</pre></div></details><details class='card s-findings'><summary><span class='name mono'>prose_lint_llm.py</span><span class='desc'>self-editing pass: uncited claims, category errors, buzzwords</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== Prose lint report (LLM self-editing pass, gpt-5-mini-2025-08-07)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+LLM self-editing pass: uncited claims, tense drift, jargon, informal register, category errors, empty buzzwords, and more.
+
+How to read: [ERROR] almost certainly a defect, fix it · [WARN] worth reviewing, sometimes a false positive · [INFO] optional check, usually fine.
+
+[WARN] BROKEN-IDIOM       p1           &quot;essentiallyPas powerful as optimal linear measurements&quot; — Phrase appears garbled; likely intended &#x27;essentially as powerful&#x27;. This is a non-standard/mangled idiom that should be corrected for clarity
+[WARN] VAGUE-QUANTIFIER   p1           &quot;far fewer queries than full recovery&quot; — &#x27;Far fewer&#x27; is a vague comparative quantifier with no numeric scale or bound. State a quantitative factor, asymptotic rate, or justify with 
+[WARN] VAGUE-QUANTIFIER   p1           &quot;When it holds with small δ&quot; — &#x27;Small δ&#x27; is imprecise here. Give a numeric range, asymptotic regime, or a formal definition of what &#x27;small&#x27; means for the isometry constant
+[WARN] UNMOTIVATED-SECTION p1           &quot;4    Core Theoretical Object: Restricted Isometry over F via Point Evaluation&quot; — The section immediately begins with a technical definition (&#x27;Fix a context distribution D...&#x27;) without a brief sentence saying what the sect
+[WARN] JARGON             p1           &quot;point evaluations are informative&quot; — &#x27;Informative&#x27; is used as an evaluative property but is not defined or measured here. Replace with a precise statement (e.g. &#x27;preserve norm u
+[WARN] UNMOTIVATED-SECTION p4           &quot;7    Methodology Theory track.&quot; — The &#x27;Methodology&#x27; heading is followed immediately by terse task bullets without an introductory sentence that states what the section will c
+[WARN] UNMOTIVATED-SECTION p4           &quot;8    Evaluation • Recovery accuracy:&quot; — The &#x27;Evaluation&#x27; heading jumps straight into metric bullets with no opening sentence describing the evaluation goals, scope, or rationale fo
+[WARN] SYNONYM-SWITCH     p4           &quot;compare achieved query counts against the theory; measured m vs predicted complexity; query budget&quot; — The text uses multiple terms (&#x27;achieved query counts&#x27;, &#x27;measured m&#x27;, &#x27;query budget&#x27;) to refer to the same quantity (number of queries). Pick
+[WARN] JARGON             p4           &quot;stress-test under simulated top-k and sampling oracles&quot; — &#x27;stress-test&#x27; is informal ML-speak that obscures the exact evaluation being performed. Replace with a precise description of the experiments
+[WARN] VAGUE-QUANTIFIER   p4           &quot;small metric entropy&quot; — The adjective &#x27;small&#x27; is qualitative here; give a quantitative bound or rate (e.g., entropy ≤ C·log(1/ε) or an explicit covering-number boun
+
+10 finding(s): 0 error, 10 warning, 0 info.
+
+Total tokens used: 12930
+
+==========================================================================</pre></div></details><details class='card s-clean'><summary><span class='name mono'>forward_ref_lint_llm.py</span><span class='desc'>concepts used before they are introduced (LLM)</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>== Forward-reference lint report (LLM judge)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+Paragraphs scanned: 98
+Concepts introduced (cumulative): 45
+Forward references found: 150
+Total tokens used: 111228
+
+== Paragraph 0 (page 1)
+  * text: Compressed Sensing of LLMs
+  * forward-ref: &#x27;Compressed Sensing&#x27;
+  * forward-ref: &#x27;LLMs&#x27;
+
+== Paragraph 1 (page 1)
+  * text: Query-Efficient Recovery of a Black-Box Next-Token Function
+  * forward-ref: &#x27;next-token function&#x27;
+
+== Paragraph 3 (page 1)
+  * text: MSc in Computer Science / Machine Learning, Data Science and Artificial Intelligence 30 ECTS · Supervisor: Prof. A. Jung Department of Computer Science, Aalto University
+  * forward-ref: &#x27;MSc&#x27;
+  * forward-ref: &#x27;ECTS&#x27;
+
+== Paragraph 5 (page 1)
+  * text: We model a language model as a single deterministic nonlinear function
+  * forward-ref: &#x27;language model&#x27;
+
+== Paragraph 6 (page 1)
+  * text: fθ : VL →RV, c 7→z = fθ(c),
+  * forward-ref: &#x27;VL&#x27;
+  * forward-ref: &#x27;RV&#x27;
+  * forward-ref: &#x27;c&#x27;
+  * also introduces here: &#x27;fθ&#x27;, &#x27;z&#x27;
+
+== Paragraph 7 (page 1)
+  * text: mapping a context window c (a token sequence of length up to L) to the logit vector z over the next token, where V is the vocabulary. Auditing a closed LLM can be framed as a funct…
+  * forward-ref: &#x27;closed LLM&#x27;
+  * forward-ref: &#x27;function recovery problem&#x27;
+  * forward-ref: &#x27;compressed-sensing&#x27;
+  * forward-ref: &#x27;m&#x27;
+  * forward-ref: &#x27;evaluation operator&#x27;
+  * forward-ref: &#x27;query designs&#x27;
+  * also introduces here: &#x27;c&#x27;, &#x27;L&#x27;, &#x27;V&#x27;
+
+== Paragraph 8 (page 1)
+  * text: 2 Why Compressed Sensing Applies: the Compressibility Priors
+  * forward-ref: &#x27;Compressed Sensing&#x27;
+  * forward-ref: &#x27;Compressibility Priors&#x27;
+
+== Paragraph 9 (page 1)
+  * text: A generic function VL →RV is unrecoverable from few samples — the domain has size |V|L. Recovery is possible only because fθ is not generic. Four structural facts play the role tha…
+  * forward-ref: &#x27;sparsity&#x27;
+  * forward-ref: &#x27;compressed sensing&#x27;
+  * forward-ref: &#x27;prediction-API model stealing&#x27;
+
+== Paragraph 11 (page 1)
+  * text: and un-embedding WU ∈RV×d, d ≪|V| [5]. Hence range(fθ) lies in a d-dimensional subspace, and since softmax(z + c1) = softmax(z) the next-token distribution identifies z only modulo…
+  * forward-ref: &#x27;un-embedding&#x27;
+  * forward-ref: &#x27;softmax&#x27;
+  * forward-ref: &#x27;next-token distribution&#x27;
+  * forward-ref: &#x27;span{1}&#x27;
+  * forward-ref: &#x27;softmax bottleneck&#x27;
+
+== Paragraph 13 (page 1)
+  * text: (P3) Lipschitz smoothness. On the compact embedding domain (bounded token embeddings plus positional encodings), fθ is a composition of C1 maps and is therefore Lipschitz, with con…
+  * forward-ref: &#x27;Lipschitz smoothness&#x27;
+  * forward-ref: &#x27;C1 maps&#x27;
+  * forward-ref: &#x27;operator norms&#x27;
+  * forward-ref: &#x27;dot-product self-attention&#x27;
+  * forward-ref: &#x27;positional encodings&#x27;
+  * forward-ref: &#x27;local Lipschitz constant&#x27;
+  * also introduces here: &#x27;compact embedding domain&#x27;
+
+== Paragraph 14 (page 1)
+  * text: L · poly(R, ∥W∥) [8, Thm. 3.3] (see also 9). Thus nearby contexts produce nearby logits — the condition under which point evaluations are informative (Section 4).
+  * forward-ref: &#x27;R&#x27;
+  * forward-ref: &#x27;logits&#x27;
+
+== Paragraph 16 (page 2)
+  * text: (P4) Small description complexity. For a bounded-weight, fixed architecture the metric en- tropy of the realizable class grows only polynomially in 1/ε — roughly Hε(F) ≲W log(1/ε) …
+  * forward-ref: &#x27;metric entropy&#x27;
+  * forward-ref: &#x27;Hε(F)&#x27;
+  * forward-ref: &#x27;realizable class&#x27;
+  * forward-ref: &#x27;transformer class&#x27;
+  * forward-ref: &#x27;covering-number bounds&#x27;
+  * forward-ref: &#x27;Kolmogorov–Donoho rate-distortion optimal approximants&#x27;
+  * forward-ref: &#x27;ambient dimension D&#x27;
+  * forward-ref: &#x27;embedding dimension&#x27;
+  * forward-ref: &#x27;context length&#x27;
+  * also introduces here: &#x27;Small description complexity&#x27;
+
+== Paragraph 19 (page 2)
+  * text: Black-box access furnishes an evaluation operator Φ : F →(RV)m, Φ(f) = (f(c1), . . . , f(cm)), instantiated at several realism levels:
+  * forward-ref: &#x27;evaluation operator Φ&#x27;
+  * forward-ref: &#x27;F&#x27;
+  * forward-ref: &#x27;RV&#x27;
+
+== Paragraph 22 (page 2)
+  * text: • Sampled-token oracle: only stochastic draws from softmax(z) — noisy, quantised measure- ments requiring repetition to denoise.
+  * forward-ref: &#x27;softmax&#x27;
+  * also introduces here: &#x27;Sampled-token oracle&#x27;
+
+== Paragraph 23 (page 2)
+  * text: • Adaptive logit-bias oracle: query-time perturbations (Carlini et al. [15]) act as designed measurement vectors that reconstruct individual logit coordinates through a top-k API, …
+  * forward-ref: &#x27;SVD&#x27;
+  * forward-ref: &#x27;subspace probing&#x27;
+  * forward-ref: &#x27;query-time perturbations&#x27;
+  * also introduces here: &#x27;Adaptive logit-bias oracle&#x27;
+
+== Paragraph 24 (page 2)
+  * text: A central practical theme is how these restricted oracles degrade the recovery guarantees of the full-logit case — i.e. how API defenses act as perturbations of the measurement ope…
+  * forward-ref: &#x27;API defenses&#x27;
+
+== Paragraph 25 (page 2)
+  * text: 4 Core Theoretical Object: Restricted Isometry over F via Point Evaluation
+  * forward-ref: &#x27;Restricted Isometry&#x27;
+  * forward-ref: &#x27;F&#x27;
+  * forward-ref: &#x27;Point Evaluation&#x27;
+
+== Paragraph 26 (page 2)
+  * text: Fix a context distribution D and the population seminorm ∥f∥2 = Ec∼D∥f(c)∥2. Draw probe
+  * forward-ref: &#x27;probe&#x27;
+  * also introduces here: &#x27;context distribution D&#x27;, &#x27;population seminorm ∥f∥2 = E_{c∼D}∥f(c)∥2&#x27;
+
+== Paragraph 28 (page 2)
+  * text: m P i ∥f(ci)∥2. The recovery problem is well-posed precisely when the evaluation operator is a restricted isometry over the difference set F −F.
+  * forward-ref: &#x27;recovery problem&#x27;
+  * forward-ref: &#x27;evaluation operator&#x27;
+  * forward-ref: &#x27;restricted isometry&#x27;
+  * forward-ref: &#x27;F&#x27;
+
+== Paragraph 29 (page 2)
+  * text: Condition 1 (Evaluation-RIP over F). There exists δ ∈(0, 1) such that, for all f, g ∈F,
+  * forward-ref: &#x27;F&#x27;
+  * also introduces here: &#x27;Evaluation-RIP&#x27;
+
+== Paragraph 32 (page 2)
+  * text: i=1 ∥f(ci) −g(ci)∥2 ≤(1 + δ) ∥f −g∥2.
+  * forward-ref: &#x27;g&#x27;
+  * forward-ref: &#x27;δ&#x27;
+
+== Paragraph 33 (page 2)
+  * text: Condition 1 says: any two models agreeing on the m probe contexts must be globally close. When it holds with small δ, evaluations at {ci} form a norm-preserving sketch of the entir…
+  * forward-ref: &#x27;Condition 1&#x27;
+  * forward-ref: &#x27;probe contexts&#x27;
+  * forward-ref: &#x27;m&#x27;
+  * forward-ref: &#x27;δ&#x27;
+  * forward-ref: &#x27;norm-preserving sketch&#x27;
+  * forward-ref: &#x27;F&#x27;
+
+== Paragraph 35 (page 3)
+  * text: Sample complexity via metric entropy. The uniform isometry is an empirical-process state- ment; the required m is governed by the metric entropy Hε(F) of the transformer class. Nor…
+  * forward-ref: &#x27;empirical-process&#x27;
+  * forward-ref: &#x27;transformer class&#x27;
+  * forward-ref: &#x27;covering-number bounds&#x27;
+  * forward-ref: &#x27;self-attention&#x27;
+  * forward-ref: &#x27;m&#x27;
+  * forward-ref: &#x27;ε&#x27;
+  * forward-ref: &#x27;δ&#x27;
+  * also introduces here: &#x27;uniform isometry&#x27;, &#x27;Hε(F)&#x27;
+
+== Paragraph 36 (page 3)
+  * text: Well-posedness via smoothness (sampling numbers). Whether point samples suffice — rather than arbitrary linear functionals — is the subject of information-based complexity. Re- cen…
+  * forward-ref: &#x27;sampling numbers&#x27;
+  * forward-ref: &#x27;approximation numbers&#x27;
+  * forward-ref: &#x27;information-based complexity&#x27;
+  * forward-ref: &#x27;Lipschitz prior (P3)&#x27;
+  * forward-ref: &#x27;Condition 1&#x27;
+  * forward-ref: &#x27;empirical-process argument&#x27;
+
+== Paragraph 37 (page 3)
+  * text: Lower bounds via packing. Applying Fano’s inequality to a maximal ε-packing of F converts metric entropy into a minimax lower bound: the achievable accuracy εm is fixed by the entr…
+  * forward-ref: &#x27;Fano&#x27;s inequality&#x27;
+  * forward-ref: &#x27;ε-packing&#x27;
+  * forward-ref: &#x27;entropy-balance&#x27;
+  * forward-ref: &#x27;εm (achievable accuracy)&#x27;
+  * forward-ref: &#x27;minimax lower bound&#x27;
+  * forward-ref: &#x27;query complexity&#x27;
+
+== Paragraph 40 (page 3)
+  * text: Target 1 (Codomain structure). The subspace range(WU) and the hidden dimension d — the latter being identifiable, since WU itself is recoverable only up to an V-irrelevant d×d symm…
+  * forward-ref: &#x27;numerical-rank&#x27;
+  * forward-ref: &#x27;subspace recovery&#x27;
+  * forward-ref: &#x27;SVD&#x27;
+  * forward-ref: &#x27;stacked logit vectors&#x27;
+  * also introduces here: &#x27;Target 1 (Codomain structure)&#x27;, &#x27;hidden dimension d&#x27;, &#x27;V-irrelevant d×d symmetry&#x27;
+
+== Paragraph 41 (page 3)
+  * text: Target 2 (Restriction to a structured sub-domain). fθ|S, where S is a prompt family varying along k ≪Ld axes (e.g. in-context demonstrations of a function class [22]). Recovery is …
+  * forward-ref: &#x27;Hε(F|S)&#x27;
+  * also introduces here: &#x27;Target 2 (Restriction to a structured sub-domain)&#x27;, &#x27;S&#x27;, &#x27;prompt family&#x27;
+
+== Paragraph 42 (page 3)
+  * text: Target 3 (General functionals). P(fθ) — a decision boundary on a sub-domain, the presence of a watermark, a behavioural property. Such a functional is recoverable under a restricte…
+  * forward-ref: &#x27;restricted isometry&#x27;
+  * forward-ref: &#x27;F&#x27;
+  * forward-ref: &#x27;quotient of F&#x27;
+  * also introduces here: &#x27;Target 3 (General functionals)&#x27;, &#x27;P(fθ)&#x27;
+
+== Paragraph 44 (page 3)
+  * text: RQ1. When does the point-evaluation operator satisfy a restricted isometry over the transformer- realizable class F, and how do the four compressibility priors (P1–P4) enter the is…
+  * forward-ref: &#x27;point-evaluation operator&#x27;
+  * forward-ref: &#x27;restricted isometry&#x27;
+  * forward-ref: &#x27;transformer-realizable class F&#x27;
+  * forward-ref: &#x27;isometry constant&#x27;
+  * forward-ref: &#x27;P1–P4&#x27;
+
+== Paragraph 46 (page 4)
+  * text: RQ2. What is the query complexity m for each target in terms of the metric entropy / sampling numbers of the relevant (restricted or quotiented) class, and does it match the packin…
+  * forward-ref: &#x27;query complexity m&#x27;
+  * forward-ref: &#x27;metric entropy&#x27;
+  * forward-ref: &#x27;sampling numbers&#x27;
+  * forward-ref: &#x27;quotiented class&#x27;
+  * forward-ref: &#x27;packing lower bound&#x27;
+
+== Paragraph 47 (page 4)
+  * text: RQ3. How do the restricted oracles of Section 3 — top-k truncation, sampling noise, finite pre- cision, rate limits — degrade the isometry constant, and which defenses provably des…
+  * forward-ref: &#x27;isometry constant&#x27;
+  * forward-ref: &#x27;finite precision&#x27;
+  * forward-ref: &#x27;rate limits&#x27;
+  * forward-ref: &#x27;m&#x27;
+
+== Paragraph 49 (page 4)
+  * text: Theory track. Establish the evaluation-RIP condition for F; import metric-entropy bounds for transformer-type classes and sampling-number results to convert them into query-complex…
+  * forward-ref: &#x27;F&#x27;
+  * forward-ref: &#x27;metric-entropy bounds&#x27;
+  * forward-ref: &#x27;transformer-type classes&#x27;
+  * forward-ref: &#x27;sampling-number results&#x27;
+  * forward-ref: &#x27;query-complexity&#x27;
+  * forward-ref: &#x27;packing lower bounds&#x27;
+  * forward-ref: &#x27;restricted oracles&#x27;
+
+== Paragraph 50 (page 4)
+  * text: Empirical track. On open-weight models where fθ is fully known (Pythia, Qwen, Llama across scales): (i) empirically estimate the evaluation-isometry constant for different probe de…
+  * forward-ref: &#x27;open-weight models&#x27;
+  * forward-ref: &#x27;evaluation-isometry constant&#x27;
+  * forward-ref: &#x27;probe designs&#x27;
+  * forward-ref: &#x27;adaptively chosen contexts&#x27;
+  * forward-ref: &#x27;query-complexity scaling curves&#x27;
+
+== Paragraph 52 (page 4)
+  * text: • Recovery accuracy: subspace/parameter error (T1), function-approximation error on S (T2), functional error (T3).
+  * forward-ref: &#x27;T1&#x27;
+  * forward-ref: &#x27;T2&#x27;
+  * forward-ref: &#x27;T3&#x27;
+
+== Paragraph 54 (page 4)
+  * text: • Isometry diagnostics: empirical δ as a function of probe design and budget.
+  * forward-ref: &#x27;Isometry diagnostics&#x27;
+  * forward-ref: &#x27;empirical δ&#x27;
+  * forward-ref: &#x27;probe design&#x27;
+
+== Paragraph 55 (page 4)
+  * text: • Robustness: degradation across the oracle hierarchy; lower-bound tightness (achieved vs information-theoretic m).
+  * forward-ref: &#x27;oracle hierarchy&#x27;
+  * forward-ref: &#x27;lower-bound tightness&#x27;
+
+== Paragraph 57 (page 4)
+  * text: 1. A single compressed-sensing formalism for black-box LLMs: the model as one nonlinear func- tion, query access as point evaluation, recovery governed by a restricted isometry ove…
+  * forward-ref: &#x27;black-box LLMs&#x27;
+  * also introduces here: &#x27;compressed-sensing formalism&#x27;, &#x27;point evaluation&#x27;
+
+== Paragraph 58 (page 4)
+  * text: 2. Query-complexity upper bounds (via metric entropy and sampling numbers) and matching packing lower bounds for codomain structure, sub-domain restrictions, and functionals.
+  * forward-ref: &#x27;sampling numbers&#x27;
+  * forward-ref: &#x27;packing lower bounds&#x27;
+
+== Paragraph 59 (page 4)
+  * text: 3. A robustness theory relating realistic API oracles to the isometry constant, with provable separations between benign and recovery-destroying defenses.
+  * forward-ref: &#x27;API oracles&#x27;
+  * forward-ref: &#x27;isometry constant&#x27;
+  * forward-ref: &#x27;benign defenses&#x27;
+  * forward-ref: &#x27;recovery-destroying defenses&#x27;
+
+== Paragraph 64 (page 5)
+  * text: • The point-evaluation operator may resist a clean RIP for the full class. Mitigation: smoothness places F in the sampling-numbers regime; where a global RIP is unavailable, restri…
+  * forward-ref: &#x27;sampling-numbers regime&#x27;
+  * forward-ref: &#x27;quotient classes&#x27;
+
+== Paragraph 65 (page 5)
+  * text: • Restricted oracles may block logit access entirely. Mitigation: the open-weight track is indepen- dent of any external API; oracle restrictions are simulated locally with control…
+  * forward-ref: &#x27;Restricted oracles&#x27;
+  * forward-ref: &#x27;open-weight track&#x27;
+  * forward-ref: &#x27;controlled corruption layers&#x27;
+
+== Paragraph 69 (page 5)
+  * text: 1 Formalise the function/measurement model; consolidate metric-entropy and sampling-number tools 2 Evaluation-RIP theory; codomain recovery (T1) + benchmark harness 3 T1 empirical …
+  * forward-ref: &#x27;metric-entropy&#x27;
+  * forward-ref: &#x27;sampling-number&#x27;
+
+== Paragraph 71 (page 5)
+  * text: Linear algebra and high-dimensional probability; prior exposure to compressed sensing or statis- tical learning theory (sample complexity, covering/packing arguments); comfort with…
+  * forward-ref: &#x27;high-dimensional probability&#x27;
+  * forward-ref: &#x27;statistical learning theory&#x27;
+  * forward-ref: &#x27;sample complexity&#x27;
+  * forward-ref: &#x27;covering/packing arguments&#x27;
+  * forward-ref: &#x27;PyTorch&#x27;
+  * forward-ref: &#x27;open-weight LLMs&#x27;
+  * forward-ref: &#x27;metric-entropy&#x27;
+  * forward-ref: &#x27;information-based-complexity&#x27;
+
+
+==========================================================================</pre></div></details><details class='card s-clean'><summary><span class='name mono'>type_consistency_lint_llm.py</span><span class='desc'>formal claims are well-typed (relations over compatible operands)</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>== Type-consistency lint report (LLM, gpt-5-mini-2025-08-07)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+
+  [UNCLEAR] p3  (claims equivalence/inequality among approximation numbers, sampling numbers, and a sharp formula: a_k: scalar vs. sampling numbers g_m: scalar)
+        claim: &quot;Recent results show that whenever the approximation numbers are square-summable (decay rate s &gt; 12 ), the sampling numbers decay at the same polynomial rate, so point evaluations are essentiallyPas powerful as optimal linear measurements [17–19]; the sharp, logarithm-free form gcm ≲ m k≥m a2k is due to Dolbeault et al. [20].&quot;
+        why:   The extracted sentence is garbled: &#x27;s &gt; 12&#x27; is almost certainly a corruption (should be &#x27;s &gt; 1/2&#x27; or similar), &#x27;essentiallyPas&#x27; is garbled, and the displayed sharp form &#x27;gcm ≲ m k≥m a2k&#x27; is unreadable. The operands (approximation numbers a_k and sampling numbers g_m) are present in the ledger, but the numeric inequalities/formula are corrupted and cannot be safely type-checked or reformulated from the text as given.
+        fix:   Replace the corrupted text with the precise statement from the cited work. For example: &quot;If the approximation numbers (a_k) are square-summable (i.e. decay rate s &gt; 1/2), then the sampling numbers satisfy g_m \lesssim (\sum_{k\ge m} a_k^2)^{1/2}, so point evaluations are nearly as powerful as optimal linear measurements.&quot; Cite Dolbeault et al. and/or Krieg &amp; Ullrich for the exact inequality.
+  [UNCLEAR] p2  (approximants / approximation: networks: UNCLEAR (not an explicitly defined ledger symbol) vs. structured function classes: (implicit) set)
+        claim: &quot;networks remain Kolmogorov–Donoho rate-distortion optimal approximants of structured function classes [14].&quot;
+        why:   The sentence uses &#x27;networks&#x27; and &#x27;structured function classes&#x27; without naming which ledger symbols correspond to these terms. The ledger contains F (transformer-realizable class) but does not define a specific symbol &#x27;networks&#x27; or the exact structured class being approximated. The approximation relation requires both operands to be of the same type class; here the operands are underspecified in the thesis text as extracted.
+        fix:   Make operands explicit: e.g. &#x27;Let N_W denote the class of neural networks with W parameters. Then N_W are Kolmogorov–Donoho rate-distortion optimal approximants of the structured function class G in the sense that H_\varepsilon(G) \lesssim W \log(1/\varepsilon).&#x27;. Ensure both &#x27;N_W&#x27; and &#x27;G&#x27; are defined in the ledger as sets (function classes) before asserting the approximation claim.
+  [UNCLEAR] p3  (inequality comparing population and empirical seminorms (RIP): \|f-g\|_2 (population seminorm): function/map vs. (1/m) \sum_{i=1}^m \|f(c_i)-g(c_i)\|_2^2 (empirical average): scalar)
+        claim: &quot;(1 − δ) ∥f − g∥ ≤ 1/m \sum_{i=1}^m ∥f(c_i) − g(c_i)\|_2^2 ≤ (1 + δ) ∥f − g∥2 .&quot; (Condition 1 display as extracted)
+        why:   The extracted display contains inconsistent/garbled notation: the left-hand factor is &#x27;(1-δ) \|f-g\|&#x27; (missing explicit squared/subscript), while the rightmost term is written with a trailing &#x27;2&#x27; (\|f-g\|2). The extraction makes it unclear whether the inequality is meant with squared norms throughout or with plain norms. This ambiguity affects type/range checking (whether the same scalar quantity is compared).
+        fix:   Replace with a consistent, standard RIP display. For example: &#x27;There exists \delta \in (0,1) such that for all f,g \in F, (1-\delta) \|f-g\|_2^2 \le (1/m) \sum_{i=1}^m \|f(c_i)-g(c_i)\|_2^2 \le (1+\delta) \|f-g\|_2^2.&#x27; Ensure the notation \|\cdot\|_2 (population) and the empirical average are explicitly defined and squared consistently.
+
+3 finding(s): 0 FAIL, 0 bridge-loose, 3 unclear.  (tokens: 14536)
+
+==========================================================================</pre></div></details></section><section class='group'><h2>Figures &amp; captions</h2><details class='card s-clean'><summary><span class='name mono'>caption_lint.py</span><span class='desc'>no missing or too-short captions</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>== Caption lint report
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+Checks that every figure and table has a caption that is present and long enough to be informative.
+
+No findings.
+
+==========================================================================</pre></div></details></section><section class='group'><h2>Research questions</h2><details class='card s-findings'><summary><span class='name mono'>research_questions_lint_llm.py</span><span class='desc'>each stated research question is answered and revisited</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== Research-question lint report (LLM, gpt-5-mini-2025-08-07)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+
+[WARN] UNANSWERED          RQ1: When does the point-evaluation operator satisfy a restricted isometry over the transformer-realizable class F, and how do the four compressibility priors (P1–P4) enter the isometry constant? (stated p.4)
+        evidence:  The document is a thesis proposal: it states the goal to &quot;Establish the evaluation-RIP condition for F&quot; and to &quot;import metric-entropy bounds...&quot; (Section 7, Methodology) and lists expected theoretical contributions (Section 9), but provides no proofs, theorems, or numerical estimates of an evaluation-RIP or of how P1–P4 quantitatively affect the isometry constant. No section contains derived RIP bounds or empirical δ measurements.
+        revisited in conclusions: no
+        gap:       No formal theorem, proof, or empirical measurement demonstrating an evaluation-RIP is presented, nor any quantitative derivation linking P1–P4 to the isometry constant.
+        fix:       Prove a precise evaluation-RIP theorem for F (stating m and δ) that explicitly quantifies how P1–P4 enter δ, and validate the bound by estimating δ empirically on open-weight transformer models.
+
+[WARN] UNANSWERED          RQ2: What is the query complexity m for each target in terms of the metric entropy / sampling numbers of the relevant (restricted or quotiented) class, and does it match the packing lower bound? (stated p.4)
+        evidence:  The proposal outlines the plan to derive query-complexity upper bounds via metric entropy and sampling numbers and to prove matching packing lower bounds (Sections 4, 5, and 7), and lists these as expected contributions (Section 9), but contains no derived bounds, no expressions for m in terms of H_ε(F) or sampling numbers, and no proved lower bounds.
+        revisited in conclusions: no
+        gap:       No explicit upper-bound formulas for m, no lower-bound proofs, and no empirical scaling curves to demonstrate whether achievable m matches the packing lower bound are provided.
+        fix:       Derive explicit upper bounds for m in terms of metric entropy / sampling numbers for each target, prove corresponding packing lower bounds, and produce experiments measuring empirical m to compare with the theoretical rates.
+
+[WARN] UNANSWERED          RQ3: How do the restricted oracles of Section 3 — top-k truncation, sampling noise, finite precision, rate limits — degrade the isometry constant, and which defenses provably destroy recoverability versus merely inflating m? (stated p.4)
+        evidence:  The proposal describes analysing restricted oracles as perturbations of the isometry and plans empirical stress-tests under simulated top-k and sampling oracles (Sections 3 and 7), and lists a robustness theory as an expected contribution (Section 9), but contains no perturbation analyses, no bounds on how each oracle affects δ, and no empirical results showing which defenses break recoverability.
+        revisited in conclusions: no
+        gap:       Absence of theoretical perturbation bounds relating each restricted oracle to the isometry constant and lack of empirical tests demonstrating the practical impact of these oracles on recovery.
+        fix:       For each restricted oracle, derive a perturbation bound showing how it changes δ (or required m), and run controlled experiments on open-weight models to identify which defenses make recovery information-theoretically impossible versus merely increasing query cost.
+
+3 research question(s): 0 answered, 3 not fully answered.  (tokens: 7072)
+
+==========================================================================</pre></div></details><details class='card s-findings'><summary><span class='name mono'>rq_quality_lint_llm.py</span><span class='desc'>research questions are well-posed and self-contained</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== Research-scope quality report (LLM, gpt-5-2025-08-07)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+
+Aim: The thesis asks the compressed-sensing question in its purest form: treating fθ as an unknown high-dimensional signal, how much of it can be recovered from m ≪ |V|^L evaluations, under what structural conditions, and with what query designs? [p1] Auditing a closed LLM can be framed as a function recovery problem: Given observed conversations, estimate the underlying function fθ. [p1]
+
+[INFO] ADEQUATE-RQ  RQ1: When does the point-evaluation operator satisfy a restricted isometry over the transformer… (p.3)
+        violates: focused, self-contained
+        Clear, complex, and specific. Slightly double-barreled (existence/conditions for RIP and quantitative dependence of δ). Minor self-containment issue: &#x27;transformer-realizable class F&#x27; is not explicitly defined before p3; F is mentioned (pp2–3) but not formally defined; &#x27;restricted isometry&#x27; and δ are defined on p2 (Condition 1); P1–P4 defined on pp1–2.
+        reformulate: Under a fixed transformer architecture with bounded weights, let F denote the set of next-token functions realizable by that architecture. For probe contexts drawn from a specified distribution, when does the point-evaluation operator satisfy an RIP over F−F, and how do priors P1–P4 quantitatively control the isometry constant δ(m)?
+
+[INFO] ADEQUATE-RQ  RQ2: What is the query complexity m for each target in terms of the metric entropy / sampling n… (p.4)
+        violates: focused, self-contained
+        Clear, measurable, and grounded in identified theory (metric entropy, sampling numbers, packing). Slightly double-barreled (upper bounds and matching lower bounds). Minor self-containment: &#x27;quotiented class&#x27; is mentioned-not-defined before p4 (Target 3 on p3 mentions &#x27;quotient of F&#x27; but gives no definition). &#x27;Targets&#x27; T1–T3 (p3), &#x27;metric entropy&#x27; (p3), &#x27;sampling numbers&#x27; (p3), and &#x27;packing lower bound&#x27; (p3) are introduced earlier.
+        reformulate: For each target T1–T3, define the corresponding restricted or quotient class precisely. What minimal query budget m(ε) achieves error ≤ ε as characterized via the class’s metric entropy or sampling numbers, and do these upper bounds match information-theoretic packing (Fano) lower bounds?
+
+[INFO] ADEQUATE-RQ  RQ3: How do the restricted oracles of Section 3 — top-k truncation, sampling noise, finite prec… (p.4)
+        violates: focused
+        Well-motivated, precise, and researchable; terms and oracles are introduced earlier (pp1–2) and δ is defined (p2). Slightly double-barreled: effect on δ versus classification of defenses by whether RIP/recoverability fails or m increases.
+        reformulate: For the restricted oracles defined in Section 3, quantify their perturbation of the evaluation operator by how they change the RIP constant δ(m) and resulting m(ε), and identify which specific defenses eliminate RIP (no recovery) versus preserve RIP with increased sample complexity.
+
+[WARN] GAP-IDENTIFIED   no explicit research-gap statement found
+[INFO] DELIMITATIONS    satisfied
+[INFO] RQ-ALIGNMENT     satisfied
+[INFO] AIM-COVERAGE     satisfied
+        scope: Explicit research-gap phrasing is not stated; novelty is implied via contributions (p4–5) and contrasts to prior work (pp3–4). Delimitations include: &#x27;There are no separate “attacks,” only different targets&#x27; (p1); analysis assumes a bounded embedding domain (P3: &#x27;The restriction to a bounded domain is essential&#x27;, p1–2); empirical work is limited to open-weight models where fθ is fully known (p3). Alignment: RQ1 maps to Contribution 1 (formalism/RIP); RQ2 to Contribution 2 (upper/lower bounds for targets); RQ3 to Contribution 3 (robustness under restricted oracles). The questions together operationalize the stated aim of quantifying recoverability and query efficiency under structural assumptions.
+
+3 question(s): 0 strong, 3 adequate/weak; 1 warning(s).  (tokens: 11586)
+
+==========================================================================</pre></div></details></section><section class='group'><h2>Method &amp; data</h2><details class='card s-clean'><summary><span class='name mono'>data_split_lint_llm.py</span><span class='desc'>train/validation/test splits are reported per method</span><span class='pill s-clean'>clean</span></summary><div class='body'><pre class='out'>== Data-split lint report (LLM, gpt-5-mini-2025-08-07)
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+
+[INFO] This document is a thesis proposal and does not contain executed experiments or any trained models to evaluate. Evidence: &#x27;Master’s Thesis Proposal&#x27; (page 1) and planned work only: &#x27;Empirical track. On open-weight models ... (i) empirically estimate the evaluation-isometry ... (ii) recover targets T1–T3 ...&#x27; (page 4). No descriptions of actual training, datasets, or data splits are present.
+
+0 method(s); 0 FAIL, 0 UNCLEAR, 0 PASS.  (tokens: 6306)
+
+==========================================================================</pre></div></details></section><section class='group'><h2>Disclosure</h2><details class='card s-findings'><summary><span class='name mono'>ai_disclosure_lint.py</span><span class='desc'>use of AI tools is disclosed with versions</span><span class='pill s-findings'>findings</span></summary><div class='body'><pre class='out'>== AI disclosure lint report
+File: ../../topics/compressed-sensing-llms/proposal.pdf
+Checks for a dedicated AI-use statement naming the tool and version, and that it is not placed inside the Methods chapter.
+
+How to read: [ERROR] almost certainly a defect, fix it · [WARN] worth reviewing, sometimes a false positive · [INFO] optional check, usually fine.
+
+[WARN] NO-AI-STATEMENT    -            no AI-use disclosure statement found — ml-theses.org requires a dedicated statement (also if no AI tools were used, say so).
+
+1 finding(s): 0 error, 1 warning, 0 info.
+
+==========================================================================</pre></div></details></section><footer><p>proposal.pdf · run_all_linters.py --profile thesis --llm --bib</p><p>Generated by the <a href='https://ml-theses.org/assets/linters/'>ml-theses.org linter suite</a>. Figure rules: Rougier, Droettboom &amp; Bourne, &ldquo;Ten Simple Rules for Better Figures&rdquo;, PLOS Comput Biol 2014.</p></footer></div><script>
+(function(){
+  var btns=document.querySelectorAll('.controls button');
+  function apply(mode){
+    document.querySelectorAll('.card').forEach(function(c){
+      var attn=!c.classList.contains('s-clean');
+      c.style.display=(mode==='attn'&&!attn)?'none':'';
+    });
+    document.querySelectorAll('.group').forEach(function(g){
+      var any=[].some.call(g.querySelectorAll('.card'),function(c){
+        return c.style.display!=='none';});
+      g.style.display=any?'':'none';
+    });
+    btns.forEach(function(b){b.setAttribute('aria-pressed',
+      b.dataset.mode===mode);});
+  }
+  btns.forEach(function(b){b.addEventListener('click',function(){
+    apply(b.dataset.mode);});});
+})();
+</script></body></html>

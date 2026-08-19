@@ -62,6 +62,14 @@ SYNONYM_CLUSTERS: List[Tuple[str, List[str]]] = [
 
 
 def count_variants(text: str, variant: str) -> int:
+    """Count whole-word occurrences of one synonym variant in `text`.
+
+    Case-insensitive; a space in the variant matches any run of
+    whitespace or a non-breaking `~`, and a trailing `s`/`es` is folded
+    in so singular and plural forms count together.
+    """
+    # Word boundaries reject `[\w-]` on either side so 'sample' does not
+    # match inside 'resampled'; `(?:e?s)?` is the naive plural fold.
     pat = re.escape(variant).replace(r"\ ", r"[\s~]+")
     return len(re.findall(rf"(?<![\w-]){pat}(?:e?s)?(?![\w-])", text, re.I))
 
@@ -88,6 +96,8 @@ def main(argv: List[str] = None) -> int:
     full_text = "\n".join(t for _, t in body)
 
     def first_loc(variant: str) -> str:
+        """Location tag ('p12' or 'file:line') of the variant's first
+        occurrence in the body, or '-' if it never appears."""
         pat = re.escape(variant).replace(r"\ ", r"[\s~]+")
         rex = re.compile(rf"(?<![\w-]){pat}(?:e?s)?(?![\w-])", re.I)
         for where, t in body:

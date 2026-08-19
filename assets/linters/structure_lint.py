@@ -35,6 +35,9 @@ Unit = Tuple[int, Optional[str], str, str]
 # PDF: bookmark outline, then text-scan fallback
 # ---------------------------------------------------------------------------
 def outline_units(path: str) -> List[Unit]:
+    """Read sectioning units from the PDF's embedded bookmark outline via
+    PyMuPDF. Splits a leading number (``2``, ``2.1``, ``A.1``) off each
+    title. Returns [] if PyMuPDF is missing or the PDF has no outline."""
     try:
         import fitz
     except ImportError:
@@ -93,6 +96,12 @@ TEX_LEVELS = {"chapter": 0, "section": 1, "subsection": 2, "subsubsection": 3}
 
 
 def tex_units(paths: List[str]) -> List[Unit]:
+    """Collect sectioning units from LaTeX sources in source order.
+
+    Skips starred (unnumbered) variants. Levels are normalised so the
+    shallowest command present becomes level 1, letting article-class
+    sources (no ``\\chapter``) share the same lone-child check as reports.
+    """
     units: List[Unit] = []
     for f in tex_files(paths):
         try:

@@ -16,10 +16,12 @@ cannot actually inspect:
     A code is "defined" when it appears with a gloss ("R1 (Fault
     Containment)", "R1: ...", "R1 — ...") or a defining keyword
     ("criterion R1", "R1 denotes ..."). A mere range mention "(R1–R5)" does
-    NOT define its members. To stay precise the check only considers a
-    prefix a scheme when >= 3 distinct members occur (so R-squared "R2",
-    the "L1"/"L2" norms, or an "F1" score alone are not mistaken for a
-    scheme), then reports the members used but never defined.
+    NOT define its members. To stay precise the check only treats a prefix
+    as a scheme when it has >= 2 distinct members AND either sits near a
+    scheme keyword (criterion / requirement / research question / ...) or
+    reaches --min-members distinct members (default 3) on its own — so
+    R-squared "R2", the "L1"/"L2" norms, or an "F1" score alone are not
+    mistaken for a scheme. It then reports the members used but never defined.
     -> [WARN] UNDEFINED-CODE per scheme with undefined members.
 
 These are exactly the pointers that slip past the other linters: the
@@ -117,6 +119,8 @@ def main(argv: List[str] = None) -> int:
             in_references = True
         if in_references:
             continue
+        # A paragraph mentioning "criteria", "requirements", etc. makes any
+        # codes in it candidate members of a real label scheme.
         near_keyword = bool(SCHEME_KEYWORDS.search(para))
         for code in DEF_RE.findall(para):
             # findall returns tuples (one group per alternative); take the hit
@@ -124,6 +128,8 @@ def main(argv: List[str] = None) -> int:
                                     else (code,)) if g), "")
             if hit:
                 defined.add(hit)
+        # Record every code occurrence (and its location) for the family
+        # tally below; skip known notation tokens and large-numbered ids.
         for m in CODE_RE.finditer(para):
             full, digits = m.group(0), int(m.group(2))
             if full in STOP_CODES or digits > 20:   # schemes are small-numbered

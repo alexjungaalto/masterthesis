@@ -71,6 +71,9 @@ STOPWORDS = {"the", "a", "an", "of", "for", "and", "with", "via", "using",
 
 
 def title_tokens(s):
+    """Return the distinctive lowercase words of a title: punctuation is
+    dropped and stopwords plus very short tokens (<=2 chars) are removed.
+    Used to build loose search queries and to compare titles word-by-word."""
     return [t for t in re.sub(r"[^a-z0-9]+", " ", s.lower()).split()
             if t not in STOPWORDS and len(t) > 2]
 
@@ -80,6 +83,10 @@ def title_tokens(s):
 # --------------------------------------------------------------------------
 
 def parse_bib(path: Path):
+    """Parse a BibTeX file into a list of normalised entry dicts, each with
+    keys id/title/authors/venue/year/arxiv/url/raw. Uses a lightweight
+    regex/brace-matching parser (no third-party dependency); comment,
+    string and preamble blocks are skipped."""
     text = path.read_text(encoding="utf-8", errors="replace")
     entries = []
     for m in re.finditer(r"@(\w+)\s*\{\s*([^,\s]+)\s*,", text):
@@ -111,6 +118,8 @@ def parse_bib(path: Path):
 
 
 def _find_arxiv(text):
+    """Return the first arXiv identifier found in text (inline, abs/, or
+    DOI form), or "" if none is present."""
     m = ARXIV_ID_RE.search(text)
     return m.group(1) if m else ""
 
@@ -120,6 +129,10 @@ def _find_arxiv(text):
 # --------------------------------------------------------------------------
 
 def extract_pdf_text(path: Path):
+    """Return the full text of a PDF. Prefers the `pdftotext -layout`
+    command-line tool (preserves column/right-margin layout, which the
+    equation and reference parsing relies on); falls back to PyMuPDF
+    (`fitz`) if pdftotext is not installed or fails."""
     try:
         out = subprocess.run(["pdftotext", "-layout", str(path), "-"],
                              capture_output=True, check=True)
@@ -131,6 +144,11 @@ def extract_pdf_text(path: Path):
 
 
 def parse_pdf_references(path: Path):
+    """Locate the reference list of a compiled manuscript and parse it into
+    entry dicts (same shape as parse_bib). The last 'References'/'Bibliography'
+    heading is taken as the start, an appendix heading (if any) as the end,
+    and the body is split on line-leading "[n]" markers. Exits the program
+    if no reference section can be found."""
     text = extract_pdf_text(path)
     # find the References heading closest to the end
     heads = [m.start() for m in
@@ -153,6 +171,11 @@ def parse_pdf_references(path: Path):
 
 
 def _parse_ieee_entry(num, body):
+    """Parse one IEEE-style reference string into an entry dict. The quoted
+    span is taken as the title, text before it as the author list, and text
+    after it as venue/year/identifiers. Returns the entry dict keyed by
+    id "[num]"."""
+    # Title is the first straight- or curly-quoted span.
     title_m = re.search(r"[\"“]\s*(.+?)[,.]?\s*[\"”]", body)
     title = title_m.group(1).strip() if title_m else ""
     authors_part = body[:title_m.start()].strip(" ,") if title_m else ""
@@ -169,6 +192,8 @@ def _parse_ieee_entry(num, body):
     body_for_year = URL_RE.sub("", ARXIV_ID_RE.sub("", body))
     year_m = list(YEAR_RE.finditer(body_for_year))
     year = year_m[-1].group(0) if year_m else ""
+    # Venue is the text up to the first "vol./no./pp./p." field; the year is
+    # stripped out so it does not become part of the venue name.
     venue = re.split(r",\s*(?:vol|no|pp|p)\.\s", rest)[0]
     venue = YEAR_RE.sub("", venue).strip(" ,.")
     return {
@@ -183,12 +208,16 @@ def _parse_ieee_entry(num, body):
 # --------------------------------------------------------------------------
 
 def _get(url, timeout=20):
+    """Perform an HTTP GET (with the linter's User-Agent) and return the
+    decoded response body as text."""
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read().decode("utf-8", errors="replace")
 
 
 def query_crossref(title):
+    """Search Crossref by bibliographic title and return up to five candidate
+    records as normalised dicts (title/authors/venue/year/type/doi/source)."""
     q = urllib.parse.quote(title)
     data = json.loads(_get(
         f"https://api.crossref.org/works?query.bibliographic={q}&rows=5"))
@@ -207,6 +236,9 @@ def query_crossref(title):
 
 
 def query_dblp(title):
+    """Search DBLP by title and return up to five candidate records as
+    normalised dicts (same shape as query_crossref). Authors are reduced to
+    last names, with DBLP's numeric homonym suffixes stripped."""
     q = urllib.parse.quote(title)
     data = json.loads(_get(f"https://dblp.org/search/publ/api?q={q}&format=json&h=5"))
     hits = data.get("result", {}).get("hits", {}).get("hit", []) or []
@@ -251,6 +283,9 @@ def query_s2(arxiv_id):
 
 
 def query_arxiv(arxiv_id):
+    """Fetch the arXiv record for a given identifier and return it as a
+    one-element list of normalised dicts (venue fixed to "arXiv"), or an
+    empty list if the id does not resolve to a real entry."""
     xml = _get(f"https://export.arxiv.org/api/query?id_list={arxiv_id}&max_results=1")
     ns = {"a": "http://www.w3.org/2005/Atom"}
     root = ET.fromstring(xml)
@@ -305,6 +340,9 @@ def sim(a, b):
 
 
 def last_names(authors):
+    """Reduce a list of author strings to normalised surnames for comparison.
+    Braces/dots are stripped, all-uppercase initials are dropped, and stray
+    "et"/"al" tokens left over from "et al." are removed."""
     out = []
     for a in authors:
         a = re.sub(r"[{}\\.]", "", a).strip()
@@ -315,6 +353,12 @@ def last_names(authors):
 
 
 def check_entry(entry, cache, delay, log):
+    """Verify a single bibliography entry against the online databases and
+    return a list of (severity, code, message) findings. Web/dataset and
+    incomplete entries short-circuit early; otherwise the entry's title (and
+    arXiv id, if any) is queried, the best match is chosen, and title,
+    authors, year, and venue/preprint status are each compared. Returns a
+    single ("OK", ...) finding when nothing is wrong."""
     findings = []  # (severity, code, message)
     title, venue = entry["title"], entry["venue"]
 
@@ -381,6 +425,9 @@ def check_entry(entry, cache, delay, log):
         overlap = sum(1 for c in cited if any(name_eq(c, f) for f in found))
         first_ok = not found or not cited or name_eq(cited[0], found[0]) \
             or any(name_eq(cited[0], f) for f in found)
+        # Flag a mismatch only if fewer than half the cited surnames appear in
+        # the record, or the (usually reliable) first author is absent -- this
+        # tolerates "et al." truncation and author-order noise.
         if overlap < max(1, len(cited) // 2) or not first_ok:
             findings.append(("ERROR", "AUTHOR-MISMATCH",
                              f"cited authors {cited[:6]} vs matched "

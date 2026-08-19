@@ -67,6 +67,11 @@ def strip_comments(line: str) -> str:
 
 
 def classify(env, label):
+    """Map a numbered entity to a kind (equation/figure/table/...).
+
+    Prefers the enclosing environment name; when that is inconclusive,
+    falls back to the ``prefix:`` part of the label (e.g. ``fig:flow``).
+    """
     base = env.rstrip("*") if env else ""
     if base in NUMBERED_MATH_ENVS:
         return "equation"
@@ -81,6 +86,15 @@ def classify(env, label):
 
 
 def scan_tex_file(path: Path):
+    """Scan one .tex file for numbered entities and references.
+
+    Returns ``(entities, refs, unlabeled_math, unlabeled_floats)``:
+    ``entities`` are ``\\label`` sites (with kind/env/location), ``refs`` is
+    the set of all referenced label names, and the two ``unlabeled_*`` lists
+    hold numbered math / captioned floats that carry no ``\\label``. A stack
+    tracks nested numbered environments so a label/caption is attributed to
+    the innermost one.
+    """
     lines = [strip_comments(l) for l in
              path.read_text(encoding="utf-8", errors="replace").splitlines()]
     entities, refs = [], set()
@@ -134,6 +148,13 @@ def scan_tex_file(path: Path):
 
 
 def run_tex_mode(files, all_labels):
+    """Run the LaTeX-mode check across all .tex files and print findings.
+
+    Aggregates every file's entities/refs, then reports each labeled entity
+    whose label is never referenced (restricted to float/equation kinds
+    unless ``all_labels``), plus the UNLABELED-EQ / UNLABELED-FLOAT cases.
+    Returns the total number of findings.
+    """
     all_entities, all_refs = [], set()
     all_umath, all_ufloat = [], []
     for f in files:
@@ -198,6 +219,11 @@ NUM_TOKEN_RE = re.compile(NUM)
 
 
 def extract_pdf_pages(path: Path):
+    """Return the PDF's text as a list of per-page strings.
+
+    Uses ``pdftotext -layout`` (poppler) when available, otherwise falls
+    back to PyMuPDF; exits with an error if neither can be used.
+    """
     try:
         out = subprocess.run(["pdftotext", "-layout", str(path), "-"],
                              capture_output=True, check=True)
@@ -224,12 +250,22 @@ def expand_number_list(list_str):
 
 
 def sort_key(entity):
+    """Order a ``(kind, number)`` entity numerically, not lexically, so that
+    e.g. "Figure 2" sorts before "Figure 10" and "A.1" groups by prefix."""
     kind, num = entity
     m = re.match(r"([A-Z]*)(\d+)(?:\.(\d+))?", num)
     return (kind, m.group(1), int(m.group(2)), int(m.group(3) or 0))
 
 
 def scan_pdf(path: Path, bare_eq_refs=True):
+    """Run the PDF-mode check on one file and print findings.
+
+    Collects entity *definitions* (caption lines, right-aligned equation
+    numbers) and *mentions* (float/equation references, optionally bare
+    ``(N)``) from the extracted text, then reports each defined entity whose
+    number is never mentioned outside its own definition. Returns the number
+    of findings. See the module docstring for the detection heuristics.
+    """
     pages = extract_pdf_pages(path)
     defs = {}      # (kind, number) -> first page of definition
     mentions = set()  # (kind, number)

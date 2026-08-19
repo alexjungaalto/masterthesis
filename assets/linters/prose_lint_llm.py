@@ -142,6 +142,9 @@ SYSTEM_PROMPT = (
 
 
 def parse_page_range(s: str) -> Optional[Tuple[int, int]]:
+    """Parse a --pages value into an ordered (lo, hi) tuple. Accepts a
+    range 'lo-hi' (normalised so lo <= hi) or a single page 'n' (returns
+    (n, n)); raises ValueError on anything else."""
     m = re.match(r"^\s*(\d+)\s*-\s*(\d+)\s*$", s or "")
     if m:
         lo, hi = int(m.group(1)), int(m.group(2))
@@ -230,6 +233,8 @@ def main(argv: List[str] = None) -> int:
           f"checks={','.join(checks)}", file=sys.stderr)
 
     def judge(chunk: Tuple[str, str]):
+        # Send one chunk to the model and return its parsed findings; run
+        # concurrently over all chunks by the executor below.
         where, text = chunk
         user = (f"requested categories: {json.dumps(checks)}\n\n"
                 f"text chunk (starts at {where}):\n\"\"\"\n{text}\n\"\"\"")

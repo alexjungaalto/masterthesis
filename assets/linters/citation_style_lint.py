@@ -44,6 +44,8 @@ AUTHOR_YEAR_CITE_RE = re.compile(r"\([A-Z][a-zA-Z]+(?:\s+(?:and|&)\s+[A-Z][a-zA-
 
 
 def lint_tex(paths: List[str], rep: Report) -> None:
+    """Check LaTeX sources for a non-IEEE (or missing) bibliography style
+    and for natbib \\citet/\\citep textual citations."""
     files = tex_files(paths)
     style_found = False
     for f in files:
@@ -99,6 +101,11 @@ def find_reference_entries(lines) -> Tuple[List[Tuple[str, str]], bool]:
 
 
 def lint_pdf(path: str, rep: Report) -> None:
+    """Check a compiled thesis PDF: that the reference list is numbered,
+    that each entry roughly matches the IEEE 'A. B. Surname, "Title," ...'
+    pattern, and that in-text citations are numeric rather than author-year.
+    The per-entry checks skip web/online sources and books/theses/standards,
+    whose IEEE forms legitimately differ (no quoted title, no initials)."""
     lines, _ = load_lines([path])
     entries, found_section = find_reference_entries(lines)
     if not found_section:
@@ -145,18 +152,30 @@ def lint_pdf(path: str, rep: Report) -> None:
 
 
 def main(argv: List[str] = None) -> int:
+    """Dispatch to PDF or LaTeX checking based on the input, unless a
+    non-IEEE --venue is given (in which case all checks are skipped, since
+    only the IEEE style is encoded here). A single .pdf argument runs the
+    compiled-thesis checks; anything else is treated as LaTeX sources."""
     ap = argparse.ArgumentParser(
         description="IEEE reference-format linter.")
     ap.add_argument("inputs", nargs="+", help="thesis.pdf or .tex files/dirs")
     ap.add_argument("--profile", choices=["thesis", "paper"], default="thesis",
-                    help="Manuscript type; 'paper' defaults --venue to ieee.")
+                    help="Manuscript type. 'thesis' pins the venue to IEEE "
+                         "(the ml-theses.org rule) regardless of --venue; "
+                         "'paper' honours --venue.")
     ap.add_argument("--venue", default=None,
-                    help="Citation venue style (default: ieee). Non-ieee "
-                         "venues (acm|neurips|...) skip the IEEE-specific "
-                         "checks, which would otherwise mis-flag them.")
+                    help="Citation venue style (default: ieee; used only with "
+                         "--profile paper). Non-ieee venues (acm|neurips|...) "
+                         "skip the IEEE-specific checks, which would otherwise "
+                         "mis-flag them.")
     args = ap.parse_args(argv)
 
-    venue = (args.venue or "ieee").lower()
+    # A thesis follows the ml-theses.org rubric (IEEE), so its venue is fixed
+    # even if --venue is passed; a paper's venue is configurable.
+    if args.profile == "thesis":
+        venue = "ieee"
+    else:
+        venue = (args.venue or "ieee").lower()
     rep = Report(f"Citation style lint report ({venue.upper()})",
                  " ".join(args.inputs),
                  about="Checks that the reference list and in-text citations "

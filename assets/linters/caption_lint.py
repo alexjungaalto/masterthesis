@@ -32,10 +32,18 @@ PDF_CAPTION_RE = re.compile(
 
 
 def word_count(text: str) -> int:
+    """Count alphabetic words, ignoring bare numbers and punctuation so
+    a caption's informativeness is judged on actual words."""
     return len(re.findall(r"[A-Za-z][A-Za-z\-']*", text))
 
 
 def lint_pdf(path: str, rep: Report, min_words: int, list_all: bool) -> None:
+    """Find captions in extracted PDF text and flag short ones.
+
+    Detects lines opening with 'Figure/Table/... N:' , rejoins the
+    following wrapped lines back into the caption, and adds a
+    SHORT-CAPTION finding (or a CAPTION inventory line under --list).
+    """
     lines, _ = load_lines([path])
     i = 0
     while i < len(lines):
@@ -68,6 +76,12 @@ def lint_pdf(path: str, rep: Report, min_words: int, list_all: bool) -> None:
 
 def lint_tex(paths: List[str], rep: Report, min_words: int,
              list_all: bool) -> None:
+    """Scan LaTeX figure/table environments for caption problems.
+
+    Reports NO-CAPTION for an environment with no `\\caption`, else
+    brace-matches the caption argument, strips its markup, and flags it
+    as SHORT-CAPTION when too few words remain.
+    """
     for f in tex_files(paths):
         text = f.read_text(encoding="utf-8", errors="replace")
         for m in re.finditer(

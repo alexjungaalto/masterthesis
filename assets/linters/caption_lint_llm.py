@@ -61,6 +61,11 @@ PDF_CAPTION_RE = re.compile(
 
 
 def pdf_captions(path: str) -> List[Caption]:
+    """Extract (location, label, text) captions from a PDF's text.
+
+    Matches lines starting 'Figure/Table/... N:' and rejoins up to five
+    following non-blank lines so a wrapped caption is reassembled.
+    """
     lines, _ = load_lines([path])
     caps: List[Caption] = []
     i = 0
@@ -86,6 +91,12 @@ def pdf_captions(path: str) -> List[Caption]:
 
 
 def tex_captions(paths: List[str]) -> List[Caption]:
+    """Extract (file:line, env, caption text) from LaTeX sources.
+
+    Reads each figure/table environment, brace-matches its `\\caption`
+    argument, and normalizes whitespace. Environments without a caption
+    are skipped here (caption_lint.py reports those as NO-CAPTION).
+    """
     caps: List[Caption] = []
     for f in tex_files(paths):
         text = f.read_text(encoding="utf-8", errors="replace")
@@ -149,6 +160,8 @@ SYSTEM_PROMPT = (
 
 def build_batches(caps: List[Caption], per_batch: int
                   ) -> List[List[Tuple[int, Caption]]]:
+    """Split captions into fixed-size batches, each item paired with its
+    global index so findings map back to the right caption."""
     numbered = list(enumerate(caps))
     return [numbered[i:i + per_batch]
             for i in range(0, len(numbered), per_batch)]

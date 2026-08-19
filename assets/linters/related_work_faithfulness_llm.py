@@ -118,6 +118,8 @@ OMIT_PROMPT = (
 
 
 def _get(url: str, timeout: int = 20) -> str:
+    """HTTP GET `url` with the polite User-Agent and return the decoded body
+    (UTF-8, undecodable bytes replaced)."""
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read().decode("utf-8", errors="replace")
@@ -157,6 +159,9 @@ def lit_search(title: str, n: int = 1) -> List[dict]:
 
 
 def _rebuild_text(pdf: str, max_chars: int):
+    """Extract the PDF as one string with '[[page N]]' page markers,
+    truncated to max_chars. Returns (text, truncated); returns (None, False)
+    when the input is not a PDF, which the caller treats as a usage error."""
     lines, mode = load_lines([pdf])
     if mode != "pdf":
         return None, False
@@ -184,10 +189,10 @@ def main(argv: List[str] = None) -> int:
     ap.add_argument("--discover", choices=["internal", "external"],
                     default="internal",
                     help="internal: check only the draft's own cited works "
-                         "(default; sends only cited titles to Semantic "
-                         "Scholar). external: additionally query Semantic "
-                         "Scholar with the draft's own title to flag missed "
-                         "related work (still title-only).")
+                         "(default; sends only cited titles to OpenAlex). "
+                         "external: additionally query OpenAlex with the "
+                         "draft's own title to flag missed related work "
+                         "(still title-only).")
     ap.add_argument("--base-url", default=BASE_URL, help=BASE_URL_HELP)
     ap.add_argument("--api-key", default=None, help=API_KEY_HELP)
     ap.add_argument("--model", default=None,
@@ -238,7 +243,6 @@ def main(argv: List[str] = None) -> int:
         hits = lit_search(r.get("title", ""), n=1)
         ab_hit = hits[0] if hits else {}
         r["_abstract"] = (ab_hit.get("abstract") or "").strip()
-        r["_fetched_title"] = (abd := ab_hit.get("title")) and abd.strip() or ""
 
     # --- Stage 3: verify faithfulness (relations + abstracts -> LLM) ---
     payload = [{

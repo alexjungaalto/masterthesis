@@ -74,7 +74,9 @@ def main(argv: List[str] = None) -> int:
                        "the Methods chapter.")
 
     if mode == "tex":
-        # surface \section{...} arguments as heading lines
+        # Surface \chapter/\section/\subsection titles as their own lines so
+        # the heading regexes (which expect a plain-text heading) can match
+        # them; the original source line is kept too.
         expanded = []
         for w, t in lines:
             m = re.search(r"\\(?:chapter|section|subsection)\*?\{([^}]*)\}", t)
@@ -83,24 +85,40 @@ def main(argv: List[str] = None) -> int:
             expanded.append((w, t))
         lines = expanded
 
-    # Locate a dedicated statement heading.
+    # Locate a dedicated statement heading. `has_dedicated` records whether a
+    # real disclosure heading exists (vs. only a fallback sentence found
+    # later); IN-METHODS is about the *absence* of a dedicated statement.
     stmt_idx: Optional[int] = None
     for i, (w, t) in enumerate(lines):
         if HEADING_RE.match(t.strip()):
             stmt_idx = i
             break
+    has_dedicated = stmt_idx is not None
 
-    # Track whether AI mentions occur inside a Methods chapter.
-    methods_ai_loc: Optional[str] = None
+    # Record which line indices fall inside a Methods/Methodology chapter, and
+    # whether AI use is discussed there. A new chapter/section heading ends the
+    # region — a numbered heading in extracted PDF text, or a \chapter/\section
+    # macro in LaTeX (needed because unnumbered titles like "Use of AI" are not
+    # matched by ANY_HEADING_RE and would otherwise never close the region).
+    methods_indices = set()
+    methods_has_ai = False
     in_methods = False
-    for w, t in lines:
+    for i, (w, t) in enumerate(lines):
         s = t.strip()
+        tex_head = re.match(r"\\(?:chapter|section|subsection)\*?\{([^}]*)\}", s)
+        if tex_head:
+            in_methods = bool(METHODS_HEADING_RE.match(tex_head.group(1).strip()))
+            continue  # the macro line itself is not body text
         if METHODS_HEADING_RE.match(s):
             in_methods = True
-        elif ANY_HEADING_RE.match(s) and not METHODS_HEADING_RE.match(s):
+            continue
+        if ANY_HEADING_RE.match(s):
             in_methods = False
-        if in_methods and (AI_MENTION_RE.search(s) or TOOL_RE.search(s)):
-            methods_ai_loc = methods_ai_loc or w
+            continue
+        if in_methods:
+            methods_indices.add(i)
+            if AI_MENTION_RE.search(s) or TOOL_RE.search(s):
+                methods_has_ai = True
 
     if stmt_idx is None:
         # fall back: any paragraph that reads like a disclosure sentence
@@ -129,7 +147,9 @@ def main(argv: List[str] = None) -> int:
         rep.add("INFO", "STATEMENT-FOUND", lines[stmt_idx][0],
                 f"dedicated statement: \"{lines[stmt_idx][1].strip()}\"")
 
-    # Inspect the statement body (up to the next heading / 60 lines).
+    # Inspect the statement body (up to the next heading / 60 lines) for a
+    # named tool and a version/model identifier. An explicit "no AI tools
+    # were used" disclosure is accepted and not flagged for a missing tool.
     body_lines = []
     for w, t in lines[stmt_idx + 1: stmt_idx + 61]:
         if ANY_HEADING_RE.match(t.strip()) and t.strip():
@@ -152,15 +172,15 @@ def main(argv: List[str] = None) -> int:
                     f"tool(s) named ({', '.join(sorted(set(tools))[:4])}) "
                     f"but no version/model identifier recorded.")
 
-    if methods_ai_loc and stmt_idx is not None:
-        stmt_in_methods = False
-        # if the statement itself is the Methods mention, warn
-        if lines[stmt_idx][0] == methods_ai_loc:
-            stmt_in_methods = True
-        if stmt_in_methods:
-            rep.add("WARN", "IN-METHODS", methods_ai_loc,
-                    "AI-use discussion sits in the Methods chapter — the "
-                    "disclosure belongs in a dedicated statement.")
+    # IN-METHODS: there is no dedicated disclosure heading, and the only
+    # AI-use discussion we found (the fallback sentence) sits inside a Methods
+    # chapter — where the guideline says the disclosure does not belong. If a
+    # dedicated statement exists (has_dedicated), extra methodological AI
+    # mentions in Methods are legitimate and do not trip this.
+    if not has_dedicated and methods_has_ai and stmt_idx in methods_indices:
+        rep.add("WARN", "IN-METHODS", lines[stmt_idx][0],
+                "AI-use discussion sits in the Methods chapter — the "
+                "disclosure belongs in a dedicated statement.")
 
     print(rep.render())
     return rep.exit_code()

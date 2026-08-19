@@ -69,6 +69,13 @@ def next_text(lines, idx) -> str:
 
 
 def main(argv: List[str] = None) -> int:
+    """Run the three checks and print a report.
+
+    Passes, in order: (1) flag over-long inline math and eqnarray; (2)
+    collect equation labels and flag those cited with \\ref instead of
+    \\eqref; (3) walk each display equation and check its trailing
+    punctuation against the sentence that follows.
+    """
     ap = argparse.ArgumentParser(
         description="Math typesetting linter (LaTeX sources).")
     ap.add_argument("inputs", nargs="+", help=".tex files or directories")
@@ -96,6 +103,9 @@ def main(argv: List[str] = None) -> int:
                     "obsolete eqnarray environment — use align/equation.")
 
     # --- equation labels referenced with \ref instead of \eqref -----------
+    # Track math-environment nesting depth so only \label{}s sitting inside a
+    # numbered math environment (depth > 0) are recorded as equation labels;
+    # labels on figures/tables/sections are ignored.
     eq_labels = set()
     depth = 0
     for fname, lno, text in lines:

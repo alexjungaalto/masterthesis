@@ -1,7 +1,19 @@
 #!/usr/bin/env python3
-"""Shared helpers for the thesis linters: load a manuscript (.pdf, .tex, or a
-directory of .tex files) as a list of (location, line) pairs, plus small text
-utilities. Location is "p<page>" for PDFs and "<file>:<lineno>" for LaTeX."""
+"""Shared helpers used by every non-LLM thesis linter in this directory.
+
+A linter never opens the manuscript itself: it calls ``load_lines(paths)``
+here, which turns a PDF, a single ``.tex`` file, or a whole directory of
+``.tex`` files into one uniform list of ``(location, text)`` pairs. Each
+pair says WHERE a line came from and WHAT it says, so a finding can point
+the student at an exact spot. The location is ``"p<page>"`` for PDF input
+and ``"<file>:<lineno>"`` for LaTeX input; ``load_lines`` also reports which
+mode it chose so a linter can enable checks that only make sense for one.
+
+On top of that this module provides the small pieces most linters reuse:
+splitting text into sentences and paragraphs, spotting table-of-contents
+lines, and the ``Report`` class that collects findings and prints them all
+in the same severity-tagged format. Keeping these here means the individual
+linters stay short and their output stays consistent."""
 
 import re
 import subprocess
@@ -16,6 +28,9 @@ Line = Tuple[str, str]  # (location, text)
 # PDF extraction (pdftotext -layout preferred, PyMuPDF fallback)
 # ---------------------------------------------------------------------------
 def pdf_lines(path: str) -> List[Line]:
+    """Extract a PDF as ``(page-location, line)`` pairs. Tries the
+    ``pdftotext -layout`` command first and falls back to PyMuPDF (``fitz``);
+    exits the process if neither is available."""
     text = None
     try:
         out = subprocess.run(["pdftotext", "-layout", path, "-"],
@@ -54,6 +69,8 @@ def pdf_lines(path: str) -> List[Line]:
 # LaTeX loading (comments stripped, one entry per source line)
 # ---------------------------------------------------------------------------
 def strip_tex_comments(line: str) -> str:
+    """Drop the LaTeX comment (everything from an unescaped ``%`` on), while
+    keeping an escaped ``\\%`` that is a literal percent sign in the text."""
     out, i = [], 0
     while i < len(line):
         c = line[i]
@@ -69,6 +86,9 @@ def strip_tex_comments(line: str) -> str:
 
 
 def tex_files(paths: List[str]) -> List[Path]:
+    """Expand the given paths to the ``.tex`` files to lint: directories are
+    searched recursively (sorted), plain ``.tex`` paths are kept as-is, and
+    anything else is ignored."""
     files: List[Path] = []
     for p in paths:
         pth = Path(p)
@@ -80,6 +100,9 @@ def tex_files(paths: List[str]) -> List[Path]:
 
 
 def tex_lines(paths: List[str]) -> List[Line]:
+    """Read every ``.tex`` file (see ``tex_files``) into ``(file:lineno,
+    text)`` pairs with comments stripped. Exits the process on a read
+    error."""
     lines: List[Line] = []
     for f in tex_files(paths):
         try:
@@ -110,6 +133,9 @@ DOT_LEADER_RE = re.compile(r"\.{4,}\s*\d+\s*$")   # table-of-contents lines
 
 
 def is_toc_line(text: str) -> bool:
+    """True if the line looks like a table-of-contents entry: a run of dot
+    leaders followed by a page number (linters skip these to avoid flagging
+    the auto-generated TOC)."""
     return bool(DOT_LEADER_RE.search(text))
 
 
@@ -165,6 +191,9 @@ class Report:
         self.findings.append((severity, code, where, message))
 
     def render(self) -> str:
+        """Return the full report as one string: header, findings sorted by
+        severity (ERROR first) then location, and a closing count line. With
+        no findings it returns just the header plus a 'No findings.' line."""
         out = [f"== {self.title}", f"File: {self.source}"]
         if self.about:
             out.append(self.about)
@@ -185,4 +214,6 @@ class Report:
         return "\n".join(out)
 
     def exit_code(self) -> int:
+        """Process exit status: 1 if any ERROR or WARN was recorded, else 0
+        (INFO-only findings still exit 0)."""
         return 1 if any(f[0] in ("ERROR", "WARN") for f in self.findings) else 0

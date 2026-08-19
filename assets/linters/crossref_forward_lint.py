@@ -180,6 +180,9 @@ BIBLINE_RE = re.compile(r"^\[\s*\d+\s*\]")
 # Extraction
 # ---------------------------------------------------------------------------
 def _is_toc_or_bib(line_text: str) -> bool:
+    """True if a line should never be scanned for references: blank lines,
+    table-of-contents entries (trailing dot leaders + page number), and
+    bibliography items (leading "[n]")."""
     t = line_text.strip()
     if not t:
         return True
@@ -191,7 +194,12 @@ def _is_toc_or_bib(line_text: str) -> bool:
 
 
 def extract_lines(path: str, page_range: Optional[Tuple[int, int]]) -> Tuple[List[Line], float]:
-    """Return (lines, median_page_height)."""
+    """Extract every text line of the PDF (optionally restricted to a page
+    range) as Line objects carrying page/position/bold info, and tag each
+    line's caption_kind/caption_num if it is a float caption, an equation
+    tag near the right margin, or a section heading. Returns
+    (lines, median_page_height); the page height is used later to convert
+    within-page vertical offsets into fractional pages."""
     if fitz is None:
         raise RuntimeError("PyMuPDF (fitz) is required. pip install pymupdf")
     doc = fitz.open(path)
@@ -267,6 +275,8 @@ def extract_lines(path: str, page_range: Optional[Tuple[int, int]]) -> Tuple[Lis
 
 
 def _caption_for(line: Line) -> Tuple[Optional[str], Optional[str]]:
+    """Return (kind, number) if the line starts with a float caption
+    (e.g. "Figure 5", "Table 2"), else (None, None)."""
     for kind, pat in CAPTION_PATTERNS:
         m = pat.match(line.text)
         if m:
@@ -275,7 +285,9 @@ def _caption_for(line: Line) -> Tuple[Optional[str], Optional[str]]:
 
 
 def _section_heading_for(line: Line) -> Tuple[Optional[str], Optional[str]]:
-    # A short, bold line beginning with a section number like "5.1 Foo".
+    """Return ("section", number) if the line looks like a section heading,
+    else (None, None). Heuristic: a short, bold line beginning with a dotted
+    section number like "5.1 Foo"."""
     if not line.is_bold:
         return None, None
     if len(line.text) > 120:
@@ -317,6 +329,11 @@ def collect_references(
     defs: Dict[Tuple[str, str], Definition],
     skip_bare_eqs: bool = False,
 ) -> List[Reference]:
+    """Scan all non-caption, non-TOC/bibliography lines for cross-reference
+    mentions (Figure/Table/Eq./Section/... plus bare "(N)" equation refs)
+    and return them as Reference objects. skip_kinds suppresses whole float
+    kinds; bare "(N)" refs are kept only when they match a registered
+    equation tag (and never when skip_bare_eqs is set)."""
     refs: List[Reference] = []
     for ln in lines:
         # Skip caption/anchor lines themselves (their leading "Figure 5" is
@@ -356,6 +373,8 @@ def collect_references(
 
 
 def _snippet(text: str, m: re.Match, width: int = 90) -> str:
+    """Return a short context window (about `width` chars) around the match,
+    ellipsised at either end when truncated, for display in the report."""
     start = max(0, m.start() - width // 2)
     end = min(len(text), m.end() + width // 2)
     snip = text[start:end].replace("\n", " ")
@@ -384,15 +403,12 @@ def analyze(
         if d is None:
             unresolved.append(r)
             continue
-        # Forward if definition is strictly below the reference in reading order.
+        # Forward if definition is strictly below the reference in reading
+        # order. The tuple guard already excludes backward/same-position
+        # definitions, so `distance` below is always > 0.
         if (d.page, d.y) <= (r.page, r.y):
             continue  # backward or same line -> not a forward ref
         distance = (d.page - r.page) + (d.y - r.y) / page_height
-        if distance <= 0:
-            continue
-        is_forward = distance > 0
-        if not is_forward:
-            continue
         if not any_forward and distance <= threshold:
             continue
         dedup_key = (r.kind, r.num, r.page, round(r.y))
@@ -522,6 +538,9 @@ def render_json(findings: List[Finding], unresolved: List[Reference],
 # CLI
 # ---------------------------------------------------------------------------
 def parse_page_range(s: str) -> Optional[Tuple[int, int]]:
+    """Parse a --pages value into an inclusive (lo, hi) tuple. Accepts
+    "1-120" (order-insensitive) or a single page "5"; returns None for an
+    empty string and raises ValueError on anything else."""
     if not s:
         return None
     m = re.match(r"^\s*(\d+)\s*-\s*(\d+)\s*$", s)

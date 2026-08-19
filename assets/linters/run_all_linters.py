@@ -13,10 +13,13 @@ Usage:
   python3 run_all_linters.py main.tex chapters/          # LaTeX sources
   python3 run_all_linters.py paper.pdf --profile paper --llm   # conf/journal paper
   python3 run_all_linters.py thesis.pdf --dashboard      # + HTML report, opened
+  python3 run_all_linters.py thesis.pdf --llm \
+      --base-url http://localhost:8080/v1 --model my-model   # local LLM endpoint
 Exit status: 0 if every linter passed, 1 otherwise.
 """
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -72,6 +75,9 @@ BIB = [("bibliography_linter.py", True, False, BOTH, False)]
 
 
 def main(argv=None) -> int:
+    """Parse the CLI, run each applicable linter as a subprocess, print its
+    report plus a final per-linter summary, and optionally build the HTML
+    dashboard. Returns the worst status (0 clean, 1 any findings/error)."""
     ap = argparse.ArgumentParser(description="Run the full linter suite.")
     ap.add_argument("inputs", nargs="+", help="thesis.pdf or .tex files/dirs")
     ap.add_argument("--profile", choices=[THESIS, PAPER], default=THESIS,
@@ -80,6 +86,17 @@ def main(argv=None) -> int:
                          "draft; skips thesis-only checks, adapts the rest).")
     ap.add_argument("--llm", action="store_true",
                     help="Also run the LLM linters (Aalto AI API).")
+    ap.add_argument("--base-url", default=None, metavar="URL",
+                    help="Send the LLM linters to this OpenAI-style endpoint "
+                         "instead of the Aalto AI API (e.g. a local "
+                         "http://localhost:8080/v1 server). Applies to every "
+                         "LLM linter in the run.")
+    ap.add_argument("--model", default=None, metavar="NAME",
+                    help="Chat/completions model the LLM linters use (default: "
+                         "per-endpoint default in aalto_llm.py).")
+    ap.add_argument("--vision-model", default=None, metavar="NAME",
+                    help="Vision model for figure_lint_llm.py (default: "
+                         "per-endpoint default in aalto_llm.py).")
     ap.add_argument("--bib", action="store_true",
                     help="Also run the bibliography existence check "
                          "(network queries to Crossref/arXiv/DBLP).")
@@ -93,6 +110,19 @@ def main(argv=None) -> int:
                     help="With --dashboard, write the HTML but do not open a "
                          "browser (for headless/CI runs).")
     args = ap.parse_args(argv)
+
+    # The endpoint/model overrides are forwarded to the LLM linters through the
+    # environment: each subprocess inherits this process's env, and every
+    # *_llm linter reads these variables via aalto_llm.py. Setting them here is
+    # uniform across the suite regardless of which CLI flags a given linter
+    # exposes. A flag, when passed, wins over a pre-existing env var; omit it
+    # and any env var the user already exported still stands.
+    for flag, var in (("base_url", "LLM_BASE_URL"),
+                      ("model", "LLM_MODEL"),
+                      ("vision_model", "LLM_VISION_MODEL")):
+        val = getattr(args, flag)
+        if val:
+            os.environ[var] = val
 
     want_dashboard = args.dashboard or bool(args.dashboard_out)
 

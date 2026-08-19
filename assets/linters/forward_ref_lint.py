@@ -285,6 +285,8 @@ STOPWORDS |= ORDINARY_WORDS
 
 
 def _normalise_term(term: str) -> str:
+    """Canonicalise a term for registry keys: strip surrounding
+    punctuation/whitespace, collapse inner spaces, and lower-case it."""
     t = term.strip().strip(".,;:()\"'").strip()
     t = re.sub(r"\s+", " ", t)
     return t.lower()
@@ -373,6 +375,8 @@ def _term_word_regex(term: str) -> re.Pattern:
 
 
 def _snippet_around(text: str, match: re.Match, width: int = 80) -> str:
+    """Return a short context window of `text` centred on `match`, with
+    ellipses marking where it was truncated, for display in the report."""
     start = max(0, match.start() - width // 2)
     end = min(len(text), match.end() + width // 2)
     snip = text[start:end].replace("\n", " ")
@@ -387,6 +391,11 @@ def find_forward_references(
     min_term_len: int,
     min_term_words: int,
 ) -> List[Finding]:
+    """Scan every paragraph for mentions of registered concepts and return a
+    Finding for each concept used in a paragraph that precedes the one where
+    the concept is introduced. `min_term_len`/`min_term_words` filter out
+    short or single-word terms to cut noise; each concept is reported at most
+    once per paragraph."""
     findings: List[Finding] = []
 
     # Precompile term regexes, filtering noisy single common words.
@@ -435,6 +444,9 @@ def render_report(
     path: str,
     markdown: bool,
 ) -> str:
+    """Build the human-readable report string (text or markdown) summarising
+    the scan and listing each forward reference by the page where the term is
+    used and the page where it is first defined."""
     lines: List[str] = []
     h = "##" if markdown else "=="
     bullet = "- " if markdown else "  * "
@@ -485,6 +497,9 @@ def render_report(
 # CLI
 # ---------------------------------------------------------------------------
 def parse_page_range(s: str) -> Optional[Tuple[int, int]]:
+    """Parse a --pages value ('1-120' or a single '5') into an inclusive
+    (lo, hi) 1-based page tuple, or None if empty; raises ValueError on a
+    malformed value."""
     if not s:
         return None
     m = re.match(r"^\s*(\d+)\s*-\s*(\d+)\s*$", s)

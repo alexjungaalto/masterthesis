@@ -132,6 +132,9 @@ def _is_boilerplate(text: str) -> bool:
 
 
 def extract_paragraphs(path: str, page_range: Optional[Tuple[int, int]]) -> List[Paragraph]:
+    """Extract text blocks from the PDF (via PyMuPDF) as an ordered list of
+    Paragraph objects, one per text block, dropping empty/boilerplate lines
+    and optionally restricting to `page_range`."""
     if fitz is None:
         raise RuntimeError("PyMuPDF (fitz) is required for extraction. pip install pymupdf")
     doc = fitz.open(path)
@@ -198,6 +201,9 @@ SYSTEM_PROMPT = (
 
 
 def _build_user_prompt(introduced: List[str], para: Paragraph) -> str:
+    """Format the per-paragraph user message: the already-introduced concept
+    list plus this paragraph's metadata and text, for the single-paragraph
+    judging path."""
     intro_json = json.dumps(introduced, ensure_ascii=False)
     return (
         f"index: {para.index}\n"
@@ -218,6 +224,9 @@ def judge_paragraph(
     timeout: float = 60.0,
     max_retries: int = 4,
 ) -> ParaResult:
+    """Ask the LLM to judge a single paragraph, returning its parsed
+    ParaResult (introduced + forward_refs). Retries with exponential backoff
+    on any error and raises RuntimeError once `max_retries` is exhausted."""
     user = _build_user_prompt(introduced, para)
     last_err: Optional[Exception] = None
     backoff = 1.5
@@ -286,6 +295,8 @@ BATCH_SYSTEM_PROMPT = (
 
 
 def _build_batch_user_prompt(introduced: List[str], paras: List[Paragraph]) -> str:
+    """Format the batch user message: the introduced-set plus an ordered
+    JSON array of the paragraphs to judge in one LLM call."""
     intro_json = json.dumps(introduced, ensure_ascii=False)
     items = [{"index": p.index, "page": p.page, "text": p.text} for p in paras]
     return (
@@ -411,6 +422,9 @@ def _write_cache(cache_path: str, results: List[ParaResult]) -> None:
 # Cache (resume) — one JSONL line per paragraph result
 # ---------------------------------------------------------------------------
 def load_cache(cache_path: str) -> Dict[int, ParaResult]:
+    """Read the JSONL cache file (if any) and return a mapping of paragraph
+    index -> ParaResult, so a --resume run can skip already-judged
+    paragraphs. Malformed lines are silently skipped."""
     cache: Dict[int, ParaResult] = {}
     if not os.path.exists(cache_path):
         return cache
@@ -437,6 +451,8 @@ def load_cache(cache_path: str) -> Dict[int, ParaResult]:
 
 
 def save_cache_line(cache_path: str, pr: ParaResult) -> None:
+    """Append one paragraph result as a JSON line to the cache file, so
+    partial progress survives an interrupted run."""
     with open(cache_path, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(asdict(pr), ensure_ascii=False) + "\n")
 
@@ -597,6 +613,9 @@ def render_report(
     markdown: bool,
     list_concepts: bool,
 ) -> str:
+    """Build the human-readable report (text or markdown) summarising the
+    LLM judgements: counts plus, per flagged paragraph, a text preview and
+    its forward-referenced terms; total token usage is also reported."""
     h = "##" if markdown else "=="
     bullet = "- " if markdown else "  * "
     lines: List[str] = []
@@ -648,6 +667,9 @@ def render_report(
 # CLI
 # ---------------------------------------------------------------------------
 def parse_page_range(s: str) -> Optional[Tuple[int, int]]:
+    """Parse a --pages value ('1-120' or a single '5') into an inclusive
+    (lo, hi) 1-based page tuple, or None if empty; raises ValueError on a
+    malformed value."""
     if not s:
         return None
     m = re.match(r"^\s*(\d+)\s*-\s*(\d+)\s*$", s)

@@ -92,6 +92,10 @@ GLYPH = {"ok": "✓", "weak": "~", "bad": "✗", "na": "·", "?": "?"}
 
 
 class Figure:
+    """One located figure: its number, the page it sits on, its caption
+    text, the page region (``fitz.Rect``) to render, and the effective dpi
+    of any embedded rasters (used by the resolution heuristic)."""
+
     def __init__(self, number, page_no, caption, rect, raster_dpis):
         self.number = number
         self.page_no = page_no          # 1-based
@@ -116,6 +120,11 @@ def body_font_size(doc) -> float:
 
 
 def find_figures(doc) -> List[Figure]:
+    """Locate every captioned figure in the PDF. For each caption matching
+    ``CAPTION_RE`` it estimates the figure's region from the images/vector
+    drawings sitting above the caption (falling back to the whitespace
+    between the previous text block and the caption) and returns one
+    ``Figure`` per caption."""
     figs: List[Figure] = []
     for pno in range(len(doc)):
         page = doc[pno]

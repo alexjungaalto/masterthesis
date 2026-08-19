@@ -153,6 +153,9 @@ FAIL_CODES = {"TYPE-MISMATCH", "RANGE", "DIMENSION"}
 
 
 def _rules_block() -> str:
+    """Render RELATION_RULES as an indented text block for the user prompt,
+    so each of the model's type judgements is anchored to an explicit stated
+    rule rather than to taste."""
     lines = ["relation type rules:"]
     for rel, rule in RELATION_RULES:
         lines.append(f"  - {rel}: {rule}")

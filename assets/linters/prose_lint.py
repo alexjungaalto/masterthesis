@@ -55,6 +55,9 @@ DEFAULT_VAGUE = [
     "much better", "much worse", "much faster", "much slower",
 ]
 
+# A vague quantifier is excused when the same sentence carries any of these:
+# a digit/percentage (HAS_NUMBER_RE), a citation ([n] or \cite, CITATION_RE),
+# or an explicit statistical-significance claim (STAT_SIG_RE).
 HAS_NUMBER_RE = re.compile(r"\d|%|\\%")
 CITATION_RE = re.compile(r"\[\d+(?:,\s*\d+)*\]|\\cite[pt]?\*?\{")
 STAT_SIG_RE = re.compile(r"statistically\s+significant|p\s*[<=>]", re.I)
@@ -82,6 +85,8 @@ JARGON_RE = re.compile(
     r"(?:and\s+(?:fast(?:est)?|smooth(?:est)?|(?:most\s+)?stable)\s+)?"
     r"convergence)\b", re.I)
 
+# Forward-looking cue phrases: "as we will see", "we will discuss ... later",
+# "will be defined in ...", "more on this later", "later in this chapter".
 FORWARD_CUE_RE = re.compile(
     r"\b(as\s+(?:we\s+(?:will|shall)\s+see|will\s+be\s+(?:seen|shown|"
     r"discussed|explained|described))|"

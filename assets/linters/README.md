@@ -1,21 +1,49 @@
 # Thesis linters
 
-Command-line linters that check MSc thesis manuscripts (PDF or LaTeX
-sources) against the writing instructions of
-[ml-theses.org](https://ml-theses.org) — the thesis guide for students
-supervised by Alex Jung at Aalto University. Pass `--profile paper` to lint
-an IEEE/ACM-style conference or journal draft instead of a thesis (see
-[Profiles](#profiles-thesis-vs-research-paper) below).
+## New here? Start with this
 
-All scripts are run with `python3 <script> ...` and print a findings
-report; exit status is `0` when clean, `1` when findings exist, and `2` on
-usage errors, so they can be scripted.
+A **linter** is a small program that reads your writing and points out
+likely problems — the way a spell-checker underlines misspellings, but for
+the things that matter in a thesis: undefined acronyms, figures nobody
+refers to, vague claims, references that don't check out, and so on. This
+folder holds about thirty such linters, one per kind of problem. You run
+them on your **compiled thesis PDF** (or your LaTeX source), and each one
+prints a list of things to look at.
+
+Two things to know before you start:
+
+- **The findings are suggestions, not a grade.** A linter flags what
+  *might* be wrong so you can decide. Some flags are false alarms — that's
+  expected. Nothing here is submitted or seen by anyone but you unless you
+  share it.
+- **You don't need to understand every linter to benefit.** Run the whole
+  set with one command (below), skim the report, fix what's clearly right,
+  and ignore the rest. Come back to the [detailed reference](#the-linters)
+  when you want to know exactly what a specific check does.
+
+**What you need:** your thesis as a PDF, [Python 3](https://www.python.org/)
+installed, and a terminal. The [Quick start](#quick-start) gets you a first
+report in about two minutes. The rest of the page is reference material you
+can read as questions come up.
+
+These linters check MSc thesis manuscripts against the writing instructions
+of [ml-theses.org](https://ml-theses.org) — the thesis guide for students
+supervised by Alex Jung at Aalto University. (Writing a conference or
+journal paper instead of a thesis? Add `--profile paper` — see
+[Profiles](#profiles-thesis-vs-research-paper).)
+
+Every script is run as `python3 <script> ...` and prints a **findings
+report**. The exit status is `0` when the manuscript is clean, `1` when
+there are findings, and `2` on a usage error (bad arguments, missing file),
+so you can also wire the linters into scripts or CI.
 
 > **Prefer a visual report?** Add `--dashboard` to the runner —
 > `python3 run_all_linters.py thesis.pdf --dashboard` runs the whole suite
 > and opens a self-contained HTML dashboard in your browser (summary band,
 > one card per linter, the figure × ten-rules matrix). See
-> [Basic usage](#basic-usage).
+> [Basic usage](#basic-usage), or
+> **[view a live example dashboard](https://ml-theses.org/assets/linters/demo_dashboard.html)**
+> (a real run of this suite on a sample document).
 
 ## Quick start
 
@@ -29,7 +57,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install pymupdf                       # some PDF linters need it
 
 # 3. fast heuristic pass (no LLM, no network) over a compiled PDF
-python3 run_all_linters.py thesis.pdf
+python3 run_all_linters.py thesis.pdf         # replace thesis.pdf with your file
 
 # 4. optional: add the LLM + bibliography linters
 export AALTO_API_KEY=...                   # key from the Aalto API dev portal
@@ -39,10 +67,26 @@ python3 run_all_linters.py thesis.pdf --llm --bib
 python3 run_all_linters.py thesis.pdf --dashboard
 ```
 
-Linting a conference/journal draft instead of a thesis? Add
-`--profile paper` (see [Profiles](#profiles-thesis-vs-research-paper)).
-The rest of this page documents each linter, the data-handling rules for
-the LLM linters, and how every ml-theses.org instruction maps to a check.
+A few terms in those commands, in plain language:
+
+- **Compiled PDF** — the finished PDF you get when you build your LaTeX
+  project (or export from Word/Overleaf). Point the linters at *that* file,
+  named however you like; `thesis.pdf` above is just a placeholder.
+- **Fast / heuristic pass (step 3)** — the linters that use only simple
+  text rules. No internet, no API key, nothing leaves your computer. Start
+  here.
+- **LLM linters (step 4)** — extra checks powered by a **large language
+  model** (the same kind of AI as ChatGPT). They are more insightful but
+  need an API key and send your text to a language-model service; see
+  [Data handling](#data-handling) for where that text goes and how to keep
+  it private. `--bib` turns on the reference checker, which looks each
+  citation up online.
+- **Dashboard (step 5)** — the same results as a web page instead of
+  terminal text (see [Basic usage](#basic-usage)).
+
+Once you have a report, [Basic usage](#basic-usage) explains how to read a
+finding line (severity, code, location, evidence). Everything below that is
+reference — dip into it as questions come up.
 
 ## Getting the scripts
 
@@ -73,6 +117,12 @@ every linter, so grab both when you download a single script.
 
 ## Setup
 
+This is the one-time install. The first line makes a **virtual environment**
+(`venv`) — a private, throwaway Python sandbox for this project, so
+installing packages here can't disturb the rest of your system. The second
+line installs the one package most PDF linters need. The third is only for
+the AI-powered linters.
+
 ```sh
 # one-time setup — the venv sidesteps pip's PEP 668
 # "externally managed environment" refusal on Homebrew/Debian Python
@@ -86,18 +136,33 @@ If you skip the venv and plain `pip install pymupdf` is refused with an
 `pip3 install --user --break-system-packages pymupdf` instead — this works
 on e.g. Aalto's JupyterHub.
 
-Linters whose "Needs" column below is empty read PDFs with `pdftotext`
-(poppler: `brew install poppler` / `apt install poppler-utils`) or PyMuPDF,
-whichever is available; the ones marked **PyMuPDF** need that package —
-most exit with status 2 and an install hint without it.
+Linters whose "Needs" column below is empty read PDFs with either of two
+PDF-to-text tools — `pdftotext` (from the *poppler* package:
+`brew install poppler` / `apt install poppler-utils`) or PyMuPDF —
+whichever is available. The ones marked **PyMuPDF** in the table need that
+specific package; without it they exit with status 2 and print an install
+hint, so you'll know.
 
 The `*_llm` linters call the
 **[Aalto AI API](https://www.aalto.fi/en/services/ai-services)** by
 default (`$AALTO_API_KEY` — sign up for a key on the
 [Aalto API developer portal](https://ai-apidev.aalto.fi/); Aalto
-network/VPN only — see `aalto_llm.py`; `--base-url` switches to the
-Aalto LLM Gateway, a local on-device server, or any OpenAI-style
-endpoint such as OpenRouter).
+network/VPN only — see `aalto_llm.py`). To send them somewhere else —
+the Aalto LLM Gateway, a local on-device server, or any OpenAI-style
+endpoint such as OpenRouter — override the endpoint and model either way:
+
+- **On the command line**, with `--base-url` (and optionally `--model` /
+  `--vision-model`). This works on a single script *and* on the whole
+  suite:
+  ```sh
+  python3 prose_lint_llm.py thesis.pdf --base-url http://localhost:8080/v1
+  python3 run_all_linters.py thesis.pdf --llm --base-url http://localhost:8080/v1
+  ```
+- **Via environment variables** — export `LLM_BASE_URL` (and
+  `LLM_MODEL` / `LLM_VISION_MODEL`) once and every linter, run singly or
+  through `run_all_linters.py`, picks them up. A flag, when given, wins
+  over the matching env var.
+
 The exact model names on offer (GPT-5 family, e.g.
 `gpt-5-mini-2025-08-07`) are listed on the
 [Aalto AI APIs | Aalto University](https://www.aalto.fi/en/services/ai-apis-in-aalto)
@@ -120,9 +185,11 @@ draft is *unpublished material*, so keep it on an Aalto-hosted gateway:
   [responsible use of AI in research](https://www.aalto.fi/en/services/responsible-use-of-artificial-intelligence-in-the-research-process)
   pages — they, not this README, are the source of truth.
 - **A local on-device model is also compliant — and the most private.**
-  Point `--base-url` at a server running on your own machine (e.g.
+  Point the linters at a server running on your own machine (e.g.
   `mlx_lm.server` on Apple Silicon, or Ollama — both expose an
-  OpenAI-style `/v1/chat/completions` API); the manuscript never leaves
+  OpenAI-style `/v1/chat/completions` API) with `--base-url` (or the
+  `LLM_BASE_URL` env var) — see [Setup](#setup); either works on a single
+  script or the whole suite. The manuscript never leaves
   the device, so no network, VPN, or key is needed. The client
   recognises `localhost` / `127.0.0.1` as a trusted endpoint and prints
   no warning. Use a capable model for quality on par with the gateway —
@@ -167,15 +234,23 @@ File: thesis.pdf
 [WARN] USED-BEFORE-EXPANSION p9  'CNN' used on p9 but expanded only on p17.
 ```
 
-Each finding line has four parts: a **severity** (`[ERROR]` almost
-certainly a defect, fix it; `[WARN]` worth reviewing, occasionally a
-false positive; `[INFO]` a low-priority heads-up — usually fine, but may
-ask you to eyeball something, e.g. confirm a pronoun's antecedent), a stable
-**finding code** (the codes are listed per linter in the tables below),
-the **location** (page `pNN` for PDF input, `file:line` for LaTeX
-input), and the **evidence** — what was found and why it is flagged. A
-clean run prints no finding lines and exits `0`; findings exit `1`;
-missing input or dependencies exit `2`.
+Read a finding line left to right — it has four parts. Taking the first
+line above, `[WARN] NEVER-EXPANDED  p12  'INT4' used 11 time(s)...`:
+
+1. **Severity** — how much to worry:
+   - `[ERROR]` — almost certainly a defect; fix it.
+   - `[WARN]` — worth reviewing; occasionally a false alarm.
+   - `[INFO]` — a low-priority heads-up; usually fine, but may ask you to
+     eyeball something (e.g. confirm what a pronoun refers to).
+2. **Finding code** (`NEVER-EXPANDED`) — a short, stable name for this kind
+   of problem. Every code is listed, per linter, in the tables further down,
+   so you can look up what it means.
+3. **Location** (`p12`) — where in the manuscript: a page number `pNN` for a
+   PDF, or `file:line` when you lint LaTeX sources.
+4. **Evidence** — what was found and why it was flagged, in plain words.
+
+A clean run prints no finding lines and exits with status `0`; a run with
+findings exits `1`; a missing file or missing dependency exits `2`.
 
 Run everything at once:
 
@@ -187,7 +262,11 @@ python3 run_all_linters.py thesis.pdf --llm --bib  # + LLM + bibliography
 `run_all_linters.py` prints each linter's report followed by a one-line
 per-linter summary (`clean` / `findings` / `error`).
 
-For a visual report instead of scrolling console text, add `--dashboard`:
+For a visual report instead of scrolling console text, add `--dashboard`.
+Want to see what it looks like first?
+**[Open the live example dashboard](https://ml-theses.org/assets/linters/demo_dashboard.html)**
+— a real `--llm --bib` run of this suite on a sample document, rendered
+exactly as the command below would render your own.
 
 ```sh
 python3 run_all_linters.py thesis.pdf --dashboard          # fast suite
@@ -212,7 +291,8 @@ journal paper are the same object — an ML manuscript — and ~14 of the
 linters (prose, acronym, terminology, math, captions, figures, flow,
 forward-references, citations, unreferenced entities, type-consistency)
 apply verbatim to either. Pass `--profile paper` to lint an IEEE/ACM-style
-paper draft instead:
+paper draft instead (IEEE and ACM are the two main computer-science
+publishers, and their formatting rules are the norm for CS papers):
 
 ```sh
 python3 run_all_linters.py paper.pdf --profile paper --llm
@@ -225,7 +305,8 @@ adapts the suite in three ways:
   a disclosure statement) and `thesis_checklist_llm.py`.
 - **Swapped in**: `paper_checklist_llm.py` — the reviewer-facing content
   checklist (contributions, novelty positioning, claims-supported,
-  reproducibility, limitations, venue-gated ethics; see below).
+  reproducibility, limitations, and — only for venues that require it — an
+  ethics statement; "venue" means the conference or journal you submit to).
 - **Adapted in place** (these five take a `--profile` flag of their own, so
   they behave the same run standalone):
 
@@ -345,6 +426,13 @@ linter can check them:
 The closest proxy: run the suite before every revision round.
 
 ## The linters
+
+The full catalogue, one row per linter. **Input** is the file type it
+accepts (`.pdf` for a compiled PDF, `.tex` for LaTeX source, `.bib` for a
+bibliography file). **Needs** is any extra requirement beyond plain Python:
+*network* (internet access), *PyMuPDF* (the `pip install pymupdf` package),
+or *Aalto AI API* (an LLM linter — needs `AALTO_API_KEY`); a dash means no
+extras. A short prose note on each linter follows the table.
 
 | Script | Checks | Input | Needs |
 |---|---|---|---|

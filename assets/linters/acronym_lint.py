@@ -54,6 +54,12 @@ MATH_RE = re.compile(r"\$[^$]*\$|\\\[[^\]]*\\\]|\\\(.*?\\\)")
 
 
 def clean_line(text: str, mode: str) -> str:
+    """Strip noise that would create phantom acronyms before scanning.
+
+    In LaTeX mode: drop reference/label macros, inline math, and any
+    remaining `\\command` tokens. In PDF mode: drop `[12]`-style numeric
+    citations. Removed spans become a space so word boundaries survive.
+    """
     if mode == "tex":
         text = TEX_STRIP_RE.sub(" ", text)
         text = MATH_RE.sub(" ", text)
@@ -64,6 +70,8 @@ def clean_line(text: str, mode: str) -> str:
 
 
 def is_heading_or_caption(text: str) -> bool:
+    """True if the line starts like a caption or structural heading
+    (Figure/Table/Algorithm/Listing/Chapter/Appendix)."""
     t = text.strip()
     return bool(re.match(r"^(Figure|Fig\.|Table|Tab\.|Algorithm|Listing|"
                          r"Chapter|Appendix)\b", t))
@@ -106,6 +114,11 @@ def main(argv: List[str] = None) -> int:
         if re.match(r"^(References|Bibliography)\s*$", t, re.I):
             in_references = True
         if in_references:
+            continue
+        # Caption/heading lines (e.g. "Figure 3: ...") float out of reading
+        # order, so an acronym's first appearance there is not a reliable
+        # "first use" — skip them, as the module docstring promises.
+        if is_heading_or_caption(raw):
             continue
         text = clean_line(raw, mode)
         seq += 1
