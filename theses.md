@@ -6,15 +6,15 @@
 
 | # | Author | Title | Industry | Recording |
 |---|--------|-------|----------|-----------|
-| 1 | K. Aalto-Setälä | TBA |  |  |
-| 2 | V. Ruuskanen | TBA |  |  |
-| 3 | A. Tolvanen | TBA |  |  |
-| 4 | H. Do | TBA |  |  |
-| 5 | Y. He | TBA |  |  |
+| 1 | K. Aalto-Setälä | Optimizing client selection to enhance performance in Federated Learning |  |  |
+| 2 | V. Ruuskanen | Secure management and control of enterprise AI agents in enterprise environments |  |  |
+| 3 | A. Tolvanen | Cross-Domain Embedding Preservation in Biological Foundation Model Distillation for On-Device Classification |  |  |
+| 4 | H. Do | Forecasting Finnish unemployment trend based on demographic structure and government policies |  |  |
+| 5 | Y. He | Framework for Evaluation of Retrieval-Augmented Generation (RAG) Pipelines |  |  |
 | 6 | H. Välimäki | Generating synthetic 3D food objects for the development of automatic dietary assessment |  |  |
 | 7 | M. Malkki | Vehicle value modelling |  |  |
 | 8 | M. Holmström | Diagnostics, debugging and analysis tools for ML enabled 5G telecommunication systems |  |  |
-| 9 | P. Gynther | TBA |  |  |
+| 9 | P. Gynther | LLM as a Judge in Healthcare |  |  |
 
 ### Completed (126)
 
