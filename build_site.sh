@@ -18,6 +18,31 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+# Fail fast if the linter checksum manifest is stale. assets/linters/SHA256SUMS
+# lets students verify downloaded scripts before running them (see the linter
+# README); a manifest that has drifted from the actual scripts is worse than
+# none, so block the build — and therefore the deploy — until it is regenerated
+# with `shasum -a 256 $(ls *.py | sort) > SHA256SUMS` from assets/linters/.
+echo "==> Verifying assets/linters/SHA256SUMS is current"
+(
+  cd assets/linters
+  if command -v sha256sum >/dev/null 2>&1; then
+    SHACMD=(sha256sum)          # Linux / CI (coreutils)
+  else
+    SHACMD=(shasum -a 256)      # macOS (no sha256sum by default)
+  fi
+  # Compare a freshly computed manifest (same file set and sort order used to
+  # generate it) against the committed one. diff catches a changed hash, a new
+  # .py that was never added, and a deleted .py still listed — all three.
+  if ! diff <("${SHACMD[@]}" $(ls *.py | sort)) SHA256SUMS >/dev/null; then
+    echo "Error: assets/linters/SHA256SUMS is out of date." >&2
+    echo "  A linter script changed (or was added/removed) without updating" >&2
+    echo "  the checksum manifest. Regenerate and commit it:" >&2
+    echo "    cd assets/linters && shasum -a 256 \$(ls *.py | sort) > SHA256SUMS" >&2
+    exit 1
+  fi
+)
+
 # Resolve the mkdocs executable: prefer a local virtualenv, then PATH, then
 # `python3 -m mkdocs`. Avoids "mkdocs: not found" when the venv isn't active.
 if [[ -x ".venv/bin/mkdocs" ]]; then
