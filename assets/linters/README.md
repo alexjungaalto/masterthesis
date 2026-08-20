@@ -115,6 +115,46 @@ Most linters import `lintutil.py`, and the `*_llm` ones import
 but not `lintutil.py`). Keeping both helpers alongside the scripts covers
 every linter, so grab both when you download a single script.
 
+### Verify what you downloaded before running it
+
+These are ordinary Python scripts: running one executes its code with your
+user account's permissions (your files, your network, any API key you have
+exported). That is normal for any script you download — but it means you
+should be sure the files you run are the ones published here and have not
+been tampered with in transit or on a mirror.
+
+The repository ships a `SHA256SUMS` file listing the SHA-256 hash of every
+`.py` file. After cloning or downloading, verify the scripts match:
+
+```sh
+cd masterthesis/assets/linters
+shasum -a 256 -c SHA256SUMS      # macOS/BSD; prints "<file>: OK" for each
+# or, on Linux:
+sha256sum -c SHA256SUMS
+```
+
+Every line should end in `OK`. A `FAILED` line means that file differs from
+the published version — stop and re-download from the official source rather
+than run it. If you fetched a single script with `curl`, grab the checksum
+list the same way and check just that file:
+
+```sh
+curl -O https://ml-theses.org/assets/linters/SHA256SUMS
+shasum -a 256 -c SHA256SUMS 2>/dev/null | grep prose_lint.py   # the file you got
+```
+
+The files are short and readable by design. If you want to go further than
+the checksum, skim them — or scan for the patterns a malicious script would
+need, none of which appear in this suite:
+
+```sh
+grep -rnE '\b(eval|exec|os\.system|os\.popen|subprocess.*shell=True|b64decode|__import__|pickle|marshal|socket\.)\b' *.py
+```
+
+Maintainer note: regenerate `SHA256SUMS` after any change to the scripts
+with `shasum -a 256 $(ls *.py | sort) > SHA256SUMS` (run from this
+directory), and commit it in the same change as the edited script.
+
 ## Setup
 
 This is the one-time install. The first line makes a **virtual environment**
