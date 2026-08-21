@@ -70,6 +70,7 @@ mkdir -p docs
 # README is the landing page; its internal links to Topics.md / theses.md /
 # material/* resolve unchanged once those files sit alongside it.
 cp README.md   docs/index.md
+cp Garage.md   docs/Garage.md
 cp Topics.md   docs/Topics.md
 cp theses.md   docs/theses.md
 cp -R material docs/material

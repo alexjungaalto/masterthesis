@@ -48,6 +48,7 @@ theme:
 
 nav:
   - Thesis Guide: index.md
+  - Thesis Garage: Garage.md
   - Available Topics: Topics.md
   - Supervised Theses: theses.md
   - Thesis Linters: assets/linters/README.md
