@@ -1,5 +1,25 @@
 # Thesis linters
 
+> **Disclaimer — read before running.** These scripts were written with
+> substantial help from large language models (AI coding assistants) and
+> are provided **as-is, with no warranty of any kind** — you run them **at
+> your own risk**. They may contain bugs or behave unexpectedly, and their
+> findings are suggestions, not authoritative. Before running them:
+>
+> - **Verify the files are the ones published here** — check them against
+>   the shipped `SHA256SUMS` (`shasum -a 256 -c SHA256SUMS`).
+> - **Scan them for insecure code** — run
+>   [Bandit](https://bandit.readthedocs.io/), the standard Python security
+>   linter (`pip install bandit && bandit -r .`), and/or the quick `grep`
+>   pattern check.
+> - **Review the code yourself** — it is short and readable by design, and
+>   keep backups of anything you point the linters at.
+>
+> Full details in
+> [Verify what you downloaded before running it](#verify-what-you-downloaded-before-running-it).
+> The maintainers accept no liability for any loss or damage arising from
+> use of these scripts.
+
 ## New here? Start with this
 
 A **linter** is a small program that reads your writing and points out
@@ -117,6 +137,16 @@ every linter, so grab both when you download a single script.
 
 ### Verify what you downloaded before running it
 
+> **How these were built, and the terms of use.** These scripts were
+> written with substantial help from large language models (AI coding
+> assistants) and are provided **as-is, with no warranty of any kind** —
+> you run them **at your own risk**. They may contain bugs, produce wrong
+> findings, or behave unexpectedly; nothing here is a substitute for your
+> own judgement. Before running them on anything you care about, review the
+> code (it is short and readable by design — see the checks below), and
+> keep backups of your files. The maintainers accept no liability for any
+> loss or damage arising from their use.
+
 These are ordinary Python scripts: running one executes its code with your
 user account's permissions (your files, your network, any API key you have
 exported). That is normal for any script you download — but it means you
@@ -150,6 +180,22 @@ need, none of which appear in this suite:
 ```sh
 grep -rnE '\b(eval|exec|os\.system|os\.popen|subprocess.*shell=True|b64decode|__import__|pickle|marshal|socket\.)\b' *.py
 ```
+
+For a more thorough, automated pass, run
+[**Bandit**](https://bandit.readthedocs.io/) — the standard security
+linter for Python. It statically scans for common insecure patterns (the
+ones the `grep` above looks for, and many more) and reports each with a
+severity and confidence rating:
+
+```sh
+pip install bandit
+bandit -r .            # scan every .py in this directory tree
+```
+
+A clean run (no results, or only low-severity informational notes) is a
+good sign; investigate anything flagged medium or high before running the
+script. Bandit reads the code without executing it, so it is safe to run on
+scripts you have not yet trusted.
 
 Maintainer note: regenerate `SHA256SUMS` after any change to the scripts
 with `shasum -a 256 $(ls *.py | sort) > SHA256SUMS` (run from this
